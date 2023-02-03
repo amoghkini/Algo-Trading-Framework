@@ -1,0 +1,7 @@
+{
+  "port": 5000,
+  "enableSSL": false,
+  "sslPort": 8443,
+  "deployDir": "F:/Projects/Upload to github/2021/Algo-Trading-Framework/python-deploy",
+  "logFileDir": "F:/Projects/Upload to github/2021/Algo-Trading-Framework/logs"
+}
