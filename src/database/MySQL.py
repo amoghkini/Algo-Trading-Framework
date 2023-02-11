@@ -4,7 +4,7 @@ from collections import namedtuple
 from itertools import repeat
 
 
-class SimpleMysql:
+class Mysql:
     conn = None
     cur = None
     conf = None
@@ -92,6 +92,45 @@ class SimpleMysql:
             return self.cur._last_executed
 
     def leftJoin(self, tables=(), fields=(), join_fields=(), where=None, order=None, limit=None):
+        """
+        Run an inner left join query on the database.
+
+        Parameters
+        ----------
+        tables : tuple, optional
+            A tuple of two tables to join. (table1, table2)
+        fields : tuple, optional
+            A tuple of two lists, representing the fields to select from each table. 
+            ([fields from table1], [fields from table 2])
+        join_fields : tuple, optional
+            A tuple of two fields to join on. (field1, field2), where field1 belongs to table1 and field2 belongs to table 2.
+        where : tuple, optional
+            A tuple in the format of ("parameterized statement", [parameters]). 
+            For example: ("id=%s and name=%s", [1, "test"])
+        order : list, optional
+            A list in the format of [field, direction]. `field` is the name of the field to order by, 
+            and `direction` is either `ASC` for ascending order or `DESC` for descending order.
+        limit : list, optional
+            A list of two values, representing the limits for the number of rows to return. [limit1, limit2]
+
+        Returns
+        -------
+        list
+            A list of namedtuples, each representing a row in the result set. 
+            The namedtuple is named "Row" and the fields are based on the selected fields.
+
+        Example
+        -------
+        result = db.leftJoin(tables=("table1", "table2"),
+                            fields=(["id", "name"], ["age", "address"]),
+                            join_fields=("id", "id"),
+                            where=("id=%s and name=%s", [1, "test"]),
+                            order=["id", "ASC"],
+                            limit=[0, 10])
+        for row in result:
+            print(row.id, row.name, row.age, row.address)
+    """
+    
         """Run an inner left join query
             tables = (table1, table2)
             fields = ([fields from table1], [fields from table 2])  # fields to select

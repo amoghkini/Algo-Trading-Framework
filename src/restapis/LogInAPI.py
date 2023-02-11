@@ -14,7 +14,7 @@ class LogInAPI(MethodView):
     def post(self):
         print("Inside post method")
         form = LoginForm()
-        user = User()
-        user.fetch_one_user(form)
+        #user = User()
+        User.fetch_one_user(form)
         flash('Logged In Successfully', 'success')
         return render_template('dashboard.html')
