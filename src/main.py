@@ -2,7 +2,6 @@ import os
 import logging
 
 from flask import Flask, render_template
-from flask_login import UserMixin, login_user, logout_user, current_user, login_required, LoginManager
 
 from config.Config import get_broker_app_config, get_server_config, get_system_config
 from database.DatabaseConnection import conn
@@ -13,40 +12,12 @@ from restapis.LogOutAPI import LogOutAPI
 from restapis.RequestPassResetAPI import RequestPassResetAPI
 from restapis.ResetPasswordAPI import ResetPasswordAPI
 from restapis.SignUpAPI import SignUpAPI
-from models.UserModel import UserModel
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'AMOGH kini'
 
-# Configuring the Login Manager
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
 
-# User model for flask_login
-'''
-class User(UserMixin):
-    def __init__(self, id, email, password):
-        self.id = id
-        self.email = email
-        self.password = password
-
-    def __repr__(self):
-        return "%d/%s/%s" % (self.id, self.email, self.password)
-'''
-# Load the user from the database
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    print(user_id,"User id here")
-    user = conn.getOne("users", ["id", "email", "password"], ("id = %s", [user_id]))
-    print("user",user)
-    if not user:
-        return None
-    return UserModel(*user)
-  
-  
 
 app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
