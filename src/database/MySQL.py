@@ -52,7 +52,10 @@ class Mysql:
 
         cur = self._select(table, fields, where, order, limit)
         result = cur.fetchone()
-
+        
+        if not result:
+            return None
+        
         row = None
         if result:
             fields = [f[0] for f in cur.description]
