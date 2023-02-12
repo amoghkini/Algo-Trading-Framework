@@ -1,7 +1,8 @@
-from database.DatabaseConnection import conn
-from database.MySQL import Mysql
 import re
+from passlib.hash import sha256_crypt
+
 from common.AccountStatus import AccountStatus
+from database.DatabaseConnection import conn
 
 class User:
     
@@ -21,8 +22,7 @@ class User:
 
     @staticmethod
     def fetch_one_user(form):
-        user = conn.getOne("users", ["id", "email_id", "password"], ("email_id = %s and password = %s", [
-                           form.email.data, form.password.data]))
+        user = conn.getOne("users", ["id", "email_id", "password"], ("email_id = %s", [form.email.data]))
         if user:
             print("User found",user)
             return user
@@ -39,9 +39,9 @@ class User:
         return 0
 
     @staticmethod
-    def validate_user_login(user, form):
+    def validate_user_login(user, username, password):
         print("Result", user)
-        if (user.get('email_id') == form.email.data) and (user.get('password') == form.password.data):
+        if (user.get('email_id') == username) and (sha256_crypt.verify(password, user.get('password'))):
             print("Logged in successfully!!!")
             return 1
         else:

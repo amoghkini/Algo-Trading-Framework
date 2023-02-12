@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for, session, g
 from flask.views import MethodView
+
 from forms.LoginUser import LoginForm
 from user.User import User
 
@@ -21,10 +22,11 @@ class LogInAPI(MethodView):
         form = LoginForm()
         result = User.fetch_one_user(form)
         if not result:
-            flash('User not found!!!','danger')
-            print("User not found")
+            flash('The entered email id or password is incorrect!!!','danger')
             return redirect(url_for('login_api'))
-        result = User.validate_user_login(result,form)
+        
+        
+        result = User.validate_user_login(result, form.email.data, form.password.data)
         
         if result:
             session['user'] = form.email.data

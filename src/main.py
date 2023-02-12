@@ -1,10 +1,10 @@
 import os
 import logging
-
-from flask import Flask, render_template, g, session
 from datetime import timedelta
+from flask import Flask, g, render_template, session
 
-from config.Config import get_broker_app_config, get_server_config, get_system_config
+
+from config.Config import get_broker_app_config, get_server_config
 from database.DatabaseConnection import conn
 from restapis.DashboardAPI import DashboardAPI
 from restapis.HomeAPI import HomeAPI
@@ -35,7 +35,6 @@ def initLoggingConfg(filepath):
                       level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
 
 
-# Execution starts here
 server_config = get_server_config()
 
 deployDir = server_config.get('deployDir')

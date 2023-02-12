@@ -3,7 +3,7 @@ CREATE SCHEMA `algo_trader_framework` ;
 CREATE TABLE `algo_trader_framework`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email_id` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
   `first_name` VARCHAR(40) NOT NULL,
   `middle_name` VARCHAR(40) NULL,
   `last_name` VARCHAR(40) NOT NULL,

@@ -1,5 +1,7 @@
-from flask import render_template, request, flash, redirect, url_for
+from flask import flash, redirect, render_template, url_for
 from flask.views import MethodView
+from passlib.hash import sha256_crypt
+
 from forms.SignUpUser import RegisterUserForm
 from user.User import User
 
@@ -21,7 +23,7 @@ class SignUpAPI(MethodView):
         
         hashed_password = self.make_password_hash(form.password.data)
         form.password.data = hashed_password
-                
+
         User.add_new_user(form)
         flash('Your account has been created! You are now able to login', 'success')
         return redirect(url_for('login_api'))
@@ -67,5 +69,6 @@ class SignUpAPI(MethodView):
 
     
     def make_password_hash(self,password):
-        return password
+        secure_password = sha256_crypt.encrypt(str(password))
+        return secure_password
     

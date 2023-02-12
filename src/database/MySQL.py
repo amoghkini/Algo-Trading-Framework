@@ -1,7 +1,7 @@
 #Ref:  https://github.com/knadh/simplemysql/blob/master/simplemysql/simplemysql.py
-import mysql.connector as mysql
 from collections import namedtuple
 from itertools import repeat
+import mysql.connector as mysql
 
 
 class Mysql:

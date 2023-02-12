@@ -1,5 +1,6 @@
-from flask import render_template, request
+from flask import flash, redirect, render_template, url_for
 from flask.views import MethodView
+
 from forms.ResetPassword import RequestResetForm
 
 
