@@ -1,7 +1,8 @@
 import os
 import logging
 
-from flask import Flask, render_template
+from flask import Flask, render_template, g, session
+from datetime import timedelta
 
 from config.Config import get_broker_app_config, get_server_config, get_system_config
 from database.DatabaseConnection import conn
@@ -58,6 +59,15 @@ brokerAppConfig = get_broker_app_config()
 logging.info('brokerAppConfig => %s', brokerAppConfig)
 
 port = server_config.get('port')
+
+@app.before_request
+def before_request():
+  session.permanent = True
+  app.permanent_session_lifetime = timedelta(minutes=1)
+  
+  g.user = None
+  if 'user' in session:
+    g.user = session['user']
 
 
 @app.errorhandler(404)
