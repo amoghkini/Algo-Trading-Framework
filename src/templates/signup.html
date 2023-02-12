@@ -6,45 +6,35 @@
         {{ form.hidden_tag() }}
         <fieldset class = "form-group">
             <legend class = "border-bottom mb-4"> Join Today</legend> 
-            <div class = "form-group">
-                {{ form.username.label(class="form-control-label") }}
-                {% if form.username.errors %}
-                    {{ form.username(class="form-control form-control-lg is-invalid") }}
-                    <div class = 'invalid-feedback'>
-                        {% for error in form.username.errors %}
-                            <span> {{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.username(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
+            
             <div class="form-group">
-                {{ form.firstName.label(class="form-control-label") }}
-                {% if form.firstName.errors %}
-                {{ form.firstName(class="form-control form-control-lg is-invalid") }}
+                {{ form.first_name.label(class="form-control-label") }}
+                {% if form.first_name.errors %}
+                {{ form.first_name(class="form-control form-control-lg is-invalid") }}
                 <div class='invalid-feedback'>
-                    {% for error in form.firstName.errors %}
+                    {% for error in form.first_name.errors %}
                     <span> {{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.firstName(class="form-control form-control-lg") }}
+                {{ form.first_name(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
             <div class="form-group">
-                {{ form.lastName.label(class="form-control-label") }}
-                {% if form.lastName.errors %}
-                {{ form.lastName(class="form-control form-control-lg is-invalid") }}
+                {{ form.last_name.label(class="form-control-label") }}
+                {% if form.last_name.errors %}
+                {{ form.last_name(class="form-control form-control-lg is-invalid") }}
                 <div class='invalid-feedback'>
-                    {% for error in form.lastName.errors %}
+                    {% for error in form.last_name.errors %}
                     <span> {{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.lastName(class="form-control form-control-lg") }}
+                {{ form.last_name(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
             <div class="form-group">
                 {{ form.email.label(class="form-control-label") }}
                 {% if form.email.errors %}
@@ -58,6 +48,7 @@
                     {{ form.email(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
             <div class="form-group">
                 {{ form.password.label(class="form-control-label") }}
                 {% if form.password.errors %}
@@ -71,6 +62,7 @@
                     {{ form.password(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
             <div class="form-group">
                 {{ form.confirm_password.label(class="form-control-label") }}
                 {% if form.confirm_password.errors %}
@@ -84,10 +76,39 @@
                     {{ form.confirm_password(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
+            <div class="form-group">
+                {{ form.mobile_no.label(class="form-control-label") }}
+                {% if form.mobile_no.errors %}
+                {{ form.mobile_no(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.mobile_no.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.mobile_no(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.date_of_birth.label(class="form-control-label") }}
+                {% if form.date_of_birth.errors %}
+                {{ form.date_of_birth(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.date_of_birth.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.date_of_birth(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
         </fieldset>
-        <div class = "form-group">
+        <br>
+        <center><div class = "form-group">
             {{ form.submit(class="btm btm-outline-info") }}    
-        </div>
+        </div></center>
     </form>
 
 </div>

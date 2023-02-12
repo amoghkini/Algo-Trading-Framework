@@ -230,7 +230,6 @@ class Mysql:
         """Run a raw query"""
 
         # check if connection is alive. if not, reconnect
-
         try:
             self.cur.execute(sql, params)
         except mysql.OperationalError as e:

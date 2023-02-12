@@ -7,7 +7,6 @@ class DashboardAPI(MethodView):
     
     def get(self):
         if g.user:
-            form = LoginForm()
             return render_template('dashboard.html')
         return redirect(url_for('login_api'))
 

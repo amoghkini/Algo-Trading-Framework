@@ -7,6 +7,9 @@ class LogInAPI(MethodView):
     
     
     def get(self):
+        if g.user:
+            return redirect(url_for('dashboard_api'))
+        
         print("Inside get method")
         form = LoginForm()
         return render_template('login.html', form=form)
@@ -18,25 +21,15 @@ class LogInAPI(MethodView):
         form = LoginForm()
         result = User.fetch_one_user(form)
         if not result:
-            flash('User not found!!!')
+            flash('User not found!!!','danger')
             print("User not found")
             return redirect(url_for('login_api'))
-        result = self.validate_user_login(result,form)
+        result = User.validate_user_login(result,form)
+        
         if result:
+            session['user'] = form.email.data
             flash('Logged In Successfully', 'success')
         else:
             flash('Invalid userid or password!!!')
             return redirect(url_for('login_api'))
-        return render_template('dashboard.html')
-
-
-    def validate_user_login(self, user, form):
-        print("Result", user)
-        if (user.get('email') == form.email.data) and (user.get('password') == form.password.data):
-            print("Logged in successfully!!!")
-            session['user'] = form.email.data
-            return 1
-        else:
-            print("Invalid username or password")
-                
-            return 0    
+        return redirect(url_for('dashboard_api'))

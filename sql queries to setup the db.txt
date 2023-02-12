@@ -1,0 +1,28 @@
+CREATE SCHEMA `algo_trader_framework` ;
+
+CREATE TABLE `algo_trader_framework`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email_id` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(40) NOT NULL,
+  `middle_name` VARCHAR(40) NULL,
+  `last_name` VARCHAR(40) NOT NULL,
+  `user_id` CHAR(6) NOT NULL,
+  `account_creation_date` BIGINT(12) NOT NULL,
+  `account_status` CHAR(20) NOT NULL,
+  `last_login_date` BIGINT(12) NULL,
+  `profile_pic` VARCHAR(100) NULL,
+  `mobile_no` BIGINT(10) NOT NULL,
+  `date_of_birth` BIGINT(12) NULL,
+  `address1` VARCHAR(45) NULL,
+  `address2` VARCHAR(45) NULL,
+  `address3` VARCHAR(45) NULL,
+  `city` VARCHAR(15) NULL,
+  `state` VARCHAR(15) NULL,
+  `country` CHAR(10) NULL,
+  `pin_code` INT NULL,
+  `telegram_bot_api_key` VARCHAR(100) NULL,
+  `no_of_brokers` INT NULL,
+  `no_of_strategies` INT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_id_UNIQUE` (`email_id` ASC) VISIBLE);

@@ -24,8 +24,8 @@ app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
 app.add_url_rule("/login", view_func=LogInAPI.as_view("login_api"))
 app.add_url_rule("/logout", view_func=LogOutAPI.as_view("logout_api"))
-app.add_url_rule("/reset_password", view_func=ResetPasswordAPI.as_view("reset_password"))
-app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_view("reset_password_request"))
+app.add_url_rule("/reset_password", view_func=ResetPasswordAPI.as_view("reset_password_api"))
+app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_view("reset_password_request_api"))
 app.add_url_rule("/signup", view_func=SignUpAPI.as_view("sign_up_api"))
 
 
