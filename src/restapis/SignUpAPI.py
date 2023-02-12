@@ -1,12 +1,15 @@
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, url_for, g
 from flask.views import MethodView
 from passlib.hash import sha256_crypt
 
+from common.AccountStatus import AccountStatus
 from forms.SignUpUser import RegisterUserForm
 from user.User import User
 
 class SignUpAPI(MethodView):
     def get(self):
+        if g.user:
+            return redirect(url_for('dashboard_api'))
         print("Inside get method")
         form = RegisterUserForm()
         return render_template('signup.html', form=form)
@@ -24,7 +27,7 @@ class SignUpAPI(MethodView):
         hashed_password = self.make_password_hash(form.password.data)
         form.password.data = hashed_password
 
-        User.add_new_user(form)
+        User.add_new_user(self.transform_data(form))
         flash('Your account has been created! You are now able to login', 'success')
         return redirect(url_for('login_api'))
     
@@ -72,3 +75,18 @@ class SignUpAPI(MethodView):
         secure_password = sha256_crypt.encrypt(str(password))
         return secure_password
     
+    def transform_data(self,form):
+        
+        user_data = {
+            'first_name': form.first_name.data,
+            'last_name': form.last_name.data,
+            'user_name' : User.generate_user_name(form.first_name.data, form.last_name.data),
+            'account_creation_date' : 4545,
+            'account_status' : AccountStatus.CREATED,
+            'mobile_no' : form.mobile_no.data,
+            'date_of_birth' : 6565,
+            'email_id' : form.email.data,
+            'password' : form.password.data
+        }
+        print("Amogh is here",user_data)          
+        return user_data

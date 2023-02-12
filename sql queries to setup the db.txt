@@ -7,7 +7,7 @@ CREATE TABLE `algo_trader_framework`.`users` (
   `first_name` VARCHAR(40) NOT NULL,
   `middle_name` VARCHAR(40) NULL,
   `last_name` VARCHAR(40) NOT NULL,
-  `user_id` CHAR(6) NOT NULL,
+  `user_name` CHAR(8) NOT NULL,
   `account_creation_date` BIGINT(12) NOT NULL,
   `account_status` CHAR(20) NOT NULL,
   `last_login_date` BIGINT(12) NULL,

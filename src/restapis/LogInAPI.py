@@ -20,16 +20,17 @@ class LogInAPI(MethodView):
         session.pop('user',None) # Drop the session if already exist
         
         form = LoginForm()
-        result = User.fetch_one_user(form)
+        
+        result = User.fetch_one_user(form.email.data)
         if not result:
             flash('The entered email id or password is incorrect!!!','danger')
             return redirect(url_for('login_api'))
         
         
-        result = User.validate_user_login(result, form.email.data, form.password.data)
+        validation_result = User.validate_user_login(result, form.email.data, form.password.data)
         
-        if result:
-            session['user'] = form.email.data
+        if validation_result:
+            session['user'] = result.get('user_name')
             flash('Logged In Successfully', 'success')
         else:
             flash('Invalid userid or password!!!')

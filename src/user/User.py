@@ -1,28 +1,28 @@
 import re
 from passlib.hash import sha256_crypt
 
-from common.AccountStatus import AccountStatus
 from database.DatabaseConnection import conn
 
 class User:
     
     @staticmethod
-    def add_new_user(form):
-        conn.insert("users", {"first_name": form.first_name.data,
-                              "last_name" : form.last_name.data,
-                              "user_id" : 1,
-                              "account_creation_date" : 4545,
-                              "account_status" : AccountStatus.CREATED,
-                              "mobile_no" : form.mobile_no.data,
-                              "date_of_birth": 6565,
-                              "email_id": form.email.data,
-                              "password": form.password.data})
+    def add_new_user(user_data):
+        print("User data",user_data)
+        conn.insert("users", {"first_name": user_data.get("first_name"),
+                              "last_name": user_data.get("last_name"),
+                              "user_name": user_data.get("user_name"),
+                              "account_creation_date": user_data.get("account_creation_date"),
+                              "account_status": user_data.get("account_status"),
+                              "mobile_no": user_data.get("mobile_no"),
+                              "date_of_birth": user_data.get("date_of_birth"),
+                              "email_id": user_data.get("email_id"),
+                              "password": user_data.get("password")})
         conn.commit()
         return True
 
     @staticmethod
-    def fetch_one_user(form):
-        user = conn.getOne("users", ["id", "email_id", "password"], ("email_id = %s", [form.email.data]))
+    def fetch_one_user(email):
+        user = conn.getOne("users", ["id", "email_id", "password", "user_name"], ("email_id = %s", [email]))
         if user:
             print("User found",user)
             return user
@@ -81,3 +81,7 @@ class User:
         if password == confirm_password:
             return 0
         return 1
+
+    @staticmethod
+    def generate_user_name(first_name,last_name):
+        return first_name.capitalize()
