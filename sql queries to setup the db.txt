@@ -7,9 +7,9 @@ CREATE TABLE `algo_trader_framework`.`users` (
   `first_name` VARCHAR(40) NOT NULL,
   `middle_name` VARCHAR(40) NULL,
   `last_name` VARCHAR(40) NOT NULL,
-  `user_name` CHAR(8) NOT NULL,
+  `user_name` VARCHAR(8) NOT NULL,
   `account_creation_date` BIGINT(12) NOT NULL,
-  `account_status` CHAR(20) NOT NULL,
+  `account_status` VARCHAR(20) NOT NULL,
   `last_login_date` BIGINT(12) NULL,
   `profile_pic` VARCHAR(100) NULL,
   `mobile_no` BIGINT(10) NOT NULL,
@@ -25,4 +25,6 @@ CREATE TABLE `algo_trader_framework`.`users` (
   `no_of_brokers` INT NULL,
   `no_of_strategies` INT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_id_UNIQUE` (`email_id` ASC) VISIBLE);
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `user_name_UNIQUE` (`user_name` ASC) VISIBLE);
+

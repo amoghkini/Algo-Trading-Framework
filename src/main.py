@@ -4,8 +4,8 @@ from datetime import timedelta
 from flask import Flask, g, render_template, session
 
 
-from config.Config import get_broker_app_config, get_server_config
-from database.DatabaseConnection import conn
+from config.Config import get_server_config
+from restapis.AboutUsAPI import AboutUsAPI
 from restapis.DashboardAPI import DashboardAPI
 from restapis.HomeAPI import HomeAPI
 from restapis.LogInAPI import LogInAPI
@@ -19,12 +19,12 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'AMOGH kini'
 
 
-
 app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
+app.add_url_rule("/about", view_func=AboutUsAPI.as_view("about_us_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
 app.add_url_rule("/login", view_func=LogInAPI.as_view("login_api"))
 app.add_url_rule("/logout", view_func=LogOutAPI.as_view("logout_api"))
-app.add_url_rule("/reset_password", view_func=ResetPasswordAPI.as_view("reset_password_api"))
+app.add_url_rule("/reset_password/<token>", view_func=ResetPasswordAPI.as_view("reset_password_api"))
 app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_view("reset_password_request_api"))
 app.add_url_rule("/signup", view_func=SignUpAPI.as_view("sign_up_api"))
 
@@ -54,10 +54,10 @@ initLoggingConfg(logFileDir + "/app.log")
 
 logging.info('server_config => %s', server_config)
 
-brokerAppConfig = get_broker_app_config()
-logging.info('brokerAppConfig => %s', brokerAppConfig)
 
 port = server_config.get('port')
+
+
 
 @app.before_request
 def before_request():
@@ -68,6 +68,7 @@ def before_request():
   if 'user' in session:
     g.user = session['user']
 
+  g.secret_key = "AMOGH kini"
 
 @app.errorhandler(404)
 def page_not_found(e):

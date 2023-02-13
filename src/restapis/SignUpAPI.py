@@ -24,12 +24,16 @@ class SignUpAPI(MethodView):
             flash(flash_message,"danger")
             return render_template('signup.html',form=form)
         
-        hashed_password = self.make_password_hash(form.password.data)
+        hashed_password = User.make_user_password_hash(form.password.data)
         form.password.data = hashed_password
 
-        User.add_new_user(self.transform_data(form))
-        flash('Your account has been created! You are now able to login', 'success')
-        return redirect(url_for('login_api'))
+        status = User.add_new_user(self.transform_data(form))
+        if status:
+            flash('Your account has been created! You are now able to login', 'success')
+            return redirect(url_for('login_api'))
+        else:
+            flash('Something went wrong!!! Please try again after sometime', 'danger')
+            return render_template('signup.html', form=form)
     
     
     def validate_user_sign_up(self,form):
@@ -49,16 +53,14 @@ class SignUpAPI(MethodView):
         
         result = User.validate_pass_and_confirm_pass(form.password.data, form.confirm_password.data)
         if result:
-            print("Incorrect password and confirm password")
             error = 1 
             flash_message = "The password and confirm password should be same"
             return error, flash_message
         
         result = User.check_if_not_following_password_rules(form.password.data)
         if result:
-            print("The password should be at least eight characters, at least one number and both lower and uppercase letters and special characters")
             error = 1
-            flash_message = "The password should be at least eight characters, at least one number and both lower and uppercase letters and special characters"
+            flash_message = "The password should be at least eight characters, contains at least one number and both lower and uppercase letters and special characters"
             return error, flash_message
         
         result = User.check_if_invalid_phone_number_format(form.mobile_no.data)
@@ -71,9 +73,7 @@ class SignUpAPI(MethodView):
         return 0, ''
 
     
-    def make_password_hash(self,password):
-        secure_password = sha256_crypt.encrypt(str(password))
-        return secure_password
+    
     
     def transform_data(self,form):
         

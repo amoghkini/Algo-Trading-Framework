@@ -7,6 +7,3 @@ class DashboardAPI(MethodView):
         if g.user:
             return render_template('dashboard.html')
         return redirect(url_for('login_api'))
-
-    def post(self):
-        return "inside post method"

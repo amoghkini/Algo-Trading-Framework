@@ -12,10 +12,16 @@
             {% if session['user'] %}
             <ul class="nav navbar-nav">
                 <li class="nav-item">
+                    <a href="#" class="nav-link">Marketplace</a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link">Broker Details</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">My Strategies</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Risk Management</a>
                 </li>
             </ul>
             {% endif %}
@@ -42,7 +48,8 @@
                         <a href="#" class="dropdown-item">My profile</a>
                         <a href="#" class="dropdown-item">Console</a>                        
                         <a href="#" class="dropdown-item">Credits</a>
-                        <a href="#" class="dropdown-item">About us</a>
+                        <a href="#" class="dropdown-item">Features</a>
+                        <a href="{{ url_for('about_us_api') }}" class="dropdown-item">About us</a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ url_for('logout_api') }}" class="dropdown-item">Logout</a>
                     </div>

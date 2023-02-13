@@ -31,8 +31,8 @@ class LogInAPI(MethodView):
         
         if validation_result:
             session['user'] = result.get('user_name')
-            flash('Logged In Successfully', 'success')
+            flash('Logged In Successfully!!!', 'success')
         else:
-            flash('Invalid userid or password!!!')
+            flash('The entered email id or password is incorrect!!!', 'danger')
             return redirect(url_for('login_api'))
         return redirect(url_for('dashboard_api'))
