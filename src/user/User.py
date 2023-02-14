@@ -12,17 +12,9 @@ class User:
     
     @staticmethod
     def add_new_user(user_data):
+        print(user_data)
         try:
-            conn.insert("users", {"first_name": user_data.get("first_name"),
-                                "last_name": user_data.get("last_name"),
-                                "user_name": user_data.get("user_name"),
-                                "account_creation_date": user_data.get("account_creation_date"),
-                                "account_status": user_data.get("account_status"),
-                                "mobile_no": user_data.get("mobile_no"),
-                                "date_of_birth": user_data.get("date_of_birth"),
-                                "profile_pic" : user_data.get('profile_pic'),
-                                "email_id": user_data.get("email_id"),
-                                "password": user_data.get("password")})
+            conn.insert("users", user_data)
             conn.commit()
             return True
         except Exception as e:
@@ -126,17 +118,21 @@ class User:
     def update_password_reset_data(password,username):
         hashed_password = User.make_user_password_hash(password)
         print(hashed_password)
+        fields_to_update = {"password": hashed_password}
+        user = User.update_user_data(username,fields_to_update)
+        return user
         
-        user = conn.update("users", {"password": hashed_password}, ("user_name=%s", (username,)))
+    @staticmethod
+    def update_user_data(username,fields_to_update):
+        print("Fields",fields_to_update)
+        user = conn.update("users", fields_to_update, ("user_name=%s", (username,))) 
+        print("User",user)
         if user:
+            print("Amogh is here")
             conn.commit()
             return user
         else:
             return None
-        
-    @staticmethod
-    def update_user_data():
-        return
     
     @staticmethod
     def save_picture(form_picture):
@@ -144,8 +140,7 @@ class User:
         print("Form picture",form_picture)
         _, f_ext = os.path.splitext(form_picture.filename)
         picture_fn = random_hex + f_ext
-        picture_path = os.path.join(
-          os.getcwd()  , 'static/profile_pic', picture_fn)  # Instead of os.getcwd() we should use app.root_path. This can be fetched from config file
+        picture_path = os.path.join(os.getcwd()  , 'static/profile_pic', picture_fn)  # Instead of os.getcwd() we should use app.root_path. This can be fetched from config file
         output_size = (125, 125)
         i = Image.open(form_picture)
         i.thumbnail(output_size)
