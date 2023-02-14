@@ -2,13 +2,15 @@
 
 {% block content %}
 <br><br><br><br><br><br>
-<div class="content-section">
+<center>
+<div class="content-section-login">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4"> Login</legend>
+            <br>
+            <legend class="border-bottom mb-4"> Login to Algo Trader</legend>
+            <br>
             <div class="form-group">
-                {{ form.email.label(class="form-control-label") }}
                 {% if form.email.errors %}
                 {{ form.email(class="form-control form-control-lg is-invalid") }}
                 <div class='invalid-feedback'>
@@ -20,8 +22,8 @@
                 {{ form.email(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
             <div class="form-group">
-                {{ form.password.label(class="form-control-label") }}
                 {% if form.password.errors %}
                 {{ form.password(class="form-control form-control-lg is-invalid") }}
                 <div class='invalid-feedback'>
@@ -33,24 +35,21 @@
                 {{ form.password(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class = "form-check">
-                {{ form.remember(class="form-check-input") }}
-                {{ form.remember.label(class="form-check-label")}}
-            </div>
         </fieldset>
-        <div class="form-group">
-            {{ form.submit(class="btm btm-outline-info") }}
-        </div>
-        <small class = "text-muted ml-2">
-            <a href ="{{ url_for('reset_password_request_api') }}">Forgot Password?</a>
-        </small>
+        <br>
+        <center>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-dark") }}
+            </div>
+        </center>
+        <br>
+        <center>
+            <small class = "text-muted ml-2">
+                <a href ="{{ url_for('reset_password_request_api') }}">Forgot Password?</a>
+            </small>
+        </center>
     </form>
 
 </div>
-<div class="border-top pt3">
-    <small class="text-muted">
-        Need An Account? <a class="ml-2" href="{{ url_for('sign_up_api') }}">Sign up now</class>
-    </small>
-</div>
-
+</center>
 {% endblock content %}

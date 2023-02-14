@@ -1,6 +1,10 @@
 import re
+import secrets
+import os
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from passlib.hash import sha256_crypt
+from PIL import Image
+
 
 from database.DatabaseConnection import conn
 
@@ -16,6 +20,7 @@ class User:
                                 "account_status": user_data.get("account_status"),
                                 "mobile_no": user_data.get("mobile_no"),
                                 "date_of_birth": user_data.get("date_of_birth"),
+                                "profile_pic" : user_data.get('profile_pic'),
                                 "email_id": user_data.get("email_id"),
                                 "password": user_data.get("password")})
             conn.commit()
@@ -34,8 +39,7 @@ class User:
     
     @staticmethod        
     def fetch_one_user_by_username(username):
-        user = conn.getOne(
-            "users", ["id", "user_name"], ("user_name = %s", [username]))
+        user = conn.getOne("users", '*', ("user_name = %s", [username]))
         if user:
             return user
         else:
@@ -129,3 +133,21 @@ class User:
             return user
         else:
             return None
+        
+    @staticmethod
+    def update_user_data():
+        return
+    
+    @staticmethod
+    def save_picture(form_picture):
+        random_hex = secrets.token_hex(8)
+        print("Form picture",form_picture)
+        _, f_ext = os.path.splitext(form_picture.filename)
+        picture_fn = random_hex + f_ext
+        picture_path = os.path.join(
+          os.getcwd()  , 'static/profile_pic', picture_fn)  # Instead of os.getcwd() we should use app.root_path. This can be fetched from config file
+        output_size = (125, 125)
+        i = Image.open(form_picture)
+        i.thumbnail(output_size)
+        i.save(picture_path)
+        return picture_fn

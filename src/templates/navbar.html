@@ -18,10 +18,16 @@
                     <a href="#" class="nav-link">Broker Details</a>
                 </li>
                 <li class="nav-item">
+                    <a href="#" class="nav-link">Backtesting</a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link">My Strategies</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Risk Management</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Stocks</a>
                 </li>
             </ul>
             {% endif %}
@@ -42,11 +48,17 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link">Alerts</a>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Console</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Notifications</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{session['user']}}</a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-                        <a href="#" class="dropdown-item">My profile</a>
-                        <a href="#" class="dropdown-item">Console</a>                        
+                        <a href="{{ url_for('my_profile_api') }}" class="dropdown-item">My profile</a>
+                        <a href="#" class="dropdown-item">Admin</a>
                         <a href="#" class="dropdown-item">Credits</a>
                         <a href="#" class="dropdown-item">Features</a>
                         <a href="{{ url_for('about_us_api') }}" class="dropdown-item">About us</a>

@@ -85,6 +85,7 @@ class SignUpAPI(MethodView):
             'account_status' : AccountStatus.CREATED,
             'mobile_no' : form.mobile_no.data,
             'date_of_birth' : 6565,
+            'profile_pic' : 'default.jpg',
             'email_id' : form.email.data,
             'password' : form.password.data
         }

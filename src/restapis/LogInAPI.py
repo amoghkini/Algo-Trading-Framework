@@ -24,7 +24,7 @@ class LogInAPI(MethodView):
         result = User.fetch_one_user(form.email.data)
         if not result:
             flash('The entered email id or password is incorrect!!!','danger')
-            return redirect(url_for('login_api'))
+            return render_template('login.html', form=form)
         
         
         validation_result = User.validate_user_login(result, form.email.data, form.password.data)
@@ -34,5 +34,5 @@ class LogInAPI(MethodView):
             flash('Logged In Successfully!!!', 'success')
         else:
             flash('The entered email id or password is incorrect!!!', 'danger')
-            return redirect(url_for('login_api'))
+            return render_template('login.html', form=form)
         return redirect(url_for('dashboard_api'))

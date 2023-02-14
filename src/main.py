@@ -10,6 +10,7 @@ from restapis.DashboardAPI import DashboardAPI
 from restapis.HomeAPI import HomeAPI
 from restapis.LogInAPI import LogInAPI
 from restapis.LogOutAPI import LogOutAPI
+from restapis.MyProfileAPI import MyProfileAPI
 from restapis.RequestPassResetAPI import RequestPassResetAPI
 from restapis.ResetPasswordAPI import ResetPasswordAPI
 from restapis.SignUpAPI import SignUpAPI
@@ -24,6 +25,7 @@ app.add_url_rule("/about", view_func=AboutUsAPI.as_view("about_us_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
 app.add_url_rule("/login", view_func=LogInAPI.as_view("login_api"))
 app.add_url_rule("/logout", view_func=LogOutAPI.as_view("logout_api"))
+app.add_url_rule("/profile", view_func=MyProfileAPI.as_view("my_profile_api"))
 app.add_url_rule("/reset_password/<token>", view_func=ResetPasswordAPI.as_view("reset_password_api"))
 app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_view("reset_password_request_api"))
 app.add_url_rule("/signup", view_func=SignUpAPI.as_view("sign_up_api"))
@@ -63,7 +65,7 @@ port = server_config.get('port')
 def before_request():
   session.permanent = True
   app.permanent_session_lifetime = timedelta(minutes=10)
-  
+
   g.user = None
   if 'user' in session:
     g.user = session['user']

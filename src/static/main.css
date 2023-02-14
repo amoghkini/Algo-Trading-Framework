@@ -23,12 +23,22 @@ h1,h2,h3,h4,h5,h6 {
     font-weight: 500;
 }
 
+.content-section-login {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+
+}
+
 .content-section {
     background: #ffffff;
     padding: 10px 20px;
     border: 1px solid #dddddd;
     border-radius: 3px;
     margin-bottom: 20px;
+ 
 }
 
 .article-title {
@@ -76,4 +86,9 @@ a.article-title:hover {
 
 .account-heading {
     font-size: 2.5rem;
+}
+
+.change-password {
+    padding-inline: 900px 80px;
+    font-size: 1.2rem;
 }

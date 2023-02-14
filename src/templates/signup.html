@@ -1,12 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<br>
 <div class = "content-section">
     <form method = "POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class = "form-group">
-            <legend class = "border-bottom mb-4"> Join Today</legend> 
-            
+            <center>
+                <legend class = "border-bottom mb-4"> Register Today</legend> 
+            </center>
             <div class="form-group">
                 {{ form.first_name.label(class="form-control-label") }}
                 {% if form.first_name.errors %}
@@ -107,7 +109,7 @@
         </fieldset>
         <br>
         <center><div class = "form-group">
-            {{ form.submit(class="btm btm-outline-info") }}    
+            {{ form.submit(class="btn btn-outline-dark") }}    
         </div></center>
     </form>
 
