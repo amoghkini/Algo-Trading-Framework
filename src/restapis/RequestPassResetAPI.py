@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, url_for, g
 from flask.views import MethodView
 
-from forms.ResetPassword import RequestResetForm
+from forms.ResetPasswordForm import RequestResetForm
 from user.User import User
 
 class RequestPassResetAPI(MethodView):

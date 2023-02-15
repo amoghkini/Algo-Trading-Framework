@@ -83,11 +83,20 @@ class User:
         return 0
     
     @staticmethod
-    def validate_pass_and_confirm_pass(password, confirm_password):
+    def validate_pass_and_confirm_pass(password: str, confirm_password: str):
         if password == confirm_password:
             return 0
         return 1
 
+    @staticmethod
+    def validate_if_new_password_is_same_as_old(old_password: str, new_password:str):
+        '''
+        This method checks if old and new passwords are same. This method internally calls validate_pass_and_confirm_pass for code reusability.
+        '''
+        return User.validate_pass_and_confirm_pass(old_password, new_password)
+ 
+    
+    
     @staticmethod
     def generate_user_name(first_name,last_name):
         username = first_name[:5].lower() + '_' + first_name[0].lower() + last_name[0].lower()
@@ -117,7 +126,6 @@ class User:
     @staticmethod
     def update_password_reset_data(password,username):
         hashed_password = User.make_user_password_hash(password)
-        print(hashed_password)
         fields_to_update = {"password": hashed_password}
         user = User.update_user_data(username,fields_to_update)
         return user
@@ -145,4 +153,5 @@ class User:
         i = Image.open(form_picture)
         i.thumbnail(output_size)
         i.save(picture_path)
+        
         return picture_fn

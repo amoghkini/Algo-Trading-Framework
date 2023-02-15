@@ -3,7 +3,7 @@ from flask.views import MethodView
 from passlib.hash import sha256_crypt
 
 from common.AccountStatus import AccountStatus
-from forms.SignUpUser import RegisterUserForm
+from forms.SignUpUserForm import RegisterUserForm
 from user.User import User
 
 class SignUpAPI(MethodView):

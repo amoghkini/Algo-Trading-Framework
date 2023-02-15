@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, url_for, g
 from flask.views import MethodView
 
-from forms.ResetPassword import ResetPasswordForm
+from forms.ResetPasswordForm import ResetPasswordForm
 from user.User import User
 
 
@@ -34,7 +34,7 @@ class ResetPasswordAPI(MethodView):
 
         form = ResetPasswordForm()
         
-        error, flash_message = self.validate_password_reset(form)
+        error, flash_message = self.validate_password_reset(form,user.get('password'))
         if error:
             flash(flash_message, "danger")
             return render_template('reset_password.html', form=form)
@@ -46,14 +46,8 @@ class ResetPasswordAPI(MethodView):
         return redirect(url_for('login_api'))
     
     
-    def validate_password_reset(self,form):
+    def validate_password_reset(self,form, old_password):
         error = 0
-
-        #result = User.check_if_user_is_already_registered(form.email.data)
-        #if result:
-        #    error = 1
-        #    flash_message = "The email ID is already taken. Please use different one or use this email to login into the system!!!"
-        #    return error, flash_message
 
         result = User.validate_pass_and_confirm_pass(form.password.data, form.confirm_password.data)
         if result:
@@ -61,7 +55,11 @@ class ResetPasswordAPI(MethodView):
             flash_message = "The password and confirm password should be same"
             return error, flash_message
 
-        #result = User.validate_if_new_password_is_same_as_old()
+        result = User.validate_if_new_password_is_same_as_old(old_password, form.password.data)
+        if not result:
+            error = 1
+            flash_message = "The old and new password is same. Please provide the different password."
+            return error, flash_message
         
         result = User.check_if_not_following_password_rules(form.password.data)
         if result:

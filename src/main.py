@@ -6,6 +6,7 @@ from flask import Flask, g, render_template, session
 
 from config.Config import get_server_config
 from restapis.AboutUsAPI import AboutUsAPI
+from restapis.ChangePasswordAPI import ChangePasswordAPI
 from restapis.DashboardAPI import DashboardAPI
 from restapis.HomeAPI import HomeAPI
 from restapis.LogInAPI import LogInAPI
@@ -22,6 +23,7 @@ app.config['SECRET_KEY'] = 'AMOGH kini'
 
 app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
 app.add_url_rule("/about", view_func=AboutUsAPI.as_view("about_us_api"))
+app.add_url_rule("/change_password", view_func=ChangePasswordAPI.as_view("change_password_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
 app.add_url_rule("/login", view_func=LogInAPI.as_view("login_api"))
 app.add_url_rule("/logout", view_func=LogOutAPI.as_view("logout_api"))
