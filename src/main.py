@@ -35,8 +35,7 @@ app.add_url_rule("/signup", view_func=SignUpAPI.as_view("sign_up_api"))
 
 def initLoggingConfg(filepath):
   format = "%(asctime)s: %(message)s"
-  logging.basicConfig(filename=filepath, format=format,
-                      level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+  logging.basicConfig(filename=filepath, format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
 
 
 server_config = get_server_config()
@@ -62,10 +61,10 @@ logging.info('server_config => %s', server_config)
 port = server_config.get('port')
 
 
-
 @app.before_request
 def before_request():
-  session.permanent = True
+  session.permanent = True  # set session to use PERMANENT_SESSION_LIFETIME
+  session.modified = True   # reset the session timer on every request
   app.permanent_session_lifetime = timedelta(minutes=10)
 
   g.user = None

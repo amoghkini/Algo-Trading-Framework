@@ -1,6 +1,7 @@
+import os
 import re
 import secrets
-import os
+
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from passlib.hash import sha256_crypt
 from PIL import Image
