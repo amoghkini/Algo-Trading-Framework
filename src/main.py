@@ -6,11 +6,13 @@ from flask import Flask, g, render_template, session
 
 from config.Config import get_server_config
 from restapis.AboutUsAPI import AboutUsAPI
+from restapis.AddBrokerAPI import AddBrokerAPI
 from restapis.ChangePasswordAPI import ChangePasswordAPI
 from restapis.DashboardAPI import DashboardAPI
 from restapis.HomeAPI import HomeAPI
 from restapis.LogInAPI import LogInAPI
 from restapis.LogOutAPI import LogOutAPI
+from restapis.MyBrokersAPI import MyBrokersAPI
 from restapis.MyProfileAPI import MyProfileAPI
 from restapis.RequestPassResetAPI import RequestPassResetAPI
 from restapis.ResetPasswordAPI import ResetPasswordAPI
@@ -27,6 +29,8 @@ app.add_url_rule("/change_password", view_func=ChangePasswordAPI.as_view("change
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
 app.add_url_rule("/login", view_func=LogInAPI.as_view("login_api"))
 app.add_url_rule("/logout", view_func=LogOutAPI.as_view("logout_api"))
+app.add_url_rule("/broker/add", view_func=AddBrokerAPI.as_view("add_broker_api"))
+app.add_url_rule("/brokers", view_func=MyBrokersAPI.as_view("my_brokers_api"))
 app.add_url_rule("/profile", view_func=MyProfileAPI.as_view("my_profile_api"))
 app.add_url_rule("/reset_password/<token>", view_func=ResetPasswordAPI.as_view("reset_password_api"))
 app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_view("reset_password_request_api"))

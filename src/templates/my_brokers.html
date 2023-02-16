@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+<h3>Brokers list page</h3>
+<br>
+<script>
+    function loginToBroker() {
+        window.location.href = "http://127.0.0.1:5000" + "/broker/add"
+    }
+</script>
+<div class="container">
+        <div class="col-md-12 bg-light text-right">
+            <button class="btn btn-outline-dark float-end" onClick="loginToBroker()">
+                Add Broker
+            </button>
+        </div>
+</div>
+{% endblock content %}

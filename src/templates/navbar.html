@@ -15,7 +15,7 @@
                     <a href="#" class="nav-link">Marketplace</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Broker Details</a>
+                    <a href="{{ url_for('my_brokers_api')}}" class="nav-link">Broker Details</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Backtesting</a>
@@ -25,6 +25,20 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Risk Management</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Calculators</a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                        <a href="#" class="dropdown-item">Margin Calculator</a>
+                        <a href="#" class="dropdown-item">Brokerage Calculator</a>
+                        <a href="#" class="dropdown-item">Returns Calculator</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Miscellaneous</a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                        <a href="#" class="dropdown-item">Trading Holidays</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Stocks</a>
