@@ -16,4 +16,29 @@
             </button>
         </div>
 </div>
+
+<br><br><br><br>
+
+
+<table class="table table-bordered table-hover table-dark table-responsive">
+    <thead class="thead-dark"   >
+        <tr>
+            <th style="text-align:center" scope="col">Broker id</th>
+            <th style="text-align:center" scope="col">Broker Name</th>
+            <th style="text-align:center" scope="col">Status</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for broker in brokers %}
+        <tr>
+            <td style="text-align:center">{{ broker.get('broker_id') }}</td>
+            <td style="text-align:center">{{ broker.get('broker_name') }}</td>
+            <td style="text-align:center">{{ broker.get('status') }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
 {% endblock content %}
