@@ -3,7 +3,6 @@ import logging
 from datetime import timedelta
 from flask import Flask, g, render_template, session
 
-
 from config.Config import get_server_config
 from restapis.AboutUsAPI import AboutUsAPI
 from restapis.AddBrokerAPI import AddBrokerAPI
@@ -17,6 +16,7 @@ from restapis.MyProfileAPI import MyProfileAPI
 from restapis.RequestPassResetAPI import RequestPassResetAPI
 from restapis.ResetPasswordAPI import ResetPasswordAPI
 from restapis.SignUpAPI import SignUpAPI
+from utils.logger import config_root_logger
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -37,11 +37,6 @@ app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_vie
 app.add_url_rule("/signup", view_func=SignUpAPI.as_view("sign_up_api"))
 
 
-def initLoggingConfg(filepath):
-  format = "%(asctime)s: %(message)s"
-  logging.basicConfig(filename=filepath, format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
-
-
 server_config = get_server_config()
 
 deployDir = server_config.get('deployDir')
@@ -57,7 +52,8 @@ if os.path.exists(logFileDir) == False:
 
 print("Deploy  Directory = " + deployDir)
 print("LogFile Directory = " + logFileDir)
-initLoggingConfg(logFileDir + "/app.log")
+
+config_root_logger(logFileDir + "/app.log")
 
 logging.info('server_config => %s', server_config)
 
