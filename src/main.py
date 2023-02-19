@@ -8,8 +8,10 @@ from restapis.AboutUsAPI import AboutUsAPI
 from restapis.AddBrokerAPI import AddBrokerAPI
 from restapis.ChangePasswordAPI import ChangePasswordAPI
 from restapis.DashboardAPI import DashboardAPI
+from restapis.EnquireBrokerAPI import EnquireBrokerAPI
 from restapis.HomeAPI import HomeAPI
 from restapis.LogInAPI import LogInAPI
+from restapis.LoginBrokerAPI import LoginBrokerAPI
 from restapis.LogOutAPI import LogOutAPI
 from restapis.MyBrokersAPI import MyBrokersAPI
 from restapis.MyProfileAPI import MyProfileAPI
@@ -25,12 +27,14 @@ app.config['SECRET_KEY'] = 'AMOGH kini'
 
 app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
 app.add_url_rule("/about", view_func=AboutUsAPI.as_view("about_us_api"))
+app.add_url_rule("/broker/add", view_func=AddBrokerAPI.as_view("add_broker_api"))
+app.add_url_rule("/broker/enquire/<broker_id>", view_func=EnquireBrokerAPI.as_view("broker_enquiry_api"))
+app.add_url_rule("/broker/login/<broker_name>/<broker_id>", view_func=LoginBrokerAPI.as_view("login_broker_api"))
+app.add_url_rule("/brokers", view_func=MyBrokersAPI.as_view("my_brokers_api"))
 app.add_url_rule("/change_password", view_func=ChangePasswordAPI.as_view("change_password_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
 app.add_url_rule("/login", view_func=LogInAPI.as_view("login_api"))
 app.add_url_rule("/logout", view_func=LogOutAPI.as_view("logout_api"))
-app.add_url_rule("/broker/add", view_func=AddBrokerAPI.as_view("add_broker_api"))
-app.add_url_rule("/brokers", view_func=MyBrokersAPI.as_view("my_brokers_api"))
 app.add_url_rule("/profile", view_func=MyProfileAPI.as_view("my_profile_api"))
 app.add_url_rule("/reset_password/<token>", view_func=ResetPasswordAPI.as_view("reset_password_api"))
 app.add_url_rule("/reset_password_request", view_func=RequestPassResetAPI.as_view("reset_password_request_api"))
@@ -72,7 +76,9 @@ def before_request():
     g.user = session['user']
 
   g.secret_key = "AMOGH kini"
-
+  
+  # Async method can be written which will be called in before requst method which will fetch the nifty and bank nifty price on each page reload
+  
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

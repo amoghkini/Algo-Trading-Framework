@@ -44,4 +44,7 @@ CREATE TABLE `algo_trader_framework`.`brokers` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `broker_id_UNIQUE` (`broker_id` ASC) VISIBLE);
 
-  
+ALTER TABLE `algo_trader_framework`.`brokers` 
+ADD COLUMN `access_token` VARCHAR(140) NULL AFTER `last_login_date`;
+
+

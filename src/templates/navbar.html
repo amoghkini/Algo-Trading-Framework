@@ -11,6 +11,7 @@
         <div id="navbarCollapse" class="collapse navbar-collapse">
             {% if session['user'] %}
             <ul class="nav navbar-nav">
+                
                 <li class="nav-item">
                     <a href="#" class="nav-link">Marketplace</a>
                 </li>
@@ -22,6 +23,9 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">My Strategies</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">My Portfolio</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Risk Management</a>
@@ -38,10 +42,22 @@
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Miscellaneous</a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
                         <a href="#" class="dropdown-item">Trading Holidays</a>
+                        <a href="#" class="dropdown-item">Black swan days</a>
+                        <a href="#" class="dropdown-item">Black listed stocks</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Stocks</a>
+                </li>
+            </ul>
+            {% endif %}
+            {% if session['user'] %}
+            <ul class="nav navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Nifty</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Bank Nifty</a>
                 </li>
             </ul>
             {% endif %}
@@ -58,6 +74,9 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Holdings</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Funds</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Alerts</a>

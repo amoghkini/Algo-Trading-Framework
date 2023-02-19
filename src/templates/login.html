@@ -2,15 +2,18 @@
 
 {% block content %}
 <br><br><br><br><br><br>
+<div style="float:left;">
+    
+</div>
 <center>
-<div class="content-section-login">
+<div class="content-section-login div-back-color size-modify " >
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <br>
             <legend class="border-bottom mb-4"> Login to Algo Trader</legend>
             <br>
-            <div class="form-group">
+            <div class="form-group-1" >
                 {% if form.email.errors %}
                 {{ form.email(class="form-control form-control-lg is-invalid") }}
                 <div class='invalid-feedback'>
@@ -22,7 +25,7 @@
                 {{ form.email(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <br>
+            <br><br>
             <div class="form-group">
                 {% if form.password.errors %}
                 {{ form.password(class="form-control form-control-lg is-invalid") }}
@@ -39,7 +42,7 @@
         <br>
         <center>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-dark") }}
+                {{ form.submit(class="btn btn-outline-light") }}
             </div>
         </center>
         <br>

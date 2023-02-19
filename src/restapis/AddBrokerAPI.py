@@ -4,7 +4,7 @@ from flask.views import MethodView
 
 from common.BrokerStatus import BrokerStatus
 from database.DatabaseConnection import conn
-from forms.BrokerForm import BrokerForm
+from forms.BrokerForm import BrokerCreateForm
 
 class AddBrokerAPI(MethodView):
 
@@ -12,15 +12,15 @@ class AddBrokerAPI(MethodView):
         if not g.user:
             return redirect(url_for('login_api'))
         
-        form = BrokerForm()
-        return render_template('broker.html',form = form)
+        form = BrokerCreateForm()
+        return render_template('add_broker.html', form=form)
 
 
     def post(self):
         if not g.user:
             return redirect(url_for('login_api'))
         
-        form = BrokerForm()
+        form = BrokerCreateForm()
         
         # check if broker is alrady present in the system
         
@@ -29,7 +29,7 @@ class AddBrokerAPI(MethodView):
         if broker:
             logging.error("The broker with same username already exist in the system.")
             flash("The broker with same username already exist in the system.","danger")
-            return render_template('broker.html', form=form)
+            return render_template('add_broker.html', form=form)
         
         
         # add the new broker into syatem
@@ -43,13 +43,13 @@ class AddBrokerAPI(MethodView):
                 logging.exception("Exception occured while adding new broker.")
                 flash(
                     "Something went wrong while adding the broker. Please retry after sometime.","danger")
-                return render_template('broker.html', form=form)
+                return render_template('add_broker.html', form=form)
             
         except Exception as e:
             logging.exception("Exception occured while adding new broker.")
             flash(
                 "Something went wrong while adding the broker. Please retry after sometime.", "danger")
-            return render_template('broker.html', form=form)
+            return render_template('add_broker.html', form=form)
         
         flash("Broker added successfully. Please test the connection to activate the broker!!!","success")
         return redirect(url_for('my_brokers_api'))

@@ -4,7 +4,7 @@ body {
 }
 
 h1,h2,h3,h4,h5,h6 {
-    color: #444444;
+    color: #ffffff;
 }
 
 .bg-steel {
@@ -89,6 +89,52 @@ a.article-title:hover {
 }
 
 .change-password {
-    padding-inline: 900px 80px;
-    font-size: 1.2rem;
+    padding-inline: 850px 90px;
+    font-size: 1.1rem;
+}
+
+body {
+    background-color: #000000;
+    color: white
+}
+
+a{
+    text-decoration: none;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none;
+}
+
+.size-modify{
+    width: 40%;
+}
+
+.div-back-color{
+    background-color: #00000000;
+    
+    border-color: white;
+    
+}
+
+legend {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    padding: 5px 10px;
+}
+
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+
+    background-color: #000000;
+    color: #acacac;
+
 }

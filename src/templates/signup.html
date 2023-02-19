@@ -2,7 +2,8 @@
 
 {% block content %}
 <br>
-<div class = "content-section">
+<center>
+<div class = "content-section div-back-color size-modify">
     <form method = "POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class = "form-group">
@@ -21,6 +22,7 @@
                 {% else %}
                 {{ form.first_name(class="form-control form-control-lg") }}
                 {% endif %}
+                
             </div>
             <br>
             <div class="form-group">
@@ -109,16 +111,16 @@
         </fieldset>
         <br>
         <center><div class = "form-group">
-            {{ form.submit(class="btn btn-outline-dark") }}    
+            {{ form.submit(class="btn btn-outline-light") }}    
         </div></center>
     </form>
-
+<small class="text-muted">
+    Already Have An Account? <a class="ml-2" href="{{ url_for('login_api') }}">Sign in</class>
+</small>
 </div>
-<div class = "border-top pt3">
-    <small class="text-muted">
-        Already Have An Account? <a class = "ml-2" href = "{{ url_for('login_api') }}">Sign in</class>
-    </small>
+</center>
+    
 
-</div>
+
 
 {% endblock content %}

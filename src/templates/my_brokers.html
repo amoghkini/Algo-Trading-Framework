@@ -2,16 +2,21 @@
 
 {% block content %}
 <br>
-<h3>Brokers list page</h3>
+<h3 style="color:white">My Brokers</h3>
 <br>
 <script>
-    function loginToBroker() {
+    function addBroker() {
         window.location.href =  "/broker/add"
     }
+
+    function loginBroker(brokerID,brokerName) {
+        window.location.href = "/broker/login/"+ brokerName + '/' +brokerID
+        
+        }
 </script>
 <div class="container">
         <div class="col-md-12 bg-light text-right">
-            <button class="btn btn-outline-dark float-end" onClick="loginToBroker()">
+            <button class="btn btn-outline-light float-end" onClick="addBroker()">
                 Add Broker
             </button>
         </div>
@@ -26,15 +31,55 @@
             <th style="text-align:center" scope="col">Broker id</th>
             <th style="text-align:center" scope="col">Broker Name</th>
             <th style="text-align:center" scope="col">Status</th>
+            <th style="text-align:center" scope="col">Test Connection</th>
+            <th style="text-align:center" scope="col">Login</th>
+            <th style="text-align:center" scope="col">API login</th>
+            <th style="text-align:center" scope="col">Auto Login</th>
+            <th style="text-align:center" scope="col">Amend</th>
+            <th style="text-align:center" scope="col">Deactivate</th>
+            <th style="text-align:center" scope="col">Delete</th>
 
         </tr>
     </thead>
     <tbody>
         {% for broker in brokers %}
         <tr>
-            <td style="text-align:center">{{ broker.get('broker_id') }}</td>
+            {% set bId, bName, status = broker.get('broker_id'), broker.get('broker_name'), broker.get('status') %}
+
+            <td style="text-align:center"><a href="{{ url_for('broker_enquiry_api',broker_id = broker.get('broker_id')) }}">{{ bId }}</a></td>
             <td style="text-align:center">{{ broker.get('broker_name') }}</td>
             <td style="text-align:center">{{ broker.get('status') }}</td>
+            <td style="text-align:center"> 
+                <button class="btn btn-outline-light " onClick="loginBroker()">
+                    Test Connection
+                </button> 
+            </td>
+            <td style="text-align:center"> 
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                    {% if status == "Logged in" %}
+                        Re-Login
+                    {% else %}
+                        Login
+                    {% endif %}
+                </button>
+            </td>
+            <td style="text-align:center">{{ broker.get('status') }}</td>
+            <td style="text-align:center">{{ broker.get('status') }}</td>
+            <td style="text-align:center">
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                    Amend
+                </button>
+            </td>
+            <td style="text-align:center">
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                    Deactivate
+                </button>
+            </td>
+            <td style="text-align:center">
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                    Delete
+                </button>
+            </td>
         </tr>
         {% endfor %}
 

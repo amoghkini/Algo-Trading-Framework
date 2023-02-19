@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 <br>
-<div class="content-section">
+<div class="content-section div-back-color">
     <div>
-        <legend class="border-bottom mb-4">Profile 
+        <legend class="border-bottom mb-4">My Profile 
             <small class="change-password">
                 <a href="{{ url_for('change_password_api') }}">Password and security</a>
             </small>
@@ -11,7 +11,7 @@
     </div>
     <form method="POST" action="" enctype="multipart/form-data">
         <center>
-            <div class="media">
+            <div class="media div-back-color">
                 <img class="rounded-circle account-img" src="{{ image_file }}">
                 <div class="form-group">
                     {{ form.picture.label() }}
@@ -75,7 +75,7 @@
         <br>
         <center>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-dark") }}
+                {{ form.submit(class="btn btn-outline-light") }}
             </div>
         </center>
     </form>
