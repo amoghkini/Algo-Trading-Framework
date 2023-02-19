@@ -9,8 +9,11 @@
         window.location.href =  "/broker/add"
     }
 
-    function loginBroker(brokerID,brokerName) {
-        window.location.href = "/broker/login/"+ brokerName + '/' +brokerID
+    function loginBroker(brokerID,brokerName,loginMethod) {
+        console.log(brokerID)
+        console.log(brokerName)
+        console.log(loginMethod)
+        window.location.href = "/broker/login/"+ loginMethod + '/' + brokerName + '/' +brokerID
         
         }
 </script>
@@ -32,8 +35,7 @@
             <th style="text-align:center" scope="col">Broker Name</th>
             <th style="text-align:center" scope="col">Status</th>
             <th style="text-align:center" scope="col">Test Connection</th>
-            <th style="text-align:center" scope="col">Login</th>
-            <th style="text-align:center" scope="col">API login</th>
+            <th style="text-align:center" scope="col">Login Status</th>
             <th style="text-align:center" scope="col">Auto Login</th>
             <th style="text-align:center" scope="col">Amend</th>
             <th style="text-align:center" scope="col">Deactivate</th>
@@ -55,28 +57,41 @@
                 </button> 
             </td>
             <td style="text-align:center"> 
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
-                    {% if status == "Logged in" %}
-                        Re-Login
-                    {% else %}
+                {% if status == "Logged in" %}
+                    <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
+                        Log out
+                    </button>
+                {% else %}
+                    <!--button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
                         Login
-                    {% endif %}
-                </button>
+                    </button-->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Login
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')" >With Credentials</a></li>
+                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#">With API</a></li>
+                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#">With Encryption Token</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+                
             </td>
-            <td style="text-align:center">{{ broker.get('status') }}</td>
-            <td style="text-align:center">{{ broker.get('status') }}</td>
+            <td style="text-align:center">{{ broker.get('status') }} </td>
             <td style="text-align:center">
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
                     Amend
                 </button>
             </td>
             <td style="text-align:center">
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
                     Deactivate
                 </button>
             </td>
             <td style="text-align:center">
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
+                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
                     Delete
                 </button>
             </td>
@@ -86,4 +101,6 @@
     </tbody>
 </table>
 
+
 {% endblock content %}
+

@@ -9,17 +9,17 @@ from loginmanagement.kiteext import KiteExt
 
 class LoginBrokerAPI(MethodView):
 
-    def get(self,broker_name, broker_id):
+    def get(self, method, broker_name, broker_id):
         broker = conn.getOne(
             "brokers", ["id", "broker_id", "user_name","password", "totp_key"], ("broker_id = %s", [broker_id]))
         if not broker:
-            logging.error("The broker is not registered in the system.")
-            flash("The broker with same username already exist in the system.", "danger")
+            logging.error("The broker is not registered in the system or credentials are invalid.")
+            flash("The broker is not registered in the system or credentials are invalid.", "danger")
             return redirect(url_for('my_brokers_api'))
-
+        
         try:
-            if broker_name == 'Zerodha':
-
+            if (broker_name == 'Zerodha') and (method == 'creds') :
+                
                 global kite
                 global access_token
                 kite = KiteExt()
@@ -42,15 +42,15 @@ class LoginBrokerAPI(MethodView):
                 logging.info("Access token written successfully!!!")
                 conn.commit()
             else:
-                logging.exception("Exception occured while writing the access token", e)
-                flash("Something went wrong while generating access token", "danger")
+                logging.exception("Exception occured while writing the access token %s", e)
+                flash("Something went wrong while writing access token", "danger")
                 return redirect(url_for('my_brokers_api'))
                 
 
                 
             flash("Logged in to the broker successfully", "success")
         except Exception as e:
-            logging.exception("Exception occured while logging to the broker",e)
+            logging.exception("Exception occured while logging to the broker %s",e)
             flash("Something went wrong during broker login","danger")
         return redirect(url_for('my_brokers_api'))
         #return 'amogh is here with login method ' + broker_name + broker_id

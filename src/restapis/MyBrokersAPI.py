@@ -11,9 +11,9 @@ class MyBrokersAPI(MethodView):
         
         brokers = conn.getAll(
             "brokers", ["broker_id", "broker_name","status"], ("user_name = %s", [g.user]))
+        
         if brokers == None:
             flash("No brokers attached!!!", "info")
-        
         
         return render_template('my_brokers.html',brokers = brokers)
     
