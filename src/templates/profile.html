@@ -44,6 +44,20 @@
                 {% endif %}
             </div>
             <div class="form-group">
+                {{ form.middle_name.label(class="form-control-label") }}
+            
+                {% if form.middle_name.errors %}
+                {{ form.middle_name(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.middle_name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.middle_name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
                 {{ form.last_name.label(class="form-control-label") }}
 
                 {% if form.last_name.errors %}
@@ -70,7 +84,48 @@
                 {{ form.email(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <div class="form-group">
+                {{ form.address1.label(class="form-control-label") }}
             
+                {% if form.address1.errors %}
+                {{ form.address1(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.address1.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.address1(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.address2.label(class="form-control-label") }}
+            
+                {% if form.address2.errors %}
+                {{ form.address2(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.address2.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.address2(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.address3.label(class="form-control-label") }}
+            
+                {% if form.address3.errors %}
+                {{ form.address3(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.address3.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.address3(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
         </fieldset>
         <br>
         <center>
