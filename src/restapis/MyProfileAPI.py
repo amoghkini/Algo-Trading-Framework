@@ -21,6 +21,7 @@ class MyProfileAPI(MethodView):
             form.address1.data = user.get('address1')
             form.address2.data = user.get('address2')
             form.address3.data = user.get('address3')
+            form.telegram_bot_api_key.data = user.get('telegram_bot_api_key')
         else:
             flash("Something went wrong. Please wait for sometime before retry!!!","danger")
         
@@ -54,7 +55,8 @@ class MyProfileAPI(MethodView):
         data_to_update = {"address1": form.address1.data,
                           "address2": form.address2.data,
                           "address3": form.address3.data,
-                          "middle_name": form.middle_name.data}
+                          "middle_name": form.middle_name.data,
+                          "telegram_bot_api_key": form.telegram_bot_api_key.data}
         
         if len(data_to_update) > 0:
             result = User.update_user_data(g.user,data_to_update)

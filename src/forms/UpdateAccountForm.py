@@ -14,6 +14,7 @@ class UpdateAccountForm(FlaskForm):
     address1 = StringField('Address line 1', validators=[ DataRequired(), Length(min=2, max=40)])
     address2 = StringField('Address line 2', validators=[ DataRequired(), Length(min=2, max=40)])
     address3 = StringField('Address line 3', validators=[ DataRequired(), Length(min=2, max=40)])
+    telegram_bot_api_key = StringField('Telegram bot API Key', validators=[DataRequired(), Length(min=2, max=100)])
     submit = SubmitField('Update Details')
 
     '''
