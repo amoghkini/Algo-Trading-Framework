@@ -100,9 +100,48 @@ class User:
     
     @staticmethod
     def generate_user_name(first_name,last_name):
+        '''
         username = first_name[:5].lower() + '_' + first_name[0].lower() + last_name[0].lower()
         if len(username) > 8:
             username = username[:8]
+            
+        '''
+        # Generate the initial username
+        username = f"{first_name[:5]}_{first_name[0]}{last_name[0]}".lower()
+        
+        # Check if the initial username already exists
+        username_exists = User.fetch_one_user_by_username(username)
+        
+        # If the username already exists, modify it
+        if username_exists:
+            last_name_index = 1
+            while username_exists:
+                # If all characters of last name are used and the username still exists, reset the last name index and try using next character of first name
+                if last_name_index >= len(last_name):
+                    last_name_index = 0
+                    first_name_index = len(username) - 2
+                    # If all characters of first name are also used, append count to the end of username
+                    if first_name_index >= len(first_name):
+                        count = 1
+                        while True:
+                            if count > 99:
+                                raise ValueError(
+                                    "Could not find a unique username.")
+                            if count < 10:
+                                modified_username = f"{username[:-1]}{count}"
+                            else:
+                                modified_username = f"{username[:-2]}{count}"
+                            if not User.fetch_one_user_by_username(modified_username):
+                                return modified_username
+                            count += 1
+                    else:
+                        username = f"{username[:6]}{first_name[first_name_index]}{last_name[0]}"
+                        first_name_index += 1
+                else:
+                    username = f"{username[:7]}{last_name[last_name_index]}"
+                    last_name_index += 1
+                username_exists = User.fetch_one_user_by_username(username)
+    
         return username
     
     @staticmethod
