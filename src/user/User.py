@@ -115,11 +115,13 @@ class User:
         # If the username already exists, modify it
         if username_exists:
             last_name_index = 1
+            first_name_index = 0
             while username_exists:
                 # If all characters of last name are used and the username still exists, reset the last name index and try using next character of first name
                 if last_name_index >= len(last_name):
                     last_name_index = 0
-                    first_name_index = len(username) - 2
+                    first_name_index += 1
+                    
                     # If all characters of first name are also used, append count to the end of username
                     if first_name_index >= len(first_name):
                         count = 1
