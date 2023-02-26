@@ -180,6 +180,19 @@ class User:
 
     @staticmethod
     def check_if_invalid_email(email):
+        """Checks if the given email address is invalid.
+
+        This function uses regular expressions to check if the given email address
+        is valid or not. It returns 0 if the email address is valid, and 1 if it
+        is invalid.
+
+        Args:
+            email (str): The email address to check.
+
+        Returns:
+            int: 0 if the email address is valid, 1 if it is invalid.
+        """
+        
         #refer:https://www.w3schools.com/python/python_regex.asp for regex syntax
         # https://docs.python.org/2/library/re.html
         
@@ -222,6 +235,23 @@ class User:
     
     @staticmethod
     def generate_user_name(first_name,last_name):
+        """Generates a unique username based on the given first and last names.
+
+        This function generates a username by concatenating the first 5 characters of the
+        first name (lowercased), an underscore, and the first character of the last name
+        (lowercased). If the resulting username is longer than 8 characters, it is truncated
+        to 8 characters. If the username already exists in the database, the function modifies
+        it by appending characters from the first and last names or a count at the end until
+        it finds a unique username.
+
+        Args:
+            first_name (str): The first name of the user.
+            last_name (str): The last name of the user.
+
+        Returns:
+            str: A unique username based on the given first and last names.
+        """
+    
         '''
         username = first_name[:5].lower() + '_' + first_name[0].lower() + last_name[0].lower()
         if len(username) > 8:
@@ -284,6 +314,19 @@ class User:
 
     @staticmethod
     def make_user_password_hash(password):
+        """Creates a secure hash of the given password.
+
+        This function takes a password as input and uses the sha256_crypt algorithm
+        to create a secure hash of the password. The resulting hash can be stored
+        in a database to verify the password later.
+
+        Args:
+            password (str): The plain-text password to hash.
+
+        Returns:
+            str: The secure hash of the password.
+        """
+        
         secure_password = sha256_crypt.encrypt(str(password))
         return secure_password
     
