@@ -13,6 +13,32 @@ class User:
     
     @staticmethod
     def add_new_user(user_data):
+        """
+        Adds a new user to the 'users' database table with the given user data.
+
+        Args:
+            user_data (dict): A dictionary containing the data for the new user.
+                The dictionary should have the following keys:
+                - 'first_name' (str): The first name of the user.
+                - 'last_name' (str): The last name of the user.
+                - 'email_id' (str): The email address of the user.
+                - 'password' (str): The password of the user.
+
+        Returns:
+            bool: True if the new user was successfully added to the database, False otherwise.
+
+        Raises:
+            Exception: If there was an error while adding the new user to the database.
+
+        Example usage:
+            user_data = {'first_name': 'John Doe', 'email_id': 'johndoe@example.com', 'password': 'Password@123'}
+            added = add_new_user(user_data)
+            if added:
+                print("New user added successfully!")
+            else:
+                print("Failed to add new user.")
+        """
+        
         print(user_data)
         try:
             conn.insert("users", user_data)
@@ -24,6 +50,31 @@ class User:
 
     @staticmethod
     def fetch_one_user(email):
+        """
+        Fetches the user data for a given email from the 'users' database table.
+
+        Args:
+            email (str): The email address of the user to fetch.
+
+        Returns:
+            dict: A dictionary containing the user data for the given email.
+                The dictionary has the following keys:
+                - 'id' (int): The unique identifier of the user.
+                - 'email_id' (str): The email address of the user.
+                - 'password' (str): The password of the user.
+                - 'user_name' (str): The name of the user.
+
+                If no user is found with the given email, None is returned.
+
+        Example usage:
+            user_email = 'johndoe@example.com'
+            user_data = fetch_one_user(user_email)
+            if user_data:
+                print(f"User with email '{user_email}' found. User data: {user_data}")
+            else:
+                print(f"No user found with email '{user_email}'.")
+        """
+        
         user = conn.getOne("users", ["id", "email_id", "password", "user_name"], ("email_id = %s", [email]))
         if user:
             return user
@@ -32,6 +83,31 @@ class User:
     
     @staticmethod        
     def fetch_one_user_by_username(username):
+        """
+        Fetches the user data for a given username from the 'users' database table.
+
+        Args:
+            username (str): The username of the user to fetch.
+
+        Returns:
+            dict: A dictionary containing the user data for the given username.
+                The dictionary has the following keys:
+                - 'id' (int): The unique identifier of the user.
+                - 'email_id' (str): The email address of the user.
+                - 'password' (str): The password of the user.
+                - 'user_name' (str): The username of the user.
+
+                If no user is found with the given username, None is returned.
+
+        Example usage:
+            username = 'johndoe'
+            user_data = fetch_one_user_by_username(username)
+            if user_data:
+                print(f"User with username '{username}' found. User data: {user_data}")
+            else:
+                print(f"No user found with username '{username}'.")
+        """
+        
         user = conn.getOne("users", '*', ("user_name = %s", [username]))
         if user:
             return user
@@ -40,6 +116,24 @@ class User:
         
     @staticmethod
     def check_if_user_is_already_registered(email):
+        """
+        Checks if a user with a given email address is already registered in the 'users' database table.
+
+        Args:
+            email (str): The email address to check.
+
+        Returns:
+            int: Returns 1 if a user with the given email address is already registered, 0 otherwise.
+
+        Example usage:
+            user_email = 'johndoe@example.com'
+            is_registered = check_if_user_is_already_registered(user_email)
+            if is_registered:
+                print(f"User with email '{user_email}' is already registered.")
+            else:
+                print(f"No user found with email '{user_email}'.")
+        """
+        
         user = conn.getOne("users", ["email_id"], ("email_id = %s", [email]))
         print("User", user)
         if user:
@@ -48,6 +142,34 @@ class User:
 
     @staticmethod
     def validate_user_login(user, email, password):
+        """
+        Validates a user's login credentials against the provided email and password.
+
+        Args:
+            user (dict): A dictionary containing the user data for the provided email.
+                The dictionary has the following keys:
+                - 'email_id' (str): The email address of the user.
+                - 'password' (str): The hashed password of the user.
+
+            email (str): The email address provided by the user during login.
+
+            password (str): The password provided by the user during login.
+
+        Returns:
+            int: Returns 1 if the provided email and password match the user's credentials, 0 otherwise.
+
+        Example usage:
+            user_data = {'email_id': 'johndoe@example.com',
+                'password': '$5$rounds=535000$.T1yH0FOevOuslGm$JBm63lRcgDEmET0QCVzs9iAIzJjKk4ENe1q3q8/CswB'}
+            email = 'johndoe@example.com'
+            password = 'mypassword'
+            is_valid = validate_user_login(user_data, email, password)
+            if is_valid:
+                print(f"User with email '{email}' logged in successfully.")
+            else:
+                print("Invalid email or password.")
+        """
+    
         print("Result", user)
         if (user.get('email_id') == email) and (sha256_crypt.verify(password, user.get('password'))):
             print("Logged in successfully!!!")
