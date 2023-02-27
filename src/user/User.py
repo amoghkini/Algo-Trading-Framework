@@ -339,6 +339,20 @@ class User:
         
     @staticmethod
     def update_user_data(username,fields_to_update):
+        """
+        Update the user data in the 'users' table with the given fields for the specified user.
+
+        Args:
+            username (str): The username of the user to update.
+            fields_to_update (dict): A dictionary containing the fields to update and their new values.
+
+        Returns:
+            user (dict): A dictionary containing the updated user data if the update was successful, None otherwise.
+
+        Raises:
+            None.
+        """
+        
         print("Fields",fields_to_update)
         user = conn.update("users", fields_to_update, ("user_name=%s", (username,))) 
         print("User",user)
@@ -351,6 +365,18 @@ class User:
     
     @staticmethod
     def save_picture(form_picture):
+        """
+        Save the profile picture uploaded by the user to the 'static/profile_pic' directory.
+
+        Args:
+            form_picture: A file object containing the image data.
+
+        Returns:
+            picture_fn (str): The filename of the saved image.
+
+        Raises:
+            None.
+        """
         random_hex = secrets.token_hex(8)
         print("Form picture",form_picture)
         _, f_ext = os.path.splitext(form_picture.filename)
