@@ -300,11 +300,41 @@ class User:
     
     @staticmethod
     def get_reset_token(user_id, secret_key, epires_sec = 1800):
+        """
+        Generates a time-limited token for resetting the password of a user.
+
+        Args:
+            user_id (str): The unique identifier of the user requesting a password reset.
+            secret_key (str): A secret key used for generating the token. This should be kept secure.
+            expires_sec (int, optional): The expiration time for the token, in seconds. Defaults to 1800 seconds (30 minutes).
+
+        Returns:
+            str: The generated reset token as a string.
+
+        Raises:
+            None.
+        """
+        
         s = Serializer(secret_key, epires_sec) # need to figure out how to pass secret key. It can be from config file or env.# need to figure out how to pass secret key. It can be from config file or env.
         return s.dumps({'user_id':user_id}).decode('utf-8') 
     
     @staticmethod
     def decode_reset_token(token, secret_key):
+        """
+        Decodes a reset token to retrieve the user ID of the associated user.
+
+        Args:
+            token (str): The reset token to decode.
+            secret_key (str): The secret key used for generating the token.
+
+        Returns:
+            Union[str, None]: If decoding the token is successful, the user ID associated with the token is returned as a string.
+            If decoding the token fails, None is returned.
+
+        Raises:
+            None.
+        """
+        
         s = Serializer(secret_key)
         try:
             user_id = s.loads(token)['user_id']
