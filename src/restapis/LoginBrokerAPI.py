@@ -1,56 +1,97 @@
 import logging
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request, g
 from flask.views import MethodView
 
-
+from brokers.Broker import Broker
+from core.Controller import Controller
 from common.BrokerStatus import BrokerStatus
 from database.DatabaseConnection import conn
-from loginmanagement.kiteext import KiteExt
+from forms.BrokerForm import BrokerLoginForm
 
-class LoginBrokerAPI(MethodView):
+from werkzeug.datastructures import MultiDict
 
-    def get(self, method, broker_name, broker_id):
+class LogInBrokerAPI(MethodView):
+        
+    def get(self):
+        if not g.user:
+            return redirect(url_for('login_api'))
+        
+        if 'brokerName' in request.args:
+            broker_data = self.get_broker_data(request.args.get('brokerName'))
+            
+            login_method = request.args.get('loginMethod')
+            form = BrokerLoginForm()  
+            form.broker_name.data = broker_data.get('broker_name')
+            form.broker_id.data = broker_data.get('broker_id')   
+            form.totp_key.data = broker_data.get('totp_key')   
+            form.login_method.data = login_method
+            request.args = None
+            #redirect_url = url_for('login_broker_api')
+            #print(redirect_url,"Redirect url")
+            return render_template('login_broker.html', form=form, login_method=login_method)
+        else:
+            return redirect(url_for('my_brokers_api'))
+    
+    def post(self):
+        
+        print(request.args)
+        print(request.form)
+
+        if not g.user:
+            return redirect(url_for('login_api'))
+        
+        #r_stat ={"redirect": "/brokers"}
+        #r_stat = {"status": "error",
+        #          "message": "Something went wrong during broker login. Please try different method"}
+        
+        
+        login_method = request.form.get('data[loginMethod]')
+        
+        if  login_method:
+            broker_values = {"broker_id": request.form.get('data[brokerID]'),
+                             "broker_name": request.form.get('data[brokerName]'),
+                             "login_method": login_method 
+            }
+        else:    
+            broker_values = {"broker_id": request.form.get('broker_id'),
+                            "password": request.form.get('password'),
+                            "broker_name": request.form.get('broker_name'),
+                            "login_method": request.form.get('login_method'),
+                            "encryption_token": request.form.get('enc_token'),
+                            "app_key" : request.form.get('app_key'),
+                            "app_secret": request.form.get('app_secret'),
+                            "totp_key": request.form.get('totp_key')
+            }
+            
+        broker_data = self.get_broker_data(broker_values.get('broker_id'))
+        
+        print("Broker values",broker_values)
+        
+        redirectUrl = Controller.handleBrokerLogin(request.args, broker_values)
+
+        if redirectUrl:
+            r_stat = {"redirect": redirectUrl,
+                    "broker_id": request.form.get('data[brokerID]'),
+                    "login_method": login_method}
+            return r_stat
+        else:
+            fields_to_update = {"access_token": "access_token",
+                                "status": BrokerStatus.LOGGED_IN}
+
+            status = conn.update("brokers", fields_to_update,
+                                 ("broker_id=%s", (broker_values.get('broker_id'),)))
+            print("status",status)
+            if status:
+                conn.commit()
+            flash("Broker logged in successfully!!!","success")
+            return redirect(url_for('my_brokers_api'))
+
+
+    def get_broker_data(self, broker_id):
         broker = conn.getOne(
-            "brokers", ["id", "broker_id", "user_name","password", "totp_key"], ("broker_id = %s", [broker_id]))
+            "brokers", ["id", "broker_id", "user_name", "broker_name", "password", "totp_key"], ("broker_id = %s", [broker_id]))
         if not broker:
             logging.error("The broker is not registered in the system or credentials are invalid.")
             flash("The broker is not registered in the system or credentials are invalid.", "danger")
             return redirect(url_for('my_brokers_api'))
-        
-        try:
-            if (broker_name == 'Zerodha') and (method == 'creds') :
-                
-                global kite
-                global access_token
-                kite = KiteExt()
-                kite.login_with_credentials(broker_id, broker.get('password'), broker.get('totp_key'))
-                logging.info(kite.profile())
-                access_token = kite.enctoken+"&user_id="+kite.user_id
-                logging.info('access token = %s', access_token)
-                logging.info('Login successful. access token = %s', access_token)
-                print(access_token)
-        
-            #elif broker_name == 'Upstox':
-            #    pass
-            
-            fields_to_update =  {"access_token":access_token,
-                                    "status": BrokerStatus.LOGGED_IN}
-            
-            status = conn.update("brokers", fields_to_update,
-                                ("broker_id=%s", (broker_id,)))
-            if status:
-                logging.info("Access token written successfully!!!")
-                conn.commit()
-            else:
-                logging.exception("Exception occured while writing the access token %s", e)
-                flash("Something went wrong while writing access token", "danger")
-                return redirect(url_for('my_brokers_api'))
-                
-
-                
-            flash("Logged in to the broker successfully", "success")
-        except Exception as e:
-            logging.exception("Exception occured while logging to the broker %s",e)
-            flash("Something went wrong during broker login","danger")
-        return redirect(url_for('my_brokers_api'))
-        #return 'amogh is here with login method ' + broker_name + broker_id
+        return broker

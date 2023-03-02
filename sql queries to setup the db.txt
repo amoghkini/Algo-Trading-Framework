@@ -47,4 +47,7 @@ CREATE TABLE `algo_trader_framework`.`brokers` (
 ALTER TABLE `algo_trader_framework`.`brokers` 
 ADD COLUMN `access_token` VARCHAR(140) NULL AFTER `last_login_date`;
 
+ALTER TABLE `algo_trader_framework`.`brokers` 
+ADD COLUMN `app_key` VARCHAR(140) NULL AFTER `last_login_date`,
+ADD COLUMN `secret_key` VARCHAR(140) NULL AFTER `app_key`;
 

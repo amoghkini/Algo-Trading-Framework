@@ -1,0 +1,11 @@
+1. Sort out all the issues with the broker login
+    We will mimic the zerodha api broker login flow in our system. We will redirect user to the login page (custom) and user can login the broker from here.
+    The login broker html page contains the form. We will pass the query parameters to the url (in the post method) so that we will be able to pass the userflow in the args parameter.
+    Consider the way to handle all 4 login methods 
+    handleBrokerLogin method from controller.py file should read the data from db instead of file. Make sure to handle this thing on priority.
+
+2. Start and stop algo functinoality should be implemented via ajax call
+3. Once coding for above 2 points is completed then restructure the entire project. The broker add code should be moved to broker.py file.
+    Every method should send the appropriate status and error message as we are writing code in multiple files.
+4. Trade manager and strategies implementation.
+5. Execution engine which contains the trade manager and trade executor

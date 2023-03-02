@@ -13,3 +13,7 @@ def get_system_config():
     return json_system_data
 
 
+def getBrokerAppConfig():
+  with open('../config/brokerapp.json', 'r') as brokerapp:
+    jsonUserData = json.load(brokerapp)
+    return jsonUserData

@@ -6,4 +6,4 @@ class LogOutAPI(MethodView):
     def get(self):
         print("Inside get method")
         session.pop('user',None)
-        return redirect(url_for('home_api'))
+        return redirect(url_for('my_brokers_api'))

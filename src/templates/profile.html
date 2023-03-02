@@ -130,14 +130,14 @@
                 {{ form.telegram_bot_api_key.label(class="form-control-label") }}
             
                 {% if form.telegram_bot_api_key.errors %}
-                {{ form.telegram_bot_api_key(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.telegram_bot_api_key.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
+                    {{ form.telegram_bot_api_key(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.telegram_bot_api_key.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
                 {% else %}
-                {{ form.telegram_bot_api_key(class="form-control form-control-lg") }}
+                    {{ form.telegram_bot_api_key(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </fieldset>

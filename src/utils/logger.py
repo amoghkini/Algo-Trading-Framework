@@ -35,3 +35,10 @@ def config_root_logger(log_file):
             }
         }
     })
+    
+    '''
+    # Can be used as backup if above code fails
+    def initLoggingConfig():
+        format = "%(asctime)s: %(message)s"
+        logging.basicConfig(format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+    '''

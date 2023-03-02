@@ -1,3 +1,5 @@
+#Reference: https: // gitlab.com/algo2t/kiteext
+
 import json
 import pyotp
 import logging
@@ -8,6 +10,7 @@ import kiteconnect.exceptions as ex
 #from six.moves.urllib.parse import urljoin
 from urllib.parse import urljoin
 from kiteconnect import KiteConnect, KiteTicker
+from flask import url_for
 
 log = logging.getLogger(__name__)
 
@@ -201,3 +204,7 @@ class KiteExt(KiteConnect):
                     content_type=r.headers["content-type"], content=r.content
                 )
             )
+
+    def login_url(self):
+        """Get the remote login url to which a user should be redirected to initiate the login flow."""
+        return f'''{url_for('login_broker_api', _external=True)}'''

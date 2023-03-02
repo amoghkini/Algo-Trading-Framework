@@ -18,15 +18,33 @@
         text-align: center;
     }
 </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    function loginToBroker() {
-        window.location.href = "/broker/login"
+    function startAlgo() {
+        var url = "{{ url_for('start_algo_api')}}"
+        var data = {};
+        $.post(url, {},
+            function (data, status, xhr) {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert('status: ' + status + ', data: ' + JSON.stringify(data));
+                }
+            },
+            'json'
+        );
     }
 </script>
+
 <h1 style="color: blue" class="center">Welcome to algo trading in python</h1>
 <div class="center">
     <button class="button" onClick="loginToBroker()">
         Login to Broker
     </button>
 </div>
+
+<button class="btn btn-outline-light " onClick="startAlgo()">
+    Start Algo
+</button>
 {% endblock content %}

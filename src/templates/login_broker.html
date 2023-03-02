@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+<div class="content-section div-back-color">
+    <form method="POST" action="/broker/login?loginRequired=True">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <center>
+                <legend class="border-bottom mb-4">Login Broker</legend>
+            </center>
+            <div class="form-group">
+                {{ form.broker_name.label(class="form-control-label") }}
+                {% if form.broker_name.errors %}
+                {{ form.broker_name(class="form-control form-control-lg is-invalid" ) }}
+                <div class='invalid-feedback'>
+                    {% for error in form.broker_name.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.broker_name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.broker_id.label(class="form-control-label") }}
+                {% if form.broker_id.errors %}
+                {{ form.broker_id(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.broker_id.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.broker_id(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.password.label(class="form-control-label") }}
+                {% if form.password.errors %}
+                {{ form.password(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.password.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.password(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+            {% if login_method == 'creds_with_enc_token' %}
+                <div class="form-group">
+                    {{ form.enc_token.label(class="form-control-label") }}
+                    {% if form.enc_token.errors %}
+                    {{ form.enc_token(class="form-control form-control-lg is-invalid") }}
+                    <div class='invalid-feedback'>
+                        {% for error in form.enc_token.errors %}
+                        <span> {{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.enc_token(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <br>
+            {% endif %}
+            <div class="form-group">
+                {% if form.login_method.errors %}
+                {{ form.login_method(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.login_method.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {{ form.login_method(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.totp_key.label(class="form-control-label") }}
+                {% if form.totp_key.errors %}
+                {{ form.totp_key(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.totp_key.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.totp_key(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+        </fieldset>
+        <br>
+        <center>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-light") }}
+            </div>
+        </center>
+    </form>
+</div>
+
+
+{% endblock content %}

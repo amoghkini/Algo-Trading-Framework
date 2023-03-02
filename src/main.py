@@ -11,13 +11,15 @@ from restapis.DashboardAPI import DashboardAPI
 from restapis.EnquireBrokerAPI import EnquireBrokerAPI
 from restapis.HomeAPI import HomeAPI
 from restapis.LogInAPI import LogInAPI
-from restapis.LoginBrokerAPI import LoginBrokerAPI
+from restapis.LogInBrokerAPI import LogInBrokerAPI
+from restapis.LogOutBrokerAPI import LogOutBrokerAPI
 from restapis.LogOutAPI import LogOutAPI
 from restapis.MyBrokersAPI import MyBrokersAPI
 from restapis.MyProfileAPI import MyProfileAPI
 from restapis.RequestPassResetAPI import RequestPassResetAPI
 from restapis.ResetPasswordAPI import ResetPasswordAPI
 from restapis.SignUpAPI import SignUpAPI
+from restapis.StartAlgoAPI import StartAlgoAPI
 from utils.logger import config_root_logger
 
 app = Flask(__name__)
@@ -27,9 +29,11 @@ app.config['SECRET_KEY'] = 'AMOGH kini'
 
 app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
 app.add_url_rule("/about", view_func=AboutUsAPI.as_view("about_us_api"))
+app.add_url_rule("/algo/start", view_func=StartAlgoAPI.as_view("start_algo_api"))
 app.add_url_rule("/broker/add", view_func=AddBrokerAPI.as_view("add_broker_api"))
 app.add_url_rule("/broker/enquire/<broker_id>", view_func=EnquireBrokerAPI.as_view("broker_enquiry_api"))
-app.add_url_rule("/broker/login/<method>/<broker_name>/<broker_id>", view_func=LoginBrokerAPI.as_view("login_broker_api"))
+app.add_url_rule("/broker/login", view_func=LogInBrokerAPI.as_view("login_broker_api"))
+app.add_url_rule("/broker/logout", view_func=LogOutBrokerAPI.as_view("logout_broker_api"))
 app.add_url_rule("/brokers", view_func=MyBrokersAPI.as_view("my_brokers_api"))
 app.add_url_rule("/change_password", view_func=ChangePasswordAPI.as_view("change_password_api"))
 app.add_url_rule("/dashboard", view_func=DashboardAPI.as_view("dashboard_api"))
@@ -69,16 +73,17 @@ port = server_config.get('port')
 def before_request():
   session.permanent = True  # set session to use PERMANENT_SESSION_LIFETIME
   session.modified = True   # reset the session timer on every request
-  app.permanent_session_lifetime = timedelta(minutes=10)
+  app.permanent_session_lifetime = timedelta(minutes=60)
 
   g.user = None
   if 'user' in session:
     g.user = session['user']
 
-  g.secret_key = "AMOGH kini"
+  g.secret_key = "Amogh kini"
   
   # Async method can be written which will be called in before requst method which will fetch the nifty and bank nifty price on each page reload
-  
+
+    
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

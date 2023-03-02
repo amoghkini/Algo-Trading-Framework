@@ -9,12 +9,28 @@
         window.location.href =  "/broker/add"
     }
 
-    function loginBroker(brokerID,brokerName,loginMethod) {
-        console.log(brokerID)
-        console.log(brokerName)
-        console.log(loginMethod)
-        window.location.href = "/broker/login/"+ loginMethod + '/' + brokerName + '/' +brokerID
-        
+    function logoutBroker(brokerID) {
+            window.location.href = "/broker/logout" + "?brokerID="  + brokerID
+        }
+
+    function loginBroker(brokerID, brokerName, loginMethod) {
+            var url = "{{ url_for('login_broker_api')}}"
+            var data = {"brokerID": brokerID ,
+                        "brokerName": brokerName,
+                        "loginMethod" : loginMethod
+        };
+            $.post(url, {data:data},
+                function (data, status, xhr) {
+                    console.log(data.redirect)
+                    if (data.redirect) {
+                        console.log("Amogh",data)
+                        window.location.href = data.redirect + "?brokerName="+data.broker_id + "&loginMethod=" + data.login_method;
+                    } else {
+                        alert(JSON.stringify(data));
+                    }
+                },
+                'json'
+            );
         }
 </script>
 <div class="container">
@@ -58,23 +74,19 @@
             </td>
             <td style="text-align:center"> 
                 {% if status == "Logged in" %}
-                    <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
+                    <button class="btn btn-outline-light " onClick="logoutBroker('{{bId}}')">
                         Log out
                     </button>
                 {% else %}
-                    <!--button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}')">
-                        Login
-                    </button-->
                     <div class="dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             Login
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')" >With Credentials</a></li>
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#">With API</a></li>
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#">With API Without Saved Credentials</a></li>
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#">With Encryption Token</a></li>
+                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'api_with_broker_portal')">With API and Brokers Portal</a></li>
+                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds_with_enc_token')">Without API and With Encryption Token</a></li>
+                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds_without_enc_token')">Without API and Without Credentials</a></li>
                         </ul>
                     </div>
                 {% endif %}
