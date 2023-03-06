@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask import url_for, flash
 import json
 import logging
 import threading
@@ -12,9 +13,13 @@ class StartAlgoAPI(MethodView):
     x = threading.Thread(target=Algo.startAlgo)
     x.start()
     
+    '''
     systemConfig = get_system_config()
     homeUrl = systemConfig['homeUrl'] + '?algoStarted=true'
     logging.info('Sending redirect url %s in response', homeUrl)
     respData = { 'redirect': homeUrl }
+    '''
+    flash("Algo started successfully!!!","success")
+    respData = {'redirect' : url_for('dashboard_api')}
     return json.dumps(respData)
   
