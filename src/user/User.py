@@ -220,15 +220,34 @@ class User:
     
     @staticmethod
     def validate_pass_and_confirm_pass(password: str, confirm_password: str):
+        """Validate if two password strings match.
+    
+        Args:
+            password (str): The first password string to compare.
+            confirm_password (str): The second password string to compare.
+            
+        Returns:
+            int: 0 if the two password strings match, 1 otherwise.
+        """
+        
         if password == confirm_password:
             return 0
         return 1
 
     @staticmethod
     def validate_if_new_password_is_same_as_old(old_password: str, new_password:str):
-        '''
-        This method checks if old and new passwords are same. This method internally calls validate_pass_and_confirm_pass for code reusability.
-        '''
+        """Validate if the new password is the same as the old password.
+
+        This method internally calls the `validate_pass_and_confirm_pass` method for code reusability.
+
+        Args:
+            old_password (str): The old password to compare.
+            new_password (str): The new password to compare.
+
+        Returns:
+            int: 0 if the new password is different from the old password, 1 otherwise.
+        """
+        
         return User.validate_pass_and_confirm_pass(old_password, new_password)
  
     
