@@ -7,7 +7,13 @@ def config_root_logger(log_file):
 
     
     formatter = "%(asctime)-15s" \
-                "| %(levelname)-5s" \
+                "| %(levelname)-s " \
+                "| %(process)s " \
+                "| %(thread)s " \
+                "| %(filename)s " \
+                "| %(funcName)s " \
+                "| %(lineno)d " \
+                "| %(name)-s " \
                 "| %(message)s"
 
     logging.config.dictConfig({
