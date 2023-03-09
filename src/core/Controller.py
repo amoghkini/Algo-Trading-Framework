@@ -19,18 +19,18 @@ class Controller:
     brokerAppDetails.setAppSecret(broker_values.get('broker_id'))
     
     logging.info('handleBrokerLogin appKey %s', brokerAppDetails.appKey)
-    
+    Controller.brokerName = brokerAppDetails.broker
     try:
       if broker_values.get('login_method') == LoginMethods.API_WITH_BROKER_PORTAL:
-        if brokerAppDetails.broker == Brokers.ZERODHA:
+        if Controller.brokerName == Brokers.ZERODHA:
           Controller.brokerLogin = ZerodhaLogin(brokerAppDetails)
       
       elif broker_values.get('login_method') in (LoginMethods.CREDS_WITH_ENC_TOKEN, LoginMethods.CREDS_WITHOUT_ENC_TOKEN):
-        if brokerAppDetails.broker == Brokers.ZERODHA:
+        if Controller.brokerName == Brokers.ZERODHA:
           Controller.brokerLogin = ZerodhaWebLogin(brokerAppDetails)
           
       # Other brokers - not implemented
-      #elif brokerAppDetails.broker == 'fyers':
+      # elif Controller.brokerName == 'fyers':
         #Controller.brokerLogin = FyersLogin(brokerAppDetails)
     except Exception as e:
       print("Exception occured",e)
@@ -42,3 +42,6 @@ class Controller:
 
   def getBrokerLogin():
     return Controller.brokerLogin
+
+  def getBrokerName():
+    return Controller.brokerName

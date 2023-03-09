@@ -9,7 +9,7 @@ from models.TickData import TickData
 
 class ZerodhaTicker(BaseTicker):
   def __init__(self):
-    BaseTicker.__init__(self)
+    super().__init__("zerodha")
 
   def startTicker(self):
     brokerAppDetails = self.brokerLogin.getBrokerAppDetails()
@@ -65,7 +65,6 @@ class ZerodhaTicker(BaseTicker):
       tradingSymbol = isd['tradingsymbol']
       tick = TickData(tradingSymbol)
       tick.lastTradedPrice = bTick['last_price']
-      '''
       tick.lastTradedQuantity = bTick['last_quantity']
       tick.avgTradedPrice = bTick['average_price']
       tick.volume = bTick['volume']
@@ -75,7 +74,6 @@ class ZerodhaTicker(BaseTicker):
       tick.high = bTick['ohlc']['high']
       tick.low = bTick['ohlc']['low']
       tick.close = bTick['ohlc']['close']
-      '''
       tick.change = bTick['change']
       ticks.append(tick)
       

@@ -1,3 +1,4 @@
+import logging
 from flask import render_template, flash, redirect, url_for, session, g
 from flask.views import MethodView
 
@@ -30,6 +31,7 @@ class LogInAPI(MethodView):
         validation_result = User.validate_user_login(result, form.email.data, form.password.data)
         
         if validation_result:
+            logging.info("Logged in successfuly!!!")
             session['user'] = result.get('user_name')
             flash('Logged In Successfully!!!', 'success')
         else:

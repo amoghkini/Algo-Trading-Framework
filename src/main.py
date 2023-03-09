@@ -81,7 +81,9 @@ def before_request():
 
   g.secret_key = "Amogh kini"
   
-  # Async method can be written which will be called in before requst method which will fetch the nifty and bank nifty price on each page reload
+  # Async method can be written which will be called in before requst method
+  # which will fetch the nifty and bank nifty price on each page reload
+  # before implementing the websocket apporach.
 
     
 @app.errorhandler(404)
