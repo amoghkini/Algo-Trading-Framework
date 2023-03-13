@@ -6,7 +6,8 @@ import uuid
 from datetime import datetime
 
 from config.Config import get_holidays
-
+from models.Direction import Direction
+from trademgmt.TradeState import TradeState
 
 class Utils:
   
@@ -16,6 +17,16 @@ class Utils:
   
   @staticmethod
   def roundToNSEPrice(price):
+    """
+    Rounds the given price to the nearest multiple of 0.05, which is a typical price tick size used in the National Stock Exchange (NSE).
+    
+    Args:
+    price (float): The price to be rounded.
+    
+    Returns:
+    float: The rounded price.
+    """
+    
     x = round(price, 2) * 20
     y = math.ceil(x)
     return y / 20
@@ -26,6 +37,13 @@ class Utils:
 
   @staticmethod
   def isMarketOpen():
+    """
+    Determines whether the stock market is currently open or closed based on the current date and time.
+    
+    Returns:
+    bool: True if the market is open, False otherwise.
+    """
+    
     if Utils.isTodayHoliday():
       return False
     now = datetime.now()
@@ -53,10 +71,12 @@ class Utils:
       time.sleep(waitSeconds)
 
   @staticmethod
-  def getEpoch(datetimeObj):
+  def getEpoch(datetimeObj = None):
     # This method converts given datetimeObj to epoch seconds
+    if datetimeObj == None:
+      datetimeObj = datetime.now()
     epochSeconds = datetime.timestamp(datetimeObj)
-    return int(epochSeconds)  # converting double to long
+    return int(epochSeconds) # converting double to long
 
   @staticmethod
   def getMarketStartTime():
@@ -93,4 +113,23 @@ class Utils:
 
   @staticmethod
   def generateTradeID():
-    return uuid.uuid4()
+    return str(uuid.uuid4())
+
+  @staticmethod
+  def calculateTradePnl(trade):
+    if trade.tradeState == TradeState.ACTIVE:
+      if trade.cmp > 0:
+        if trade.direction == Direction.LONG:
+          trade.pnl = Utils.roundOff(trade.filledQty * (trade.cmp - trade.entry))
+        else:  
+          trade.pnl = Utils.roundOff(trade.filledQty * (trade.entry - trade.cmp))
+    else:
+      if trade.exit > 0:
+        if trade.direction == Direction.LONG:
+          trade.pnl = Utils.roundOff(trade.filledQty * (trade.exit - trade.entry))
+        else:  
+          trade.pnl = Utils.roundOff(trade.filledQty * (trade.entry - trade.exit))
+    tradeValue = trade.entry * trade.filledQty
+    if tradeValue > 0:
+      trade.pnlPercentage = Utils.roundOff(trade.pnl * 100 / tradeValue)
+    return trade
