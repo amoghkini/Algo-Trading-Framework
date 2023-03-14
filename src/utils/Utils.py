@@ -53,6 +53,16 @@ class Utils:
 
   @staticmethod
   def isMarketClosedForTheDay():
+    """
+    Determine whether the market is closed for the day based on the current time and the market end time,
+    as determined by the `getMarketEndTime` function in the `Utils` module.
+    
+    Returns:
+        A boolean value indicating whether the market is closed for the day.
+        
+    Raises:
+        None
+    """
     # This method returns true if the current time is > marketEndTime
     # Please note this will not return true if current time is < marketStartTime on a trading day
     if Utils.isTodayHoliday():
@@ -63,6 +73,19 @@ class Utils:
 
   @staticmethod
   def waitTillMarketOpens(context):
+    """
+    Wait until the market opens, as determined by the `getMarketStartTime` function in the `Utils` module.
+    
+    Args:
+        context: A string representing the context in which the method is being called. This could be used
+                 for logging purposes.
+                 
+    Returns:
+        None
+        
+    Raises:
+        None
+    """
     nowEpoch = Utils.getEpoch(datetime.now())
     marketStartTimeEpoch = Utils.getEpoch(Utils.getMarketStartTime())
     waitSeconds = marketStartTimeEpoch - nowEpoch
