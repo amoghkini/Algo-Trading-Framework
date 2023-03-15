@@ -10,7 +10,6 @@ class Instruments:
   @staticmethod
   def fetchInstruments():
     brokerHandle = Controller.getBrokerLogin().getBrokerHandle()
-    print("Amogh broker handle",brokerHandle)
     if Instruments.instrumentsList:
       return Instruments.instrumentsList
 

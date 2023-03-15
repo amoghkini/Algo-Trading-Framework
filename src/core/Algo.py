@@ -33,6 +33,3 @@ class Algo:
     
     Algo.isAlgoRunning = True
     logging.info("Algo started.")
-    #Test.testTicker()
-    #Test.testOrders()
-    

@@ -9,6 +9,7 @@ from loginmgmt.ZerodhaWebLogin import ZerodhaWebLogin
 
 class Controller:
   brokerLogin = None # static variable
+  brokerName = None # static variable
 
   def handleBrokerLogin(args,broker_values):
     brokerAppConfig = getBrokerAppConfig()
