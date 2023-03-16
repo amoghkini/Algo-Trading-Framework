@@ -24,7 +24,7 @@ class BrokerEnquiryForm(FlaskForm):
 
 class BrokerLoginForm(FlaskForm):
     
-    broker_name = SelectField('Select Broker', choices=[Brokers.ZERODHA], validators=[DataRequired()])
+    broker_name = SelectField('Broker Name', choices=[Brokers.ZERODHA], validators=[DataRequired()])
     broker_id = StringField('User ID', validators=[DataRequired(), Length(min=2, max=20)], render_kw={'readonly': True})
     password = PasswordField('Password', validators=[DataRequired()])
     login_method = HiddenField('Login Method', validators=[DataRequired()])
@@ -32,6 +32,6 @@ class BrokerLoginForm(FlaskForm):
     totp_key = StringField('TOTP key', validators=[DataRequired(), Length(min=32, max=32)], render_kw={'readonly': True})
     submit = SubmitField('Login Broker')
     
-    def __init__(self, *args, **kwargs):
-        super(BrokerLoginForm, self).__init__(*args, **kwargs)
-        read_only(self.broker_name)
+    #def __init__(self, *args, **kwargs):
+    #    super(BrokerLoginForm, self).__init__(*args, **kwargs)
+    #    read_only(self.broker_name)

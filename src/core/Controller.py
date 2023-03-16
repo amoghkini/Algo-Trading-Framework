@@ -13,7 +13,7 @@ class Controller:
 
   def handleBrokerLogin(args,broker_values):
     brokerAppConfig = getBrokerAppConfig()
-    
+    #print("Handle broker login", broker_values)
     brokerAppDetails = BrokerAppDetails(broker_values.get('broker_name'))
     brokerAppDetails.setClientID(broker_values.get('broker_id'))
     brokerAppDetails.setAppKey(broker_values.get('broker_id'))

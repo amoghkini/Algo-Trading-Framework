@@ -42,7 +42,7 @@ class TradeManager:
 
     # check and create trades directory for today`s date
     serverConfig = get_server_config()
-    tradesDir = serverConfig['tradesDir']
+    tradesDir = serverConfig['deployDir']
     TradeManager.intradayTradesDir =  os.path.join(tradesDir, Utils.getTodayDateStr())
     if os.path.exists(TradeManager.intradayTradesDir) == False:
       logging.info('TradeManager: Intraday Trades Directory %s does not exist. Hence going to create.', TradeManager.intradayTradesDir)
@@ -50,7 +50,9 @@ class TradeManager:
 
     # start ticker service
     brokerName = Controller.getBrokerName()
-    if brokerName == "zerodha":
+    print(brokerName)
+    if brokerName == "Zerodha":
+      print("Amogh is before zerodha ticker")
       TradeManager.ticker = ZerodhaTicker()
     #elif brokerName == "fyers" # not implemented
     # ticker = FyersTicker()
@@ -83,7 +85,7 @@ class TradeManager:
         logging.exception("Exception in TradeManager Main thread")
 
       # sleep for 30 seconds and then continue
-      time.sleep(30)
+      time.sleep(5)
       logging.info('TradeManager: Main thread woke up..')
 
   @staticmethod
@@ -392,7 +394,7 @@ class TradeManager:
   def getOrderManager():
     orderManager = None
     brokerName = Controller.getBrokerName()
-    if brokerName == "zerodha":
+    if brokerName == "Zerodha":
       orderManager = ZerodhaOrderManager()
     #elif brokerName == "fyers": # Not implemented
     return orderManager

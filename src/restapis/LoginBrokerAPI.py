@@ -55,17 +55,17 @@ class LogInBrokerAPI(MethodView):
         else:    
             broker_values = {"broker_id": request.form.get('broker_id'),
                             "password": request.form.get('password'),
-                            "broker_name": request.form.get('broker_name'),
+                             "broker_name": request.form.get('broker_name'),
                             "login_method": request.form.get('login_method'),
                             "encryption_token": request.form.get('enc_token'),
                             "app_key" : request.form.get('app_key'),
                             "app_secret": request.form.get('app_secret'),
                             "totp_key": request.form.get('totp_key')
             }
-            
+        print("broker_values post method", request.form)
         broker_data = self.get_broker_data(broker_values.get('broker_id'))
         
-        print("Broker values",broker_values)
+        #print("Broker values",broker_values)
         
         redirectUrl = Controller.handleBrokerLogin(request.args, broker_values)
 

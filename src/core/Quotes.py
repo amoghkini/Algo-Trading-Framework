@@ -9,7 +9,7 @@ class Quotes:
     broker = Controller.getBrokerName()
     brokerHandle = Controller.getBrokerLogin().getBrokerHandle()
     quote = None
-    if broker == "zerodha":
+    if broker == "Zerodha":
       key = 'NSE:' + tradingSymbol # Pl note for now using only NSE exchange
       bQuoteResp = brokerHandle.quote(key) 
       bQuote = bQuoteResp[key]

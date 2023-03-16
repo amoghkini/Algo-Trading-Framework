@@ -9,12 +9,13 @@ from config.Config import get_holidays
 from models.Direction import Direction
 from trademgmt.TradeState import TradeState
 
+
 class Utils:
-  
+
   dateFormat = "%Y-%m-%d"
   timeFormat = "%H:%M:%S"
   dateTimeFormat = "%Y-%m-%d %H:%M:%S"
-  
+
   @staticmethod
   def roundToNSEPrice(price):
     """
@@ -26,7 +27,7 @@ class Utils:
     Returns:
     float: The rounded price.
     """
-    
+
     x = round(price, 2) * 20
     y = math.ceil(x)
     return y / 20
@@ -43,7 +44,7 @@ class Utils:
     Returns:
     bool: True if the market is open, False otherwise.
     """
-    
+
     if Utils.isTodayHoliday():
       return False
     now = datetime.now()
@@ -90,16 +91,17 @@ class Utils:
     marketStartTimeEpoch = Utils.getEpoch(Utils.getMarketStartTime())
     waitSeconds = marketStartTimeEpoch - nowEpoch
     if waitSeconds > 0:
-      logging.info("%s: Waiting for %d seconds till market opens...", context, waitSeconds)
+      logging.info(
+          "%s: Waiting for %d seconds till market opens...", context, waitSeconds)
       time.sleep(waitSeconds)
 
   @staticmethod
-  def getEpoch(datetimeObj = None):
+  def getEpoch(datetimeObj=None):
     # This method converts given datetimeObj to epoch seconds
     if datetimeObj == None:
       datetimeObj = datetime.now()
     epochSeconds = datetime.timestamp(datetimeObj)
-    return int(epochSeconds) # converting double to long
+    return int(epochSeconds)  # converting double to long
 
   @staticmethod
   def getMarketStartTime():
@@ -112,7 +114,8 @@ class Utils:
   @staticmethod
   def getTimeOfToDay(hours, minutes, seconds):
     datetimeObj = datetime.now()
-    datetimeObj = datetimeObj.replace(hour=hours, minute=minutes, second=seconds, microsecond=0)
+    datetimeObj = datetimeObj.replace(
+        hour=hours, minute=minutes, second=seconds, microsecond=0)
     return datetimeObj
 
   @staticmethod
@@ -143,15 +146,19 @@ class Utils:
     if trade.tradeState == TradeState.ACTIVE:
       if trade.cmp > 0:
         if trade.direction == Direction.LONG:
-          trade.pnl = Utils.roundOff(trade.filledQty * (trade.cmp - trade.entry))
-        else:  
-          trade.pnl = Utils.roundOff(trade.filledQty * (trade.entry - trade.cmp))
+          trade.pnl = Utils.roundOff(
+              trade.filledQty * (trade.cmp - trade.entry))
+        else:
+          trade.pnl = Utils.roundOff(
+              trade.filledQty * (trade.entry - trade.cmp))
     else:
       if trade.exit > 0:
         if trade.direction == Direction.LONG:
-          trade.pnl = Utils.roundOff(trade.filledQty * (trade.exit - trade.entry))
-        else:  
-          trade.pnl = Utils.roundOff(trade.filledQty * (trade.entry - trade.exit))
+          trade.pnl = Utils.roundOff(
+              trade.filledQty * (trade.exit - trade.entry))
+        else:
+          trade.pnl = Utils.roundOff(
+              trade.filledQty * (trade.entry - trade.exit))
     tradeValue = trade.entry * trade.filledQty
     if tradeValue > 0:
       trade.pnlPercentage = Utils.roundOff(trade.pnl * 100 / tradeValue)

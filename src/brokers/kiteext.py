@@ -32,6 +32,7 @@ class KiteExt(KiteConnect):
             self.root + self._routes["api.login"],
             data={"user_id": self.user_id, "password": self.password},
         )
+        print("UserID",r.status_code)
         r = self.reqsession.post(
             self.root + self._routes["api.twofa"],
             data={
@@ -41,6 +42,7 @@ class KiteExt(KiteConnect):
                 "skip_session": "true",
             },
         )
+        print("Password", r.status_code)
         self.enctoken = r.cookies.get("enctoken")
         self.public_token = r.cookies.get("public_token")
         self.user_id = r.cookies.get("user_id")

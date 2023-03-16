@@ -61,15 +61,16 @@ class ZerodhaTicker(BaseTicker):
     # convert broker specific Ticks to our system specific Ticks (models.TickData) and pass to super class function
     ticks = []
     for bTick in brokerTicks:
+      print("Broker tick",bTick)
       isd = Instruments.getInstrumentDataByToken(bTick['instrument_token'])
       tradingSymbol = isd['tradingsymbol']
       tick = TickData(tradingSymbol)
       tick.lastTradedPrice = bTick['last_price']
-      tick.lastTradedQuantity = bTick['last_quantity']
-      tick.avgTradedPrice = bTick['average_price']
-      tick.volume = bTick['volume']
-      tick.totalBuyQuantity = bTick['buy_quantity']
-      tick.totalSellQuantity = bTick['sell_quantity']
+      tick.lastTradedQuantity = bTick['last_traded_quantity']
+      tick.avgTradedPrice = bTick['average_traded_price']
+      tick.volume = bTick['volume_traded']
+      tick.totalBuyQuantity = bTick['total_buy_quantity']
+      tick.totalSellQuantity = bTick['total_sell_quantity']
       tick.open = bTick['ohlc']['open']
       tick.high = bTick['ohlc']['high']
       tick.low = bTick['ohlc']['low']
@@ -80,7 +81,9 @@ class ZerodhaTicker(BaseTicker):
     self.onNewTicks(ticks)
 
   def on_connect(self, ws, response):
+    #ws.set_mode(ws.MODE_FULL)
     self.onConnect()
+    
 
   def on_close(self, ws, code, reason):
     self.onDisconnect(code, reason)

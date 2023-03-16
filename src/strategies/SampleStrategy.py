@@ -26,15 +26,22 @@ class SampleStrategy(BaseStrategy):
     super().__init__("SAMPLE")
     # Initialize all the properties specific to this strategy
     self.productType = ProductType.MIS
-    self.symbols = ["SBIN", "INFY", "TATASTEEL", "RELIANCE", "HDFCBANK", "CIPLA"]
+    self.symbols = ["IDEA"]
+    '''
+    self.symbols = ["SBIN", "INFY", "TATASTEEL","RELIANCE", "HDFCBANK", "CIPLA", 
+                    "ICICIBANK", "HDFC", "ITC", "TCS", "LT", "AXISBANK", "KOTAKBANK", 
+                    "HINDUNILVR", "SBIN", "BHARTIARTL", "BAJFINANCE", "ASIANPAINT", "HCLTECH",
+                    "MARUTI", "SUNPHARMA", "NTPC", "TITAN", "TATASTEEL", "ULTRACEMCO","POWERGRID","TATAMOTORS",
+                    "BAJAJFINSV", "TECHM", "WIPRO"]
+    '''
     self.slPercentage = 1.1
     self.targetPerncetage = 2.2
     self.startTimestamp = Utils.getTimeOfToDay(9, 30, 0) # When to start the strategy. Default is Market start time
-    self.stopTimestamp = Utils.getTimeOfToDay(14, 30, 0) # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
+    self.stopTimestamp = Utils.getTimeOfToDay(15, 30, 0) # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
     self.squareOffTimestamp = Utils.getTimeOfToDay(15, 0, 0) # Square off time
     self.capital = 3000 # Capital to trade (This is the margin you allocate from your broker account for this strategy)
     self.leverage = 2 # 2x, 3x Etc
-    self.maxTradesPerDay = 3 # Max number of trades per day under this strategy
+    self.maxTradesPerDay = 30 # Max number of trades per day under this strategy
     self.isFnO = False # Does this strategy trade in FnO or not
     self.capitalPerSet = 0 # Applicable if isFnO is True (1 set means 1CE/1PE or 2CE/2PE etc based on your strategy logic)
 
@@ -78,6 +85,7 @@ class SampleStrategy(BaseStrategy):
     trade.qty = int(self.calculateCapitalPerTrade() / breakoutPrice)
     if trade.qty == 0:
       trade.qty = 1 # Keep min 1 qty
+    trade.qty = 1  # Keep min 1 qty
     if direction == 'LONG':
       trade.stopLoss = Utils.roundToNSEPrice(breakoutPrice - breakoutPrice * self.slPercentage / 100)
       if cmp < trade.stopLoss:
