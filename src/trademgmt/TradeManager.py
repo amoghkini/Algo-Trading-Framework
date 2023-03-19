@@ -50,9 +50,7 @@ class TradeManager:
 
     # start ticker service
     brokerName = Controller.getBrokerName()
-    print(brokerName)
     if brokerName == "Zerodha":
-      print("Amogh is before zerodha ticker")
       TradeManager.ticker = ZerodhaTicker()
     #elif brokerName == "fyers" # not implemented
     # ticker = FyersTicker()

@@ -41,7 +41,7 @@ class SampleStrategy(BaseStrategy):
     self.squareOffTimestamp = Utils.getTimeOfToDay(15, 0, 0) # Square off time
     self.capital = 3000 # Capital to trade (This is the margin you allocate from your broker account for this strategy)
     self.leverage = 2 # 2x, 3x Etc
-    self.maxTradesPerDay = 30 # Max number of trades per day under this strategy
+    self.maxTradesPerDay = 3 # Max number of trades per day under this strategy
     self.isFnO = False # Does this strategy trade in FnO or not
     self.capitalPerSet = 0 # Applicable if isFnO is True (1 set means 1CE/1PE or 2CE/2PE etc based on your strategy logic)
 
@@ -85,7 +85,6 @@ class SampleStrategy(BaseStrategy):
     trade.qty = int(self.calculateCapitalPerTrade() / breakoutPrice)
     if trade.qty == 0:
       trade.qty = 1 # Keep min 1 qty
-    trade.qty = 1  # Keep min 1 qty
     if direction == 'LONG':
       trade.stopLoss = Utils.roundToNSEPrice(breakoutPrice - breakoutPrice * self.slPercentage / 100)
       if cmp < trade.stopLoss:

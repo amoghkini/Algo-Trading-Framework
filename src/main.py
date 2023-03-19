@@ -22,6 +22,9 @@ from restapis.SignUpAPI import SignUpAPI
 from restapis.StartAlgoAPI import StartAlgoAPI
 from utils.logger import config_root_logger
 
+from utils.Utils import Utils
+
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'AMOGH kini'
@@ -96,5 +99,6 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-if __name__ == "__main__":
+
+if __name__ == "__main__":  
     app.run(port=port)
