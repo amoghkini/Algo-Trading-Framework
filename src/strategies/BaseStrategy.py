@@ -16,7 +16,7 @@ class BaseStrategy:
     self.productType = ProductType.MIS # MIS/NRML/CNC etc
     self.symbols = [] # List of stocks to be traded under this strategy
     self.slPercentage = 0
-    self.targetPerncetage = 0
+    self.targetPercentage = 0
     self.startTimestamp = Utils.getMarketStartTime() # When to start the strategy. Default is Market start time
     self.stopTimestamp = None # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
     self.squareOffTimestamp = None # Square off time
@@ -77,9 +77,10 @@ class BaseStrategy:
       return
 
     if now < self.startTimestamp:
-      waitSeconds = now - self.startTimestamp
+      waitSeconds = Utils.getEpoch(self.startTimestamp) - Utils.getEpoch(now)
       logging.info("%s: Waiting for %d seconds till startegy start timestamp reaches...", self.getName(), waitSeconds)
-      time.sleep(waitSeconds)      
+      if waitSeconds > 0:
+        time.sleep(waitSeconds)      
 
     # Run in an loop and keep processing
     while True:
