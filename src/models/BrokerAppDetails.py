@@ -15,5 +15,3 @@ class BrokerAppDetails:
   def setAppSecret(self, appSecret):
     self.appSecret = appSecret
 
-  def setTOTP(self,totp_key):
-    self.totp_key = totp_key

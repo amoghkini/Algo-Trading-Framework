@@ -54,7 +54,7 @@ class OptionSelling(BaseStrategy):
     now = datetime.now()
     if now < self.startTimestamp:
       return
-    if len(self.tradesCreatedSymbols) >= 2:
+    if len(self.trades) >= self.maxTradesPerDay:
       return
 
     # Get current market price of Nifty Future
@@ -70,9 +70,8 @@ class OptionSelling(BaseStrategy):
     ATMPlus50CESymbol = Utils.prepareWeeklyOptionsSymbol("NIFTY", ATMStrike + 50, 'CE')
     ATMMinus50PESymbol = Utils.prepareWeeklyOptionsSymbol("NIFTY", ATMStrike - 50, 'PE')
     logging.info('%s: ATMPlus50CE = %s, ATMMinus50PE = %s', self.getName(), ATMPlus50CESymbol, ATMMinus50PESymbol)
-
-    if len(self.tradesCreatedSymbols) == 0:
-      self.generateTrades(ATMPlus50CESymbol, ATMMinus50PESymbol)
+    # create trades
+    self.generateTrades(ATMPlus50CESymbol, ATMMinus50PESymbol)
 
   def generateTrades(self, ATMPlus50CESymbol, ATMMinus50PESymbol):
     numLots = self.calculateLotsPerTrade()
@@ -85,9 +84,6 @@ class OptionSelling(BaseStrategy):
     self.generateTrade(ATMPlus50CESymbol, numLots, quoteATMPlus50CESymbol.lastTradedPrice)
     self.generateTrade(ATMMinus50PESymbol, numLots, quoteATMMinus50PESymbol.lastTradedPrice)
     logging.info('%s: Trades generated.', self.getName())
-    # add symbols to created list
-    self.tradesCreatedSymbols.append(ATMPlus50CESymbol)
-    self.tradesCreatedSymbols.append(ATMMinus50PESymbol)
 
   def generateTrade(self, optionSymbol, numLots, lastTradedPrice):
     trade = Trade(optionSymbol)
