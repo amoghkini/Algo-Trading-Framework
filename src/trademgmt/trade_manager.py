@@ -4,22 +4,22 @@ import time
 import json
 from datetime import datetime
 
-from config.Config import get_server_config
-from core.Controller import Controller
-from ticker.ZerodhaTicker import ZerodhaTicker
-from trademgmt.Trade import Trade
-from trademgmt.TradeState import TradeState
-from trademgmt.TradeExitReason import TradeExitReason
-from trademgmt.TradeEncoder import TradeEncoder
-from ordermgmt.ZerodhaOrderManager import ZerodhaOrderManager
-from ordermgmt.OrderInputParams import OrderInputParams
-from ordermgmt.OrderModifyParams import OrderModifyParams
-from ordermgmt.Order import Order
-from models.OrderType import OrderType
-from models.OrderStatus import OrderStatus
-from models.Direction import Direction
+from config.config import get_server_config
+from core.controller import Controller
+from ticker.zerodha_ticker import ZerodhaTicker
+from trademgmt.trade import Trade
+from trademgmt.trade_state import TradeState
+from trademgmt.trade_exit_reason import TradeExitReason
+from trademgmt.trade_encoder import TradeEncoder
+from ordermgmt.zerodha_order_manager import ZerodhaOrderManager
+from ordermgmt.order_input_params import OrderInputParams
+from ordermgmt.order_modify_params import OrderModifyParams
+from ordermgmt.order import Order
+from models.order_type import OrderType
+from models.order_status import OrderStatus
+from models.direction import Direction
 
-from utils.Utils import Utils
+from utils.utils import Utils
 
 class TradeManager:
   ticker = None

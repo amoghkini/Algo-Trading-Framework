@@ -1,8 +1,8 @@
 from flask import flash, redirect, render_template, url_for, g
 from flask.views import MethodView
 
-from forms.ResetPasswordForm import ResetPasswordForm
-from user.User import User
+from forms.reset_password_form import ResetPasswordForm
+from user.user import User
 
 
 class ResetPasswordAPI(MethodView):

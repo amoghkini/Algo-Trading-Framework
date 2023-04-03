@@ -2,11 +2,10 @@ import logging
 import time
 from datetime import datetime
 
-from models.ProductType import ProductType
-from core.Quotes import Quotes
-from trademgmt.TradeManager import TradeManager
-
-from utils.Utils import Utils
+from models.product_type import ProductType
+from core.quotes import Quotes
+from trademgmt.trade_manager import TradeManager
+from utils.utils import Utils
 
 class BaseStrategy:
   def __init__(self, name):

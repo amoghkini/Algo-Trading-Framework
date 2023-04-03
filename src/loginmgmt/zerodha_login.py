@@ -1,8 +1,8 @@
 import logging
 from kiteconnect import KiteConnect
 
-from config.Config import get_system_config
-from loginmgmt.BaseLogin import BaseLogin
+from config.config import get_system_config
+from loginmgmt.base_login import BaseLogin
 
 class ZerodhaLogin(BaseLogin):
   def __init__(self, brokerAppDetails):

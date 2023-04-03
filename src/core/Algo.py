@@ -2,13 +2,13 @@ import logging
 import threading
 import time
 
-from instruments.Instruments import Instruments
-from trademgmt.TradeManager import TradeManager
+from instruments.instruments import Instruments
+from trademgmt.trade_manager import TradeManager
 
-from strategies.SampleStrategy import SampleStrategy
-from strategies.BNFORB30Min import BNFORB30Min
-from strategies.OptionSelling import OptionSelling
-from strategies.ShortStraddleBNF import ShortStraddleBNF
+from strategies.sample_strategy import SampleStrategy
+from strategies.options_BNF_ORB_30Min import BNFORB30Min
+from strategies.option_selling import OptionSelling
+from strategies.short_straddle_BNF import ShortStraddleBNF
 
 #from Test import Test
 

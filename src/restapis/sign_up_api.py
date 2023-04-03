@@ -2,9 +2,9 @@ from flask import flash, redirect, render_template, url_for, g
 from flask.views import MethodView
 from passlib.hash import sha256_crypt
 
-from common.AccountStatus import AccountStatus
-from forms.SignUpUserForm import RegisterUserForm
-from user.User import User
+from common.account_status import AccountStatus
+from forms.sign_up_user_form import RegisterUserForm
+from user.user import User
 
 class SignUpAPI(MethodView):
     def get(self):

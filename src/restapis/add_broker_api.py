@@ -2,9 +2,9 @@ import logging
 from flask import render_template, redirect, url_for, flash, g
 from flask.views import MethodView
 
-from common.BrokerStatus import BrokerStatus
-from database.DatabaseConnection import conn
-from forms.BrokerForm import BrokerCreateForm
+from common.broker_status import BrokerStatus
+from database.database_connection import conn
+from forms.broker_form import BrokerCreateForm
 
 class AddBrokerAPI(MethodView):
 

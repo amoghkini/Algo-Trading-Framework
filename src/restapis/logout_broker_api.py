@@ -1,8 +1,8 @@
 from flask import flash, redirect, render_template, url_for, session, request
 from flask.views import MethodView
 
-from common.BrokerStatus import BrokerStatus
-from database.DatabaseConnection import conn
+from common.broker_status import BrokerStatus
+from database.database_connection import conn
 
 
 class LogOutBrokerAPI(MethodView):

@@ -1,11 +1,11 @@
 import logging
 
-from brokers.Brokers import Brokers
-from common.LoginMethods import LoginMethods
-from config.Config import getBrokerAppConfig
-from models.BrokerAppDetails import BrokerAppDetails
-from loginmgmt.ZerodhaLogin import ZerodhaLogin
-from loginmgmt.ZerodhaWebLogin import ZerodhaWebLogin
+from brokers.brokers import Brokers
+from common.login_methods import LoginMethods
+from config.config import getBrokerAppConfig
+from models.broker_app_details import BrokerAppDetails
+from loginmgmt.zerodha_login import ZerodhaLogin
+from loginmgmt.zerodha_web_login import ZerodhaWebLogin
 
 class Controller:
   brokerLogin = None # static variable

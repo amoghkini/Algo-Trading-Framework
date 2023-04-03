@@ -1,4 +1,4 @@
-from database.MySQL import Mysql
+from database.my_sql import Mysql
 
 conn = Mysql(
     host="127.0.0.1",

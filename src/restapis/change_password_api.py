@@ -2,8 +2,8 @@ from flask import flash, redirect, render_template, url_for, g
 from flask.views import MethodView
 from passlib.hash import sha256_crypt
 
-from forms.ChangePasswordForm import ChangePasswordForm
-from user.User import User
+from forms.change_password_form import ChangePasswordForm
+from user.user import User
 
 
 class ChangePasswordAPI(MethodView):

@@ -5,9 +5,9 @@ import logging
 import calendar
 from datetime import datetime, timedelta
 
-from config.Config import get_holidays
-from models.Direction import Direction
-from trademgmt.TradeState import TradeState
+from config.config import get_holidays
+from models.direction import Direction
+from trademgmt.trade_state import TradeState
 
 
 class Utils:

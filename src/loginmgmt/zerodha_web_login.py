@@ -1,9 +1,9 @@
 import logging
 from flask import request
 
-from common.LoginMethods import LoginMethods
-from config.Config import get_system_config
-from loginmgmt.BaseLogin import BaseLogin
+from common.login_methods import LoginMethods
+from config.config import get_system_config
+from loginmgmt.base_login import BaseLogin
 from brokers.kiteext import KiteExt
 
 class ZerodhaWebLogin(BaseLogin):

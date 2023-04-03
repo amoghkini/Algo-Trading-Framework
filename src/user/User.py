@@ -7,7 +7,7 @@ from passlib.hash import sha256_crypt
 from PIL import Image
 
 
-from database.DatabaseConnection import conn
+from database.database_connection import conn
 
 class User:
     

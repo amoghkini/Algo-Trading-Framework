@@ -2,9 +2,9 @@ import os
 import logging
 import json
 
-from config.Config import get_server_config, getTimestampsData, saveTimestampsData
-from core.Controller import Controller
-from utils.Utils import Utils
+from config.config import get_server_config, getTimestampsData, saveTimestampsData
+from core.controller import Controller
+from utils.utils import Utils
 
 class Instruments:
   instrumentsList = None

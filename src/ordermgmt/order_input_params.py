@@ -1,6 +1,6 @@
 
-from models.Segment import Segment
-from models.ProductType import ProductType
+from models.segment import Segment
+from models.product_type import ProductType
 
 class OrderInputParams:
   def __init__(self, tradingSymbol):

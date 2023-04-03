@@ -1,7 +1,7 @@
 import logging
 
-from core.Controller import Controller
-from models.Quote import Quote
+from core.controller import Controller
+from models.quote import Quote
 
 class Quotes:
   @staticmethod

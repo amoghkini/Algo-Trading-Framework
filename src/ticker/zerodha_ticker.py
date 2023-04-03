@@ -3,9 +3,9 @@ import json
 
 from kiteconnect import KiteTicker
 
-from ticker.BaseTicker import BaseTicker
-from instruments.Instruments import Instruments
-from models.TickData import TickData
+from ticker.base_ticker import BaseTicker
+from instruments.instruments import Instruments
+from models.tick_data import TickData
 
 class ZerodhaTicker(BaseTicker):
   def __init__(self):

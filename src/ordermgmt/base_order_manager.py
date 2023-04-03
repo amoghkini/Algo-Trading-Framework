@@ -1,5 +1,5 @@
 
-from core.Controller import Controller
+from core.controller import Controller
 
 class BaseOrderManager:
   def __init__(self, broker):

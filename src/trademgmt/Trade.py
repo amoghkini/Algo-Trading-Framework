@@ -1,9 +1,9 @@
 import logging
 
-from trademgmt.TradeState import TradeState
-from models.ProductType import ProductType
+from trademgmt.trade_state import TradeState
+from models.product_type import ProductType
 
-from utils.Utils import Utils
+from utils.utils import Utils
 
 class Trade:
   def __init__(self, tradingSymbol = None):

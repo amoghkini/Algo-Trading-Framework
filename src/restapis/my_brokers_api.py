@@ -1,7 +1,7 @@
 from flask import render_template, g, redirect, url_for, flash
 from flask.views import MethodView
 
-from database.DatabaseConnection import conn
+from database.database_connection import conn
 
 class MyBrokersAPI(MethodView):
 

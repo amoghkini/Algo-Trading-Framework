@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
-from database.DatabaseConnection import conn
+from database.database_connection import conn
 
 class RegisterUserForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=20)])

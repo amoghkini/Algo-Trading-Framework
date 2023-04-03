@@ -1,14 +1,14 @@
 import logging
 
-from ordermgmt.BaseOrderManager import BaseOrderManager
-from ordermgmt.Order import Order
+from ordermgmt.base_order_manager import BaseOrderManager
+from ordermgmt.order import Order
 
-from models.ProductType import ProductType
-from models.OrderType import OrderType
-from models.Direction import Direction
-from models.OrderStatus import OrderStatus
+from models.product_type import ProductType
+from models.order_type import OrderType
+from models.direction import Direction
+from models.order_status import OrderStatus
 
-from utils.Utils import Utils
+from utils.utils import Utils
 
 class ZerodhaOrderManager(BaseOrderManager):
   def __init__(self):

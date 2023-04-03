@@ -3,8 +3,8 @@ from flask import url_for, flash
 import json
 import logging
 import threading
-from config.Config import get_system_config
-from core.Algo import Algo
+from config.config import get_system_config
+from core.algo import Algo
 
 class StartAlgoAPI(MethodView):
   def post(self):

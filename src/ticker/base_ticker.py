@@ -1,6 +1,6 @@
 import logging
 
-from core.Controller import Controller
+from core.controller import Controller
 
 class BaseTicker:
   def __init__(self, broker):

@@ -3,8 +3,8 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, Hidden
 from wtforms_components import read_only
 from wtforms.validators import DataRequired, Length
 
-from brokers.Brokers import Brokers
-from database.DatabaseConnection import conn
+from brokers.brokers import Brokers
+from database.database_connection import conn
 
 
 class BrokerCreateForm(FlaskForm):

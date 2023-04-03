@@ -1,11 +1,11 @@
 import logging
 import time
 
-from core.Controller import Controller
-from ticker.ZerodhaTicker import ZerodhaTicker
-from ordermgmt.ZerodhaOrderManager import ZerodhaOrderManager
-from core.Quotes import Quotes
-from utils.Utils import Utils
+from core.controller import Controller
+from ticker.zerodha_ticker import ZerodhaTicker
+from ordermgmt.zerodha_order_manager import ZerodhaOrderManager
+from core.quotes import Quotes
+from utils.utils import Utils
 
 class Test:
   def testTicker():

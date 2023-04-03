@@ -1,13 +1,13 @@
 import logging
 from datetime import datetime
 
-from instruments.Instruments import Instruments
-from models.Direction import Direction
-from models.ProductType import ProductType
-from strategies.BaseStrategy import BaseStrategy
-from utils.Utils import Utils
-from trademgmt.Trade import Trade
-from trademgmt.TradeManager import TradeManager
+from instruments.instruments import Instruments
+from models.direction import Direction
+from models.product_type import ProductType
+from strategies.base_strategy import BaseStrategy
+from utils.utils import Utils
+from trademgmt.trade import Trade
+from trademgmt.trade_manager import TradeManager
 
 # Each strategy has to be derived from BaseStrategy
 class ShortStraddleBNF(BaseStrategy):

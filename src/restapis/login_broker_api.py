@@ -2,13 +2,11 @@ import logging
 from flask import render_template, redirect, url_for, flash, request, g
 from flask.views import MethodView
 
-from brokers.Broker import Broker
-from core.Controller import Controller
-from common.BrokerStatus import BrokerStatus
-from database.DatabaseConnection import conn
-from forms.BrokerForm import BrokerLoginForm
-
-from werkzeug.datastructures import MultiDict
+from brokers.broker import Broker
+from core.controller import Controller
+from common.broker_status import BrokerStatus
+from database.database_connection import conn
+from forms.broker_form import BrokerLoginForm
 
 class LogInBrokerAPI(MethodView):
         

@@ -3,26 +3,25 @@ import logging
 from datetime import timedelta
 from flask import Flask, g, render_template, session
 
-from config.Config import get_server_config
-from restapis.AboutUsAPI import AboutUsAPI
-from restapis.AddBrokerAPI import AddBrokerAPI
-from restapis.ChangePasswordAPI import ChangePasswordAPI
-from restapis.DashboardAPI import DashboardAPI
-from restapis.EnquireBrokerAPI import EnquireBrokerAPI
-from restapis.HomeAPI import HomeAPI
-from restapis.LogInAPI import LogInAPI
-from restapis.LogInBrokerAPI import LogInBrokerAPI
-from restapis.LogOutBrokerAPI import LogOutBrokerAPI
-from restapis.LogOutAPI import LogOutAPI
-from restapis.MyBrokersAPI import MyBrokersAPI
-from restapis.MyProfileAPI import MyProfileAPI
-from restapis.RequestPassResetAPI import RequestPassResetAPI
-from restapis.ResetPasswordAPI import ResetPasswordAPI
-from restapis.SignUpAPI import SignUpAPI
-from restapis.StartAlgoAPI import StartAlgoAPI
+from config.config import get_server_config
+from restapis.about_us_api import AboutUsAPI
+from restapis.add_broker_api import AddBrokerAPI
+from restapis.change_password_api import ChangePasswordAPI
+from restapis.dashboard_api import DashboardAPI
+from restapis.enquire_broker_api import EnquireBrokerAPI
+from restapis.home_api import HomeAPI
+from restapis.login_api import LogInAPI
+from restapis.login_broker_api import LogInBrokerAPI
+from restapis.logout_broker_api import LogOutBrokerAPI
+from restapis.logout_api import LogOutAPI
+from restapis.my_brokers_api import MyBrokersAPI
+from restapis.my_profile_api import MyProfileAPI
+from restapis.request_pass_reset_api import RequestPassResetAPI
+from restapis.reset_password_api import ResetPasswordAPI
+from restapis.sign_up_api import SignUpAPI
+from restapis.start_algo_api import StartAlgoAPI
 from utils.logger import config_root_logger
-
-from utils.Utils import Utils
+from utils.utils import Utils
 
 
 app = Flask(__name__)

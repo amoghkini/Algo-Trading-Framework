@@ -1,8 +1,8 @@
 from flask import render_template, request, g, redirect, url_for, flash
 from flask.views import MethodView
 
-from forms.UpdateAccountForm import UpdateAccountForm
-from user.User import User
+from forms.update_account_form import UpdateAccountForm
+from user.user import User
 
 class MyProfileAPI(MethodView):
     def get(self):

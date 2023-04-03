@@ -2,8 +2,8 @@ import logging
 from flask import render_template, flash, redirect, url_for, session, g
 from flask.views import MethodView
 
-from forms.LoginUserForm import LoginForm
-from user.User import User
+from forms.login_user_form import LoginForm
+from user.user import User
 
 class LogInAPI(MethodView):
     
