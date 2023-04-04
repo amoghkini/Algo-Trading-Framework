@@ -49,43 +49,42 @@ app.add_url_rule("/signup", view_func=SignUpAPI.as_view("sign_up_api"))
 
 server_config = get_server_config()
 
-deployDir = server_config.get('deployDir')
-if os.path.exists(deployDir) == False:
-  print("Deploy Directory " + deployDir + " does not exist. Exiting the app.")
-  exit(-1)
+deploy_dir = server_config.get('deployDir')
+if os.path.exists(deploy_dir) == False:
+    print("Deploy Directory " + deploy_dir +
+          " does not exist. Exiting the app.")
+    exit(-1)
 
-logFileDir = server_config.get('logFileDir')
-if os.path.exists(logFileDir) == False:
-  print("LogFile Directory " + logFileDir +
-        " does not exist. Exiting the app.")
-  exit(-1)
+log_file_dir = server_config.get('logFileDir')
+if os.path.exists(log_file_dir) == False:
+    print("LogFile Directory " + log_file_dir +
+          " does not exist. Exiting the app.")
+    exit(-1)
 
-print("Deploy  Directory = " + deployDir)
-print("LogFile Directory = " + logFileDir)
+print("Deploy  Directory = " + deploy_dir)
+print("LogFile Directory = " + log_file_dir)
 
-config_root_logger(logFileDir + "/app.log")
+config_root_logger(log_file_dir + "/app.log")
 
 logging.info('server_config => %s', server_config)
 
-
 port = server_config.get('port')
-
 
 @app.before_request
 def before_request():
-  session.permanent = True  # set session to use PERMANENT_SESSION_LIFETIME
-  session.modified = True   # reset the session timer on every request
-  app.permanent_session_lifetime = timedelta(minutes=60)
+    session.permanent = True  # set session to use PERMANENT_SESSION_LIFETIME
+    session.modified = True   # reset the session timer on every request
+    app.permanent_session_lifetime = timedelta(minutes=60)
 
-  g.user = None
-  if 'user' in session:
-    g.user = session['user']
+    g.user = None
+    if 'user' in session:
+        g.user = session['user']
 
-  g.secret_key = "Amogh kini"
-  
-  # Async method can be written which will be called in before requst method
-  # which will fetch the nifty and bank nifty price on each page reload
-  # before implementing the websocket apporach.
+    g.secret_key = "Amogh kini"
+    
+    # Async method can be written which will be called in before requst method
+    # which will fetch the nifty and bank nifty price on each page reload
+    # before implementing the websocket apporach.
 
     
 @app.errorhandler(404)
@@ -96,8 +95,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
-
-
 
 if __name__ == "__main__":  
     app.run(port=port)

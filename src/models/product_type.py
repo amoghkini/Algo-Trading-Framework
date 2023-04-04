@@ -1,5 +1,4 @@
-
 class ProductType:
-  MIS = "MIS"
-  NRML = "NRML"
-  CNC = "CNC"
+    MIS = "MIS"
+    NRML = "NRML"
+    CNC = "CNC"

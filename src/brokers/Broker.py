@@ -1,14 +1,11 @@
 import os
 import re
 import secrets
-
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from passlib.hash import sha256_crypt
 from PIL import Image
 
-
 from database.database_connection import conn
-
 
 class Broker:
     

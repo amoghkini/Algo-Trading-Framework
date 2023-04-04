@@ -1,31 +1,30 @@
-
 from core.controller import Controller
 
 class BaseOrderManager:
-  def __init__(self, broker):
-    self.broker = broker
-    self.brokerHandle = Controller.getBrokerLogin().getBrokerHandle()
+    def __init__(self, broker):
+        self.broker = broker
+        self.brokerHandle = Controller.getBrokerLogin().getBrokerHandle()
 
-  def placeOrder(self, orderInputParams):
-    pass
+    def placeOrder(self, orderInputParams):
+        pass
 
-  def modifyOrder(self, order, orderModifyParams):
-    pass
+    def modifyOrder(self, order, orderModifyParams):
+        pass
 
-  def modifyOrderToMarket(self, order):
-    pass
+    def modifyOrderToMarket(self, order):
+        pass
 
-  def cancelOrder(self, order):
-    pass
+    def cancelOrder(self, order):
+        pass
 
-  def fetchAndUpdateAllOrderDetails(self, orders):
-    pass
+    def fetchAndUpdateAllOrderDetails(self, orders):
+        pass
 
-  def convertToBrokerProductType(self, productType):
-    return productType
+    def convertToBrokerProductType(self, productType):
+        return productType
 
-  def convertToBrokerOrderType(self, orderType):
-    return orderType
+    def convertToBrokerOrderType(self, orderType):
+        return orderType
 
-  def convertToBrokerDirection(self, direction):
-    return direction
+    def convertToBrokerDirection(self, direction):
+        return direction

@@ -1,11 +1,8 @@
 import logging
 import logging.config
 
-
-
 def config_root_logger(log_file):
 
-    
     formatter = "%(asctime)-15s" \
                 "| %(levelname)-s " \
                 "| %(process)s " \

@@ -1,4 +1,3 @@
-
 class Direction:
-  LONG = "LONG"
-  SHORT = "SHORT"
+    LONG = "LONG"
+    SHORT = "SHORT"
