@@ -24,164 +24,165 @@ from utils.utils import Utils
 class TradeManager:
     ticker = None
     trades = [] # to store all the trades
-    strategyToInstanceMap = {}
-    symbolToCMPMap = {}
-    intradayTradesDir = None
-    registeredSymbols = []
+    strategy_to_instance_map = {}
+    symbol_to_cmp_map = {}
+    intraday_trades_dir = None
+    registered_symbols = []
 
     @staticmethod
     def run():
-        if Utils.isTodayHoliday():
+        if Utils.is_today_holiday():
             logging.info("Cannot start TradeManager as Today is Trading Holiday.")
             return
 
-        if Utils.isMarketClosedForTheDay():
+        if Utils.is_market_closed_for_the_day():
             logging.info("Cannot start TradeManager as Market is closed for the day.")
             return
 
-        Utils.waitTillMarketOpens("TradeManager")
+        Utils.wait_till_market_opens("TradeManager")
 
         # check and create trades directory for today`s date
-        serverConfig = get_server_config()
-        tradesDir = os.path.join(serverConfig['deployDir'], 'trades')
-        TradeManager.intradayTradesDir =  os.path.join(tradesDir, Utils.getTodayDateStr())
-        if os.path.exists(TradeManager.intradayTradesDir) == False:
-            logging.info('TradeManager: Intraday Trades Directory %s does not exist. Hence going to create.', TradeManager.intradayTradesDir)
-            os.makedirs(TradeManager.intradayTradesDir)
+        server_config = get_server_config()
+        trades_dir = os.path.join(server_config['deployDir'], 'trades')
+        TradeManager.intraday_trades_dir = os.path.join(trades_dir, Utils.get_today_date_str())
+        if os.path.exists(TradeManager.intraday_trades_dir) == False:
+            logging.info('TradeManager: Intraday Trades Directory %s does not exist. Hence going to create.', TradeManager.intraday_trades_dir)
+            os.makedirs(TradeManager.intraday_trades_dir)
 
         # start ticker service
-        brokerName = Controller.getBrokerName()
-        if brokerName == "Zerodha":
+        broker_name = Controller.get_broker_name()
+        if broker_name == "Zerodha":
             TradeManager.ticker = ZerodhaTicker()
-        #elif brokerName == "fyers" # not implemented
+        # elif broker_name == "fyers" # not implemented
         #   ticker = FyersTicker()
 
-        TradeManager.ticker.startTicker()
-        TradeManager.ticker.registerListener(TradeManager.tickerListener)
+        TradeManager.ticker.start_ticker()
+        TradeManager.ticker.register_listener(TradeManager.ticker_listener)
 
         # sleep for 2 seconds for ticker connection establishment
         time.sleep(2)
 
         # Load all trades from json files to app memory
-        TradeManager.loadAllTradesFromFile()
+        TradeManager.load_all_trades_from_file()
 
         # track and update trades in a loop
         while True:
-            if Utils.isMarketClosedForTheDay():
+            if Utils.is_market_closed_for_the_day():
                 logging.info('TradeManager: Stopping TradeManager as market closed.')
                 break
 
             try:
                 # Fetch all order details from broker and update orders in each trade
-                TradeManager.fetchAndUpdateAllTradeOrders()
+                TradeManager.fetch_and_update_all_trade_orders()
                 # track each trade and take necessary action
-                TradeManager.trackAndUpdateAllTrades()
+                TradeManager.track_and_update_all_trades()
             except Exception as e:
                 logging.exception("Exception in TradeManager Main thread")
 
             # save updated data to json file
-            TradeManager.saveAllTradesToFile()
+            TradeManager.save_all_trade_to_file()
             
             # sleep for 30 seconds and then continue
             time.sleep(5)
             logging.info('TradeManager: Main thread woke up..')
 
     @staticmethod
-    def registerStrategy(strategyInstance):
-        TradeManager.strategyToInstanceMap[strategyInstance.getName()] = strategyInstance
+    def register_strategy(strategy_instance):
+        TradeManager.strategy_to_instance_map[strategy_instance.get_name()] = strategy_instance
 
     @staticmethod
-    def loadAllTradesFromFile():
-        tradesFilepath = os.path.join(TradeManager.intradayTradesDir, 'trades.json')
-        if os.path.exists(tradesFilepath) == False:
-            logging.warn('TradeManager: loadAllTradesFromFile() Trades Filepath %s does not exist', tradesFilepath)
+    def load_all_trades_from_file():
+        trades_filepath = os.path.join(TradeManager.intraday_trades_dir, 'trades.json')
+        if os.path.exists(trades_filepath) == False:
+            logging.warn('TradeManager: load_all_trades_from_file() Trades Filepath %s does not exist', trades_filepath)
             return
         TradeManager.trades = []
-        tFile = open(tradesFilepath, 'r')
-        tradesData = json.loads(tFile.read())
-        for tr in tradesData:
-            trade = TradeManager.convertJSONToTrade(tr)
-            logging.info('loadAllTradesFromFile trade => %s', trade)
+        t_file = open(trades_filepath, 'r')
+        trades_data = json.loads(t_file.read())
+        for tr in trades_data:
+            trade = TradeManager.convert_json_to_trade(tr)
+            logging.info('load_all_trades_from_file trade => %s', trade)
             TradeManager.trades.append(trade)
-            if trade.tradingSymbol not in TradeManager.registeredSymbols:
+            if trade.trading_symbol not in TradeManager.registered_symbols:
                 # Algo register symbols with ticker
-                TradeManager.ticker.registerSymbols([trade.tradingSymbol])
-                TradeManager.registeredSymbols.append(trade.tradingSymbol)
-        logging.info('TradeManager: Successfully loaded %d trades from json file %s', len(TradeManager.trades), tradesFilepath)
+                TradeManager.ticker.register_symbols([trade.trading_symbol])
+                TradeManager.registered_symbols.append(trade.trading_symbol)
+        logging.info('TradeManager: Successfully loaded %d trades from json file %s', len(TradeManager.trades), trades_filepath)
 
     @staticmethod
-    def saveAllTradesToFile():
-        tradesFilepath = os.path.join(TradeManager.intradayTradesDir, 'trades.json')
-        with open(tradesFilepath, 'w') as tFile:
-            json.dump(TradeManager.trades, tFile, indent=2, cls=TradeEncoder)
-        logging.info('TradeManager: Saved %d trades to file %s', len(TradeManager.trades), tradesFilepath)
+    def save_all_trade_to_file():
+        trades_filepath = os.path.join(TradeManager.intraday_trades_dir, 'trades.json')
+        with open(trades_filepath, 'w') as t_file:
+            json.dump(TradeManager.trades, t_file, indent=2, cls=TradeEncoder)
+        logging.info('TradeManager: Saved %d trades to file %s', len(TradeManager.trades), trades_filepath)
 
     @staticmethod
-    def addNewTrade(trade):
+    def add_new_trade(trade):
         if trade == None:
             return
-        logging.info('TradeManager: addNewTrade called for %s', trade)
+        logging.info('TradeManager: add_new_trade called for %s', trade)
         for tr in TradeManager.trades:
             if tr.equals(trade):
                 logging.warn('TradeManager: Trade already exists so not adding again. %s', trade)
                 return
         # Add the new trade to the list
         TradeManager.trades.append(trade)
-        logging.info('TradeManager: trade %s added successfully to the list', trade.tradeID)
+        logging.info('TradeManager: trade %s added successfully to the list', trade.trade_id)
         # Register the symbol with ticker so that we will start getting ticks for this symbol
-        if trade.tradingSymbol not in TradeManager.registeredSymbols:
-            TradeManager.ticker.registerSymbols([trade.tradingSymbol])
-            TradeManager.registeredSymbols.append(trade.tradingSymbol)
+        if trade.trading_symbol not in TradeManager.registered_symbols:
+            TradeManager.ticker.register_symbols([trade.trading_symbol])
+            TradeManager.registered_symbols.append(trade.trading_symbol)
         # Also add the trade to strategy trades list
-        strategyInstance = TradeManager.strategyToInstanceMap[trade.strategy]
-        if strategyInstance != None:
-            strategyInstance.addTradeToList(trade)
+        strategy_instance = TradeManager.strategy_to_instance_map[trade.strategy]
+        if strategy_instance != None:
+            strategy_instance.add_trade_to_list(trade)
 
     @staticmethod
-    def disableTrade(trade, reason):
+    def disable_trade(trade, reason):
         if trade != None:
-            logging.info('TradeManager: Going to disable trade ID %s with the reason %s', trade.tradeID, reason)
-            trade.tradeState = TradeState.DISABLED
+            logging.info('TradeManager: Going to disable trade ID %s with the reason %s', trade.trade_id, reason)
+            trade.trade_state = TradeState.DISABLED
 
     @staticmethod
-    def tickerListener(tick):
-        # logging.info('tickerLister: new tick received for %s = %f', tick.tradingSymbol, tick.lastTradedPrice);
-        TradeManager.symbolToCMPMap[tick.tradingSymbol] = tick.lastTradedPrice # Store the latest tick in map
+    def ticker_listener(tick):
+        # logging.info('tickerLister: new tick received for %s = %f', tick.trading_symbol, tick.lastTradedPrice);
+        # Store the latest tick in map
+        TradeManager.symbol_to_cmp_map[tick.trading_symbol] = tick.last_traded_price
         # On each new tick, get a created trade and call its strategy whether to place trade or not
-        for strategy in TradeManager.strategyToInstanceMap:
-            longTrade = TradeManager.getUntriggeredTrade(tick.tradingSymbol, strategy, Direction.LONG)
-            shortTrade = TradeManager.getUntriggeredTrade(tick.tradingSymbol, strategy, Direction.SHORT)
-            if longTrade == None and shortTrade == None:
+        for strategy in TradeManager.strategy_to_instance_map:
+            long_trade = TradeManager.get_untriggered_trade(tick.trading_symbol, strategy, Direction.LONG)
+            short_trade = TradeManager.get_untriggered_trade(tick.trading_symbol, strategy, Direction.SHORT)
+            if long_trade == None and short_trade == None:
                 continue
-            strategyInstance = TradeManager.strategyToInstanceMap[strategy]
-            if longTrade != None:
-                if strategyInstance.shouldPlaceTrade(longTrade, tick):
+            strategy_instance = TradeManager.strategy_to_instance_map[strategy]
+            if long_trade != None:
+                if strategy_instance.should_place_trade(long_trade, tick):
                     # place the longTrade
-                    isSuccess = TradeManager.executeTrade(longTrade)
-                    if isSuccess == True:
+                    is_success = TradeManager.executeTrade(long_trade)
+                    if is_success == True:
                         # set longTrade state to ACTIVE
-                        longTrade.tradeState = TradeState.ACTIVE
-                        longTrade.startTimestamp = Utils.getEpoch()
+                        long_trade.trade_state = TradeState.ACTIVE
+                        long_trade.start_timestamp = Utils.get_epoch()
                         continue
             
-            if shortTrade != None:
-                if strategyInstance.shouldPlaceTrade(shortTrade, tick):
+            if short_trade != None:
+                if strategy_instance.should_place_trade(short_trade, tick):
                     # place the shortTrade
-                    isSuccess = TradeManager.executeTrade(shortTrade)
-                    if isSuccess == True:
+                    is_success = TradeManager.executeTrade(short_trade)
+                    if is_success == True:
                         # set shortTrade state to ACTIVE
-                        shortTrade.tradeState = TradeState.ACTIVE
-                        shortTrade.startTimestamp = Utils.getEpoch()
+                        short_trade.trade_state = TradeState.ACTIVE
+                        short_trade.start_timestamp = Utils.get_epoch()
     
     @staticmethod
-    def getUntriggeredTrade(tradingSymbol, strategy, direction):
+    def get_untriggered_trade(trading_symbol, strategy, direction):
         trade = None
         for tr in TradeManager.trades:
-            if tr.tradeState == TradeState.DISABLED:
+            if tr.trade_state == TradeState.DISABLED:
                 continue
-            if tr.tradeState != TradeState.CREATED:
+            if tr.trade_state != TradeState.CREATED:
                 continue
-            if tr.tradingSymbol != tradingSymbol:
+            if tr.trading_symbol != trading_symbol:
                 continue
             if tr.strategy != strategy:
                 continue
@@ -194,339 +195,339 @@ class TradeManager:
     @staticmethod
     def executeTrade(trade):
         logging.info('TradeManager: Execute trade called for %s', trade)
-        trade.initialStopLoss = trade.stopLoss
+        trade.initial_stop_loss = trade.stop_loss
         # Create order input params object and place order
-        oip = OrderInputParams(trade.tradingSymbol)
+        oip = OrderInputParams(trade.trading_symbol)
         oip.direction = trade.direction
-        oip.productType = trade.productType
-        oip.orderType = OrderType.MARKET if trade.placeMarketOrder == True else OrderType.LIMIT
-        oip.price = trade.requestedEntry
+        oip.product_type = trade.product_type
+        oip.order_type = OrderType.MARKET if trade.place_market_order == True else OrderType.LIMIT
+        oip.price = trade.requested_entry
         oip.qty = trade.qty
-        if trade.isFutures == True or trade.isOptions == True:
-            oip.isFnO = True
+        if trade.is_futures == True or trade.is_options == True:
+            oip.is_fno = True
         try:
-            trade.entryOrder = TradeManager.getOrderManager().placeOrder(oip)
+            trade.entry_order = TradeManager.get_order_manager().place_order(oip)
         except Exception as e:
-            logging.error('TradeManager: Execute trade failed for tradeID %s: Error => %s', trade.tradeID, str(e))
+            logging.error('TradeManager: Execute trade failed for tradeID %s: Error => %s', trade.trade_id, str(e))
             return False
 
-        logging.info('TradeManager: Execute trade successful for %s and entryOrder %s', trade, trade.entryOrder)
+        logging.info('TradeManager: Execute trade successful for %s and entry_order %s', trade, trade.entry_order)
         return True
 
     @staticmethod
-    def fetchAndUpdateAllTradeOrders():
-        allOrders = []
+    def fetch_and_update_all_trade_orders():
+        all_orders = []
         for trade in TradeManager.trades:
-            if trade.entryOrder != None:
-                allOrders.append(trade.entryOrder)
-            if trade.slOrder != None:
-                allOrders.append(trade.slOrder)
-            if trade.targetOrder != None:
-                allOrders.append(trade.targetOrder)
+            if trade.entry_order != None:
+                all_orders.append(trade.entry_order)
+            if trade.sl_order != None:
+                all_orders.append(trade.sl_order)
+            if trade.target_order != None:
+                all_orders.append(trade.target_order)
 
-        TradeManager.getOrderManager().fetchAndUpdateAllOrderDetails(allOrders)
+        TradeManager.get_order_manager().fetch_and_update_all_order_details(all_orders)
 
     @staticmethod
-    def trackAndUpdateAllTrades():
+    def track_and_update_all_trades():
         for trade in TradeManager.trades:
-            if trade.tradeState == TradeState.ACTIVE:
-                if trade.intradaySquareOffTimestamp != None:
-                    nowEpoch = Utils.getEpoch()
-                    if nowEpoch >= trade.intradaySquareOffTimestamp:
-                        TradeManager.squareOffTrade(trade, TradeExitReason.SQUARE_OFF)
+            if trade.trade_state == TradeState.ACTIVE:
+                if trade.intraday_square_off_timestamp != None:
+                    nowEpoch = Utils.get_epoch()
+                    if nowEpoch >= trade.intraday_square_off_timestamp:
+                        TradeManager.square_off_trade(trade, TradeExitReason.SQUARE_OFF)
                 
-                TradeManager.trackEntryOrder(trade)
-                TradeManager.trackSLOrder(trade)
-                TradeManager.trackTargetOrder(trade)
+                TradeManager.track_entry_order(trade)
+                TradeManager.track_sl_order(trade)
+                TradeManager.track_target_order(trade)
 
     @staticmethod
-    def trackEntryOrder(trade):
-        if trade.tradeState != TradeState.ACTIVE:
+    def track_entry_order(trade):
+        if trade.trade_state != TradeState.ACTIVE:
             return
 
-        if trade.entryOrder == None:
+        if trade.entry_order == None:
             return
 
-        if trade.entryOrder.orderStatus == OrderStatus.CANCELLED or trade.entryOrder.orderStatus == OrderStatus.REJECTED:
-            trade.tradeState = TradeState.CANCELLED
+        if trade.entry_order.order_status == OrderStatus.CANCELLED or trade.entry_order.order_status == OrderStatus.REJECTED:
+            trade.trade_state = TradeState.CANCELLED
 
-        trade.filledQty = trade.entryOrder.filledQty
-        if trade.filledQty > 0:
-            trade.entry = trade.entryOrder.averagePrice
+        trade.filled_qty = trade.entry_order.filled_qty
+        if trade.filled_qty > 0:
+            trade.entry = trade.entry_order.average_price
         # Update the current market price and calculate pnl
-        trade.cmp = TradeManager.symbolToCMPMap[trade.tradingSymbol]
-        Utils.calculateTradePnl(trade)
+        trade.cmp = TradeManager.symbol_to_cmp_map[trade.trading_symbol]
+        Utils.calculate_trade_pnl(trade)
 
     @staticmethod
-    def trackSLOrder(trade):
-        if trade.tradeState != TradeState.ACTIVE:
+    def track_sl_order(trade):
+        if trade.trade_state != TradeState.ACTIVE:
             return
-        if trade.stopLoss == 0: # Do not place SL order if no stoploss provided
+        if trade.stop_loss == 0: # Do not place SL order if no stoploss provided
             return
-        if trade.slOrder == None:
+        if trade.sl_order == None:
             # Place SL order
-            TradeManager.placeSLOrder(trade)
+            TradeManager.place_sl_order(trade)
         else:
-            if trade.slOrder.orderStatus == OrderStatus.COMPLETE:
+            if trade.sl_order.order_status == OrderStatus.COMPLETE:
                 # SL Hit
-                exit = trade.slOrder.averagePrice
-                exitReason = TradeExitReason.SL_HIT if trade.initialStopLoss == trade.stopLoss else TradeExitReason.TRAIL_SL_HIT
-                TradeManager.setTradeToCompleted(trade, exit, exitReason)
+                exit = trade.sl_order.average_price
+                exit_reason = TradeExitReason.SL_HIT if trade.initial_stop_loss == trade.stop_loss else TradeExitReason.TRAIL_SL_HIT
+                TradeManager.set_trade_to_completed(trade, exit, exit_reason)
                 # Make sure to cancel target order if exists
-                TradeManager.cancelTargetOrder(trade)
+                TradeManager.cancel_target_order(trade)
 
-            elif trade.slOrder.orderStatus == OrderStatus.CANCELLED:
+            elif trade.sl_order.order_status == OrderStatus.CANCELLED:
                 # SL order cancelled outside of algo (manually or by broker or by exchange)
-                logging.error('SL order %s for tradeID %s cancelled outside of Algo. Setting the trade as completed with exit price as current market price.', trade.slOrder.orderId, trade.tradeID)
-                exit = TradeManager.symbolToCMPMap[trade.tradingSymbol]
-                TradeManager.setTradeToCompleted(trade, exit, TradeExitReason.SL_CANCELLED)
+                logging.error('SL order %s for tradeID %s cancelled outside of Algo. Setting the trade as completed with exit price as current market price.', trade.sl_order.order_id, trade.trade_id)
+                exit = TradeManager.symbol_to_cmp_map[trade.trading_symbol]
+                TradeManager.set_trade_to_completed(trade, exit, TradeExitReason.SL_CANCELLED)
                 # Cancel target order if exists
-                TradeManager.cancelTargetOrder(trade)
+                TradeManager.cancel_target_order(trade)
 
             else:
-                TradeManager.checkAndUpdateTrailSL(trade)
+                TradeManager.check_and_update_trail_sl(trade)
 
     @staticmethod
-    def checkAndUpdateTrailSL(trade):
+    def check_and_update_trail_sl(trade):
         # Trail the SL if applicable for the trade
-        strategyInstance = TradeManager.strategyToInstanceMap[trade.strategy]
-        if strategyInstance == None:
+        strategy_instance = TradeManager.strategy_to_instance_map[trade.strategy]
+        if strategy_instance == None:
             return
 
-        newTrailSL = strategyInstance.getTrailingSL(trade)
-        updateSL = False
-        if newTrailSL > 0:
-            if trade.direction == Direction.LONG and newTrailSL > trade.stopLoss:
-                updateSL = True
-            elif trade.direction == Direction.SHORT and newTrailSL < trade.stopLoss:
-                updateSL = True
-        if updateSL == True:
+        new_trail_sl = strategy_instance.get_trailing_sl(trade)
+        update_sl = False
+        if new_trail_sl > 0:
+            if trade.direction == Direction.LONG and new_trail_sl > trade.stop_loss:
+                update_sl = True
+            elif trade.direction == Direction.SHORT and new_trail_sl < trade.stop_loss:
+                update_sl = True
+        if update_sl == True:
             omp = OrderModifyParams()
-            omp.newTriggerPrice = newTrailSL
+            omp.new_trigger_price = new_trail_sl
             try:
-                oldSL = trade.stopLoss
-                TradeManager.getOrderManager().modifyOrder(trade.slOrder, omp)
-                logging.info('TradeManager: Trail SL: Successfully modified stopLoss from %f to %f for tradeID %s', oldSL, newTrailSL, trade.tradeID)
-                trade.stopLoss = newTrailSL # IMPORTANT: Dont forget to update this on successful modification
+                old_sl = trade.stop_loss
+                TradeManager.get_order_manager().modify_order(trade.sl_order, omp)
+                logging.info('TradeManager: Trail SL: Successfully modified stopLoss from %f to %f for tradeID %s', old_sl, new_trail_sl, trade.trade_id)
+                trade.stop_loss = new_trail_sl # IMPORTANT: Dont forget to update this on successful modification
             except Exception as e:
-                logging.error('TradeManager: Failed to modify SL order for tradeID %s orderId %s: Error => %s', trade.tradeID, trade.slOrder.orderId, str(e))
+                logging.error('TradeManager: Failed to modify SL order for tradeID %s orderId %s: Error => %s', trade.trade_id, trade.sl_order.order_id, str(e))
 
     @staticmethod
-    def trackTargetOrder(trade):
-        if trade.tradeState != TradeState.ACTIVE:
+    def track_target_order(trade):
+        if trade.trade_state != TradeState.ACTIVE:
             return
         if trade.target == 0: # Do not place Target order if no target provided
             return
-        if trade.targetOrder == None:
+        if trade.target_order == None:
             # Place Target order
-            TradeManager.placeTargetOrder(trade)
+            TradeManager.place_target_order(trade)
         else:
-            if trade.targetOrder.orderStatus == OrderStatus.COMPLETE:
+            if trade.target_order.order_status == OrderStatus.COMPLETE:
                 # Target Hit
-                exit = trade.targetOrder.averagePrice
-                TradeManager.setTradeToCompleted(trade, exit, TradeExitReason.TARGET_HIT)
+                exit = trade.target_order.average_price
+                TradeManager.set_trade_to_completed(trade, exit, TradeExitReason.TARGET_HIT)
                 # Make sure to cancel sl order
-                TradeManager.cancelSLOrder(trade)
+                TradeManager.cancel_sl_order(trade)
 
-            elif trade.targetOrder.orderStatus == OrderStatus.CANCELLED:
+            elif trade.target_order.order_status == OrderStatus.CANCELLED:
                 # Target order cancelled outside of algo (manually or by broker or by exchange)
-                logging.error('Target order %s for tradeID %s cancelled outside of Algo. Setting the trade as completed with exit price as current market price.', trade.targetOrder.orderId, trade.tradeID)
-                exit = TradeManager.symbolToCMPMap[trade.tradingSymbol]
-                TradeManager.setTradeToCompleted(trade, exit, TradeExitReason.TARGET_CANCELLED)
+                logging.error('Target order %s for trade_id %s cancelled outside of Algo. Setting the trade as completed with exit price as current market price.', trade.target_order.order_id, trade.trade_id)
+                exit = TradeManager.symbol_to_cmp_map[trade.trading_symbol]
+                TradeManager.set_trade_to_completed(trade, exit, TradeExitReason.TARGET_CANCELLED)
                 # Cancel SL order
-                TradeManager.cancelSLOrder(trade)
+                TradeManager.cancel_sl_order(trade)
 
     @staticmethod
-    def placeSLOrder(trade):
-        oip = OrderInputParams(trade.tradingSymbol)
+    def place_sl_order(trade):
+        oip = OrderInputParams(trade.trading_symbol)
         oip.direction = Direction.SHORT if trade.direction == Direction.LONG else Direction.LONG 
-        oip.productType = trade.productType
-        oip.orderType = OrderType.SL_MARKET
-        oip.triggerPrice = trade.stopLoss
+        oip.product_type = trade.product_type
+        oip.order_type = OrderType.SL_MARKET
+        oip.trigger_price = trade.stop_loss
         oip.qty = trade.qty
-        if trade.isFutures == True or trade.isOptions == True:
-            oip.isFnO = True
+        if trade.is_futures == True or trade.is_options == True:
+            oip.is_fno = True
         try:
-            trade.slOrder = TradeManager.getOrderManager().placeOrder(oip)
+            trade.sl_order = TradeManager.get_order_manager().place_order(oip)
         except Exception as e:
-            logging.error('TradeManager: Failed to place SL order for tradeID %s: Error => %s', trade.tradeID, str(e))
+            logging.error('TradeManager: Failed to place SL order for trade_id %s: Error => %s', trade.trade_id, str(e))
             return False
-        logging.info('TradeManager: Successfully placed SL order %s for tradeID %s', trade.slOrder.orderId, trade.tradeID)
+        logging.info('TradeManager: Successfully placed SL order %s for trade_id %s', trade.sl_order.order_id, trade.trade_id)
         return True
 
     @staticmethod
-    def placeTargetOrder(trade, isMarketOrder = False):
-        oip = OrderInputParams(trade.tradingSymbol)
+    def place_target_order(trade, is_market_order=False):
+        oip = OrderInputParams(trade.trading_symbol)
         oip.direction = Direction.SHORT if trade.direction == Direction.LONG else Direction.LONG
-        oip.productType = trade.productType
-        oip.orderType = OrderType.MARKET if isMarketOrder == True else OrderType.LIMIT
-        oip.price = 0 if isMarketOrder == True else trade.target
+        oip.product_type = trade.product_type
+        oip.order_type = OrderType.MARKET if is_market_order == True else OrderType.LIMIT
+        oip.price = 0 if is_market_order == True else trade.target
         oip.qty = trade.qty
-        if trade.isFutures == True or trade.isOptions == True:
-            oip.isFnO = True
+        if trade.is_futures == True or trade.is_options == True:
+            oip.is_fno = True
         try:
-            trade.targetOrder = TradeManager.getOrderManager().placeOrder(oip)
+            trade.target_order = TradeManager.get_order_manager().place_order(oip)
         except Exception as e:
-            logging.error('TradeManager: Failed to place Target order for tradeID %s: Error => %s', trade.tradeID, str(e))
+            logging.error('TradeManager: Failed to place Target order for trade_id %s: Error => %s', trade.trade_id, str(e))
             return False
-        logging.info('TradeManager: Successfully placed Target order %s for tradeID %s', trade.targetOrder.orderId, trade.tradeID)
+        logging.info('TradeManager: Successfully placed Target order %s for trade_id %s', trade.target_order.order_id, trade.trade_id)
         return True
 
     @staticmethod
-    def cancelEntryOrder(trade):
-        if trade.entryOrder == None:
+    def cancel_entry_order(trade):
+        if trade.entry_order == None:
             return
-        if trade.entryOrder.orderStatus == OrderStatus.CANCELLED:
-            return
-        try:
-            TradeManager.getOrderManager().cancelOrder(trade.entryOrder)
-        except Exception as e:
-            logging.error('TradeManager: Failed to cancel Entry order %s for tradeID %s: Error => %s', trade.entryOrder.orderId, trade.tradeID, str(e))
-        logging.info('TradeManager: Successfully cancelled Entry order %s for tradeID %s', trade.entryOrder.orderId, trade.tradeID)
-
-    @staticmethod
-    def cancelSLOrder(trade):
-        if trade.slOrder == None:
-            return
-        if trade.slOrder.orderStatus == OrderStatus.CANCELLED:
+        if trade.entry_order.order_status == OrderStatus.CANCELLED:
             return
         try:
-            TradeManager.getOrderManager().cancelOrder(trade.slOrder)
+            TradeManager.get_order_manager().cancel_order(trade.entry_order)
         except Exception as e:
-            logging.error('TradeManager: Failed to cancel SL order %s for tradeID %s: Error => %s', trade.slOrder.orderId, trade.tradeID, str(e))
-        logging.info('TradeManager: Successfully cancelled SL order %s for tradeID %s', trade.slOrder.orderId, trade.tradeID)
+            logging.error('TradeManager: Failed to cancel Entry order %s for trade_id %s: Error => %s', trade.entry_order.order_id, trade.trade_id, str(e))
+        logging.info('TradeManager: Successfully cancelled Entry order %s for trade_id %s', trade.entry_order.order_id, trade.trade_id)
 
     @staticmethod
-    def cancelTargetOrder(trade):
-        if trade.targetOrder == None:
+    def cancel_sl_order(trade):
+        if trade.sl_order == None:
             return
-        if trade.targetOrder.orderStatus == OrderStatus.CANCELLED:
+        if trade.sl_order.order_status == OrderStatus.CANCELLED:
             return
         try:
-            TradeManager.getOrderManager().cancelOrder(trade.targetOrder)
+            TradeManager.get_order_manager().cancel_order(trade.sl_order)
         except Exception as e:
-            logging.error('TradeManager: Failed to cancel Target order %s for tradeID %s: Error => %s', trade.targetOrder.orderId, trade.tradeID, str(e))
-        logging.info('TradeManager: Successfully cancelled Target order %s for tradeID %s', trade.targetOrder.orderId, trade.tradeID)
+            logging.error('TradeManager: Failed to cancel SL order %s for trade_id %s: Error => %s', trade.sl_order.order_id, trade.trade_id, str(e))
+        logging.info('TradeManager: Successfully cancelled SL order %s for trade_id %s', trade.sl_order.order_id, trade.trade_id)
 
     @staticmethod
-    def setTradeToCompleted(trade, exit, exitReason = None):
+    def cancel_target_order(trade):
+        if trade.target_order == None:
+            return
+        if trade.target_order.order_status == OrderStatus.CANCELLED:
+            return
+        try:
+            TradeManager.get_order_manager().cancel_order(trade.target_order)
+        except Exception as e:
+            logging.error('TradeManager: Failed to cancel Target order %s for trade_id %s: Error => %s', trade.target_order.order_id, trade.trade_id, str(e))
+        logging.info('TradeManager: Successfully cancelled Target order %s for trade_id %s', trade.target_order.order_id, trade.trade_id)
+
+    @staticmethod
+    def set_trade_to_completed(trade, exit, exit_reason=None):
         trade.tradeState = TradeState.COMPLETED
         trade.exit = exit
-        trade.exitReason = exitReason if trade.exitReason == None else trade.exitReason
-        trade.endTimestamp = Utils.getEpoch()
-        trade = Utils.calculateTradePnl(trade)
-        logging.info('TradeManager: setTradeToCompleted strategy = %s, symbol = %s, qty = %d, entry = %f, exit = %f, pnl = %f, exit reason = %s', trade.strategy, trade.tradingSymbol, trade.filledQty, trade.entry, trade.exit, trade.pnl, trade.exitReason)
+        trade.exit_reason = exit_reason if trade.exit_reason == None else trade.exit_reason
+        trade.end_timestamp = Utils.get_epoch()
+        trade = Utils.calculate_trade_pnl(trade)
+        logging.info('TradeManager: set_trade_to_completed strategy = %s, symbol = %s, qty = %d, entry = %f, exit = %f, pnl = %f, exit reason = %s', trade.strategy, trade.trading_symbol, trade.filled_qty, trade.entry, trade.exit, trade.pnl, trade.exit_reason)
 
     @staticmethod
-    def squareOffTrade(trade, reason = TradeExitReason.SQUARE_OFF):
-        logging.info('TradeManager: squareOffTrade called for tradeID %s with reason %s', trade.tradeID, reason)
-        if trade == None or trade.tradeState != TradeState.ACTIVE:
+    def square_off_trade(trade, reason = TradeExitReason.SQUARE_OFF):
+        logging.info('TradeManager: square_off_trade called for trade_id %s with reason %s', trade.trade_id, reason)
+        if trade == None or trade.trade_state != TradeState.ACTIVE:
             return
 
-        trade.exitReason = reason
-        if trade.entryOrder != None:
-            if trade.entryOrder.orderStatus == OrderStatus.OPEN:
+        trade.exit_reason = reason
+        if trade.entry_order != None:
+            if trade.entry_order.order_status == OrderStatus.OPEN:
                 # Cancel entry order if it is still open (not filled or partially filled case)
-                TradeManager.cancelEntryOrder(trade)
+                TradeManager.cancel_entry_order(trade)
 
-        if trade.slOrder != None:
-            TradeManager.cancelSLOrder(trade)
+        if trade.sl_order != None:
+            TradeManager.cancel_sl_order(trade)
 
-        if trade.targetOrder != None:
+        if trade.target_order != None:
             # Change target order type to MARKET to exit position immediately
-            logging.info('TradeManager: changing target order %s to MARKET to exit position for tradeID %s', trade.targetOrder.orderId, trade.tradeID)
-            TradeManager.getOrderManager().modifyOrderToMarket(trade.targetOrder)
+            logging.info('TradeManager: changing target order %s to MARKET to exit position for tradeID %s', trade.target_order.order_id, trade.trade_id)
+            TradeManager.get_order_manager().modify_order_to_market(trade.target_order)
         else:
             # Place new target order to exit position
-            logging.info('TradeManager: placing new target order to exit position for tradeID %s', trade.tradeID)
-            TradeManager.placeTargetOrder(trade, True)
+            logging.info('TradeManager: placing new target order to exit position for tradeID %s', trade.trade_id)
+            TradeManager.place_target_order(trade, True)
 
     @staticmethod
-    def getOrderManager():
-        orderManager = None
-        brokerName = Controller.getBrokerName()
-        if brokerName == "Zerodha":
-            orderManager = ZerodhaOrderManager()
-        #elif brokerName == "fyers": # Not implemented
-        return orderManager
+    def get_order_manager():
+        order_manager = None
+        broker_name = Controller.get_broker_name()
+        if broker_name == "Zerodha":
+            order_manager = ZerodhaOrderManager()
+        # elif broker_name == "fyers": # Not implemented
+        return order_manager
 
     @staticmethod
-    def getNumberOfTradesPlacedByStrategy(strategy):
+    def get_number_of_trades_placed_by_strategy(strategy):
         count = 0
         for trade in TradeManager.trades:
             if trade.strategy != strategy:
                 continue
-            if trade.tradeState == TradeState.CREATED or trade.tradeState == TradeState.DISABLED:
+            if trade.trade_state == TradeState.CREATED or trade.trade_state == TradeState.DISABLED:
                 continue
             # consider active/completed/cancelled trades as trades placed
             count += 1
         return count
 
     @staticmethod
-    def getAllTradesByStrategy(strategy):
-        tradesByStrategy = []
+    def get_all_trades_by_strategy(strategy):
+        trades_by_strategy = []
         for trade in TradeManager.trades:
             if trade.strategy == strategy:
-                tradesByStrategy.append(trade)
-        return tradesByStrategy
+                trades_by_strategy.append(trade)
+        return trades_by_strategy
 
     @staticmethod
-    def convertJSONToTrade(jsonData):
-        trade = Trade(jsonData['tradingSymbol'])
-        trade.tradeID = jsonData['tradeID']
+    def convert_json_to_trade(jsonData):
+        trade = Trade(jsonData['trading_symbol'])
+        trade.trade_id = jsonData['trade_id']
         trade.strategy = jsonData['strategy']
         trade.direction = jsonData['direction']
-        trade.productType = jsonData['productType']
-        trade.isFutures = jsonData['isFutures']
-        trade.isOptions = jsonData['isOptions']
-        trade.optionType = jsonData['optionType']
-        trade.placeMarketOrder = jsonData['placeMarketOrder']
-        trade.intradaySquareOffTimestamp = jsonData['intradaySquareOffTimestamp']
-        trade.requestedEntry = jsonData['requestedEntry']
+        trade.product_type = jsonData['product_type']
+        trade.is_futures = jsonData['is_futures']
+        trade.is_options = jsonData['is_options']
+        trade.option_type = jsonData['option_type']
+        trade.place_market_order = jsonData['place_market_order']
+        trade.intraday_square_off_timestamp = jsonData['intraday_square_off_timestamp']
+        trade.requested_entry = jsonData['requested_entry']
         trade.entry = jsonData['entry']
         trade.qty = jsonData['qty']
-        trade.filledQty = jsonData['filledQty']
-        trade.initialStopLoss = jsonData['initialStopLoss']
-        trade.stopLoss = jsonData['stopLoss']
+        trade.filled_qty = jsonData['filled_qty']
+        trade.initial_stop_loss = jsonData['initial_stop_loss']
+        trade.stop_loss = jsonData['stop_loss']
         trade.target = jsonData['target']
         trade.cmp = jsonData['cmp']
-        trade.tradeState = jsonData['tradeState']
+        trade.trade_state = jsonData['tradeState']
         trade.timestamp = jsonData['timestamp']
-        trade.createTimestamp = jsonData['createTimestamp']
-        trade.startTimestamp = jsonData['startTimestamp']
-        trade.endTimestamp = jsonData['endTimestamp']
+        trade.create_timestamp = jsonData['create_timestamp']
+        trade.start_timestamp = jsonData['start_timestamp']
+        trade.end_timestamp = jsonData['end_timestamp']
         trade.pnl = jsonData['pnl']
-        trade.pnlPercentage = jsonData['pnlPercentage']
+        trade.pnl_percentage = jsonData['pnl_percentage']
         trade.exit = jsonData['exit']
-        trade.exitReason = jsonData['exitReason']
+        trade.exit_reason = jsonData['exit_reason']
         trade.exchange = jsonData['exchange']
-        trade.entryOrder = TradeManager.convertJSONToOrder(jsonData['entryOrder'])
-        trade.slOrder = TradeManager.convertJSONToOrder(jsonData['slOrder'])
-        trade.targetOrder = TradeManager.convertJSONToOrder(jsonData['targetOrder'])
+        trade.entry_order = TradeManager.convert_json_to_order(jsonData['entry_order'])
+        trade.sl_order = TradeManager.convert_json_to_order(jsonData['sl_order'])
+        trade.target_order = TradeManager.convert_json_to_order(jsonData['target_order'])
         return trade
 
     @staticmethod
-    def convertJSONToOrder(jsonData):
-        if jsonData == None:
+    def convert_json_to_order(json_data):
+        if json_data == None:
             return None
         order = Order()
-        order.tradingSymbol = jsonData['tradingSymbol']
-        order.exchange = jsonData['exchange']
-        order.productType = jsonData['productType']
-        order.orderType = jsonData['orderType']
-        order.price = jsonData['price']
-        order.triggerPrice = jsonData['triggerPrice']
-        order.qty = jsonData['qty']
-        order.orderId = jsonData['orderId']
-        order.orderStatus = jsonData['orderStatus']
-        order.averagePrice = jsonData['averagePrice']
-        order.filledQty = jsonData['filledQty']
-        order.pendingQty = jsonData['pendingQty']
-        order.orderPlaceTimestamp = jsonData['orderPlaceTimestamp']
-        order.lastOrderUpdateTimestamp = jsonData['lastOrderUpdateTimestamp']
-        order.message = jsonData['message']
+        order.trading_symbol = json_data['trading_symbol']
+        order.exchange = json_data['exchange']
+        order.product_type = json_data['product_type']
+        order.order_type = json_data['order_type']
+        order.price = json_data['price']
+        order.trigger_price = json_data['trigger_price']
+        order.qty = json_data['qty']
+        order.order_id = json_data['order_id']
+        order.order_status = json_data['order_status']
+        order.average_price = json_data['average_price']
+        order.filled_qty = json_data['filled_qty']
+        order.pending_qty = json_data['pending_qty']
+        order.order_place_timestamp = json_data['order_place_timestamp']
+        order.last_order_update_timestamp = json_data['last_order_update_timestamp']
+        order.message = json_data['message']
         return order
 
     @staticmethod
-    def getLastTradedPrice(tradingSymbol):
-        return TradeManager.symbolToCMPMap[tradingSymbol]
+    def get_last_traded_price(trading_symbol):
+        return TradeManager.symbol_to_cmp_map[trading_symbol]

@@ -5,30 +5,30 @@ from core.controller import Controller
 class BaseTicker:
     def __init__(self, broker):
         self.broker = broker
-        self.brokerLogin = Controller.getBrokerLogin()
+        self.broker_login = Controller.get_broker_login()
         self.ticker = None
-        self.tickListeners = []
+        self.tick_listeners = []
 
-    def startTicker(self):
+    def start_ticker(self):
         pass
 
-    def stopTicker(self):
+    def stop_ticker(self):
         pass
 
-    def registerListener(self, listener):
+    def register_listener(self, listener):
         # All registered tick listeners will be notified on new ticks
-        self.tickListeners.append(listener)
+        self.tick_listeners.append(listener)
 
-    def registerSymbols(self, symbols):
+    def register_symbols(self, symbols):
         pass
 
-    def unregisterSymbols(self, symbols):
+    def unregister_symbols(self, symbols):
         pass
 
-    def onNewTicks(self, ticks):
+    def on_new_ticks(self, ticks):
         # logging.info('New ticks received %s', ticks)
         for tick in ticks:
-            for listener in self.tickListeners:
+            for listener in self.tick_listeners:
                 try:
                     listener(tick)
                 except Exception as e:

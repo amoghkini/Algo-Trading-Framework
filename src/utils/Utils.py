@@ -12,12 +12,12 @@ from trademgmt.trade_state import TradeState
 
 class Utils:
 
-  dateFormat = "%Y-%m-%d"
-  timeFormat = "%H:%M:%S"
-  dateTimeFormat = "%Y-%m-%d %H:%M:%S"
+  date_format = "%Y-%m-%d"
+  time_format = "%H:%M:%S"
+  date_time_format = "%Y-%m-%d %H:%M:%S"
 
   @staticmethod
-  def roundToNSEPrice(price):
+  def round_to_nse_price(price):
       """
       Rounds the given price to the nearest multiple of 0.05, which is a typical price tick size used in the National Stock Exchange (NSE).
       
@@ -33,11 +33,11 @@ class Utils:
       return y / 20
 
   @staticmethod
-  def roundOff(price):  # Round off to 2 decimal places
+  def round_off(price):  # Round off to 2 decimal places
       return round(price, 2)
 
   @staticmethod
-  def isMarketOpen():
+  def is_market_open():
       """
       Determines whether the stock market is currently open or closed based on the current date and time.
       
@@ -45,18 +45,18 @@ class Utils:
       bool: True if the market is open, False otherwise.
       """
 
-      if Utils.isTodayHoliday():
+      if Utils.is_today_holiday():
           return False
       now = datetime.now()
-      marketStartTime = Utils.getMarketStartTime()
-      marketEndTime = Utils.getMarketEndTime()
-      return now >= marketStartTime and now <= marketEndTime
+      market_start_time = Utils.get_market_start_time()
+      market_end_time = Utils.get_market_start_time()
+      return now >= market_start_time and now <= market_end_time
 
   @staticmethod
-  def isMarketClosedForTheDay():
+  def is_market_closed_for_the_day():
       """
       Determine whether the market is closed for the day based on the current time and the market end time,
-      as determined by the `getMarketEndTime` function in the `Utils` module.
+      as determined by the `get_market_start_time` function in the `Utils` module.
       
       Returns:
           A boolean value indicating whether the market is closed for the day.
@@ -64,18 +64,18 @@ class Utils:
       Raises:
           None
       """
-      # This method returns true if the current time is > marketEndTime
-      # Please note this will not return true if current time is < marketStartTime on a trading day
-      if Utils.isTodayHoliday():
+      # This method returns true if the current time is > market_end_time
+      # Please note this will not return true if current time is < market_start_time on a trading day
+      if Utils.is_today_holiday():
           return True
       now = datetime.now()
-      marketEndTime = Utils.getMarketEndTime()
-      return now > marketEndTime
+      market_end_time = Utils.get_market_start_time()
+      return now > market_end_time
 
   @staticmethod
-  def waitTillMarketOpens(context):
+  def wait_till_market_opens(context):
       """
-      Wait until the market opens, as determined by the `getMarketStartTime` function in the `Utils` module.
+      Wait until the market opens, as determined by the `get_market_start_time` function in the `Utils` module.
       
       Args:
           context: A string representing the context in which the method is being called. This could be used
@@ -87,193 +87,194 @@ class Utils:
       Raises:
           None
       """
-      nowEpoch = Utils.getEpoch(datetime.now())
-      marketStartTimeEpoch = Utils.getEpoch(Utils.getMarketStartTime())
-      waitSeconds = marketStartTimeEpoch - nowEpoch
-      if waitSeconds > 0:
-          logging.info(
-              "%s: Waiting for %d seconds till market opens...", context, waitSeconds)
-          time.sleep(waitSeconds)
+      now_epoch = Utils.get_epoch(datetime.now())
+      market_start_time_epoch = Utils.get_epoch(Utils.get_market_start_time())
+      wait_seconds = market_start_time_epoch - now_epoch
+      if wait_seconds > 0:
+          logging.info("%s: Waiting for %d seconds till market opens...", context, wait_seconds)
+          time.sleep(wait_seconds)
 
   @staticmethod
-  def getEpoch(datetimeObj=None):
-      # This method converts given datetimeObj to epoch seconds
-      if datetimeObj == None:
-          datetimeObj = datetime.now()
-      epochSeconds = datetime.timestamp(datetimeObj)
-      return int(epochSeconds)  # converting double to long
+  def get_epoch(datetime_obj=None):
+      # This method converts given datetime_obj to epoch seconds
+      if datetime_obj == None:
+          datetime_obj = datetime.now()
+      epoch_seconds = datetime.timestamp(datetime_obj)
+      return int(epoch_seconds)  # converting double to long
 
   @staticmethod
-  def getMarketStartTime(dateTimeObj = None):
-      return Utils.getTimeOfDay(9, 15, 0, dateTimeObj)
+  def get_market_start_time(date_time_obj = None):
+      return Utils.get_time_of_day(9, 15, 0, date_time_obj)
 
   @staticmethod
-  def getMarketEndTime(dateTimeObj = None):
-      return Utils.getTimeOfDay(15, 30, 0, dateTimeObj)
+  def get_market_end_time(date_time_obj = None):
+      return Utils.get_time_of_day(15, 30, 0, date_time_obj)
 
   @staticmethod
-  def getTimeOfDay(hours, minutes, seconds, dateTimeObj = None):
-      if dateTimeObj == None:
-          dateTimeObj = datetime.now()
-      dateTimeObj = dateTimeObj.replace(hour=hours, minute=minutes, second=seconds, microsecond=0)
-      return dateTimeObj
+  def get_time_of_day(hours, minutes, seconds, date_time_obj=None):
+      if date_time_obj == None:
+          date_time_obj = datetime.now()
+      date_time_obj = date_time_obj.replace(hour=hours, minute=minutes, second=seconds, microsecond=0)
+      return date_time_obj
 
   @staticmethod
-  def getTimeOfToDay(hours, minutes, seconds):
-      return Utils.getTimeOfDay(hours, minutes, seconds, datetime.now())
+  def get_time_of_to_day(hours, minutes, seconds):
+      return Utils.get_time_of_day(hours, minutes, seconds, datetime.now())
 
   @staticmethod
-  def getTodayDateStr():
-      return Utils.convertToDateStr(datetime.now())
+  def get_today_date_str():
+      return Utils.convert_to_date_str(datetime.now())
 
   @staticmethod
-  def convertToDateStr(datetimeObj):
-      return datetimeObj.strftime(Utils.dateFormat)
+  def convert_to_date_str(datetime_obj):
+      return datetime_obj.strftime(Utils.date_format)
 
   @staticmethod
-  def isHoliday(datetimeObj):
-      dayOfWeek = calendar.day_name[datetimeObj.weekday()]
-      if dayOfWeek == 'Saturday' or dayOfWeek == 'Sunday':
+  def is_holiday(datetime_obj):
+      day_of_week = calendar.day_name[datetime_obj.weekday()]
+      if day_of_week == 'Saturday' or day_of_week == 'Sunday':
           return True
 
-      dateStr = Utils.convertToDateStr(datetimeObj)
+      date_str = Utils.convert_to_date_str(datetime_obj)
       holidays = get_holidays()
-      if (dateStr in holidays):
+      if (date_str in holidays):
           return True
       else:
           return False
 
   @staticmethod
-  def isTodayHoliday():
-      return Utils.isHoliday(datetime.now())
+  def is_today_holiday():
+      return Utils.is_holiday(datetime.now())
     
   @staticmethod
-  def generateTradeID():
+  def generate_trade_id():
       return str(uuid.uuid4())
 
   @staticmethod
-  def calculateTradePnl(trade):
-      if trade.tradeState == TradeState.ACTIVE:
+  def calculate_trade_pnl(trade):
+      if trade.trade_state == TradeState.ACTIVE:
           if trade.cmp > 0:
               if trade.direction == Direction.LONG:
-                  trade.pnl = Utils.roundOff(trade.filledQty * (trade.cmp - trade.entry))
+                  trade.pnl = Utils.round_off(trade.filled_qty * (trade.cmp - trade.entry))
               else:  
-                  trade.pnl = Utils.roundOff(trade.filledQty * (trade.entry - trade.cmp))
+                  trade.pnl = Utils.round_off(trade.filled_qty * (trade.entry - trade.cmp))
       else:
           if trade.exit > 0:
               if trade.direction == Direction.LONG:
-                  trade.pnl = Utils.roundOff(trade.filledQty * (trade.exit - trade.entry))
+                  trade.pnl = Utils.round_off(trade.filled_qty * (trade.exit - trade.entry))
               else:  
-                  trade.pnl = Utils.roundOff(trade.filledQty * (trade.entry - trade.exit))
-      tradeValue = trade.entry * trade.filledQty
-      if tradeValue > 0:
-          trade.pnlPercentage = Utils.roundOff(trade.pnl * 100 / tradeValue)
+                  trade.pnl = Utils.round_off(trade.filled_qty * (trade.entry - trade.exit))
+      trade_value = trade.entry * trade.filled_qty
+      if trade_value > 0:
+          trade.pnl_percentage = Utils.round_off(trade.pnl * 100 / trade_value)
       return trade
 
   @staticmethod
-  def prepareMonthlyExpiryFuturesSymbol(inputSymbol):
-      expiryDateTime = Utils.getMonthlyExpiryDayDate()
-      expiryDateMarketEndTime = Utils.getMarketEndTime(expiryDateTime)
+  def prepare_monthly_expiry_futures_symbol(input_symbol):
+      expiry_date_time = Utils.get_monthly_expiry_day_date()
+      expiry_date_market_end_time = Utils.get_market_start_time(expiry_date_time)
       now = datetime.now()
-      if now > expiryDateMarketEndTime:
-          # increasing today date by 20 days to get some day in next month passing to getMonthlyExpiryDayDate()
-          expiryDateTime = Utils.getMonthlyExpiryDayDate(now + timedelta(days=20))
-      year2Digits = str(expiryDateTime.year)[2:]
-      monthShort = calendar.month_name[expiryDateTime.month].upper()[0:3]
-      futureSymbol = inputSymbol + year2Digits + monthShort + 'FUT'
-      logging.info('prepareMonthlyExpiryFuturesSymbol[%s] = %s', inputSymbol, futureSymbol)  
-      return futureSymbol
+      if now > expiry_date_market_end_time:
+          # increasing today date by 20 days to get some day in next month passing to get_monthly_expiry_day_date()
+          expiry_date_time = Utils.get_monthly_expiry_day_date(now + timedelta(days=20))
+      year_2_digits = str(expiry_date_time.year)[2:]
+      month_short = calendar.month_name[expiry_date_time.month].upper()[0:3]
+      future_symbol = input_symbol + year_2_digits + month_short + 'FUT'
+      logging.info('prepare_monthly_expiry_futures_symbol[%s] = %s', input_symbol, future_symbol)
+      return future_symbol
 
   @staticmethod
-  def prepareWeeklyOptionsSymbol(inputSymbol, strike, optionType, numWeeksPlus = 0):
-      expiryDateTime = Utils.getWeeklyExpiryDayDate()
-      todayMarketStartTime = Utils.getMarketStartTime()
-      expiryDayMarketEndTime = Utils.getMarketEndTime(expiryDateTime)
-      if numWeeksPlus > 0:
-          expiryDateTime = expiryDateTime + timedelta(days=numWeeksPlus * 7)
-          expiryDateTime = Utils.getWeeklyExpiryDayDate(expiryDateTime)
-      if todayMarketStartTime > expiryDayMarketEndTime:
-          expiryDateTime = expiryDateTime + timedelta(days=6)
-          expiryDateTime = Utils.getWeeklyExpiryDayDate(expiryDateTime)
+  def prepare_weekly_options_symbol(input_symbol, strike, option_type, num_weeks_plus=0):
+      expiry_date_time = Utils.get_weekly_expiry_day_date()
+      today_market_start_time = Utils.get_market_start_time()
+      expiry_day_market_end_time = Utils.get_market_start_time(expiry_date_time)
+      if num_weeks_plus > 0:
+          expiry_date_time = expiry_date_time + timedelta(days=num_weeks_plus * 7)
+          expiry_date_time = Utils.get_weekly_expiry_day_date(expiry_date_time)
+      if today_market_start_time > expiry_day_market_end_time:
+          expiry_date_time = expiry_date_time + timedelta(days=6)
+          expiry_date_time = Utils.get_weekly_expiry_day_date(expiry_date_time)
       # Check if monthly and weekly expiry same
-      expiryDateTimeMonthly = Utils.getMonthlyExpiryDayDate()
-      weekAndMonthExpriySame = False
-      if expiryDateTime == expiryDateTimeMonthly:
-          weekAndMonthExpriySame = True
-          logging.info('Weekly and Monthly expiry is same for %s', expiryDateTime)
-      year2Digits = str(expiryDateTime.year)[2:]
-      optionSymbol = None
-      if weekAndMonthExpriySame == True:
-          monthShort = calendar.month_name[expiryDateTime.month].upper()[0:3]
-          optionSymbol = inputSymbol + str(year2Digits) + monthShort + str(strike) + optionType.upper()
+      expiry_date_time_monthly = Utils.get_monthly_expiry_day_date()
+      week_and_month_expriy_same = False
+      if expiry_date_time == expiry_date_time_monthly:
+          week_and_month_expriy_same = True
+          logging.info('Weekly and Monthly expiry is same for %s', expiry_date_time)
+      year_2_digits = str(expiry_date_time.year)[2:]
+      option_symbol = None
+      if week_and_month_expriy_same == True:
+          month_short = calendar.month_name[expiry_date_time.month].upper()[0:3]
+          option_symbol = input_symbol + str(year_2_digits) + month_short + str(strike) + option_type.upper()
       else:
-          m = expiryDateTime.month
-          d = expiryDateTime.day
-          mStr = str(m)
+          m = expiry_date_time.month
+          d = expiry_date_time.day
+          m_str = str(m)
           if m == 10:
-              mStr = "O"
+              m_str = "O"
           elif m == 11:
-              mStr = "N"
+              m_str = "N"
           elif m == 12:
-              mStr = "D"
-          dStr = ("0" + str(d)) if d < 10 else str(d)
-          optionSymbol = inputSymbol + str(year2Digits) + mStr + dStr + str(strike) + optionType.upper()
-      logging.info('prepareWeeklyOptionsSymbol[%s, %d, %s, %d] = %s', inputSymbol, strike, optionType, numWeeksPlus, optionSymbol)  
-      return optionSymbol
+              m_str = "D"
+          d_str = ("0" + str(d)) if d < 10 else str(d)
+          option_symbol = input_symbol + \
+              str(year_2_digits) + m_str + d_str + \
+              str(strike) + option_type.upper()
+      logging.info('prepare_weekly_options_symbol[%s, %d, %s, %d] = %s', input_symbol, strike, option_type, num_weeks_plus, option_symbol)  
+      return option_symbol
 
   @staticmethod
-  def getMonthlyExpiryDayDate(datetimeObj = None):
-      if datetimeObj == None:
-          datetimeObj = datetime.now()
-      year = datetimeObj.year
-      month = datetimeObj.month
-      lastDay = calendar.monthrange(year, month)[1] # 2nd entry is the last day of the month
-      datetimeExpiryDay = datetime(year, month, lastDay)
-      while calendar.day_name[datetimeExpiryDay.weekday()] != 'Thursday':
-          datetimeExpiryDay = datetimeExpiryDay - timedelta(days=1)
-      while Utils.isHoliday(datetimeExpiryDay) == True:
-          datetimeExpiryDay = datetimeExpiryDay - timedelta(days=1)
+  def get_monthly_expiry_day_date(datetime_obj=None):
+      if datetime_obj == None:
+          datetime_obj = datetime.now()
+      year = datetime_obj.year
+      month = datetime_obj.month
+      last_day = calendar.monthrange(year, month)[1] # 2nd entry is the last day of the month
+      datetime_expiry_day = datetime(year, month, last_day)
+      while calendar.day_name[datetime_expiry_day.weekday()] != 'Thursday':
+          datetime_expiry_day = datetime_expiry_day - timedelta(days=1)
+      while Utils.is_holiday(datetime_expiry_day) == True:
+          datetime_expiry_day = datetime_expiry_day - timedelta(days=1)
 
-      datetimeExpiryDay = Utils.getTimeOfDay(0, 0, 0, datetimeExpiryDay)
-      return datetimeExpiryDay
+      datetime_expiry_day = Utils.get_time_of_day(0, 0, 0, datetime_expiry_day)
+      return datetime_expiry_day
 
   @staticmethod
-  def getWeeklyExpiryDayDate(dateTimeObj = None):
-      if dateTimeObj == None:
-          dateTimeObj = datetime.now()
-      daysToAdd = 0
-      if dateTimeObj.weekday() >= 3:
-          daysToAdd = -1 * (dateTimeObj.weekday() - 3)
+  def get_weekly_expiry_day_date(datetime_obj=None):
+      if datetime_obj == None:
+          datetime_obj = datetime.now()
+      days_to_add = 0
+      if datetime_obj.weekday() >= 3:
+          days_to_add = -1 * (datetime_obj.weekday() - 3)
       else:
-          daysToAdd = 3 - dateTimeObj.weekday()
-      datetimeExpiryDay = dateTimeObj + timedelta(days=daysToAdd)
-      while Utils.isHoliday(datetimeExpiryDay) == True:
-          datetimeExpiryDay = datetimeExpiryDay - timedelta(days=1)
+          days_to_add = 3 - datetime_obj.weekday()
+      datetime_expiry_day = datetime_obj + timedelta(days=days_to_add)
+      while Utils.is_holiday(datetime_expiry_day) == True:
+          datetime_expiry_day = datetime_expiry_day - timedelta(days=1)
 
-      datetimeExpiryDay = Utils.getTimeOfDay(0, 0, 0, datetimeExpiryDay)
-      return datetimeExpiryDay
+      datetime_expiry_day = Utils.get_time_of_day(0, 0, 0, datetime_expiry_day)
+      return datetime_expiry_day
 
   @staticmethod
-  def isTodayWeeklyExpiryDay():
-      expiryDate = Utils.getWeeklyExpiryDayDate()
-      todayDate = Utils.getTimeOfToDay(0, 0, 0)
-      if expiryDate == todayDate:
+  def is_today_weekly_expiry_day():
+      expiry_date = Utils.get_weekly_expiry_day_date()
+      today_date = Utils.get_time_of_to_day(0, 0, 0)
+      if expiry_date == today_date:
           return True
       return False
 
   @staticmethod
-  def isTodayOneDayBeforeWeeklyExpiryDay():
-      expiryDate = Utils.getWeeklyExpiryDayDate()
-      todayDate = Utils.getTimeOfToDay(0, 0, 0)
-      if expiryDate - timedelta(days=1) == todayDate:
+  def is_today_one_day_before_weekly_expiry_day():
+      expiry_date = Utils.get_weekly_expiry_day_date()
+      today_date = Utils.get_time_of_to_day(0, 0, 0)
+      if expiry_date - timedelta(days=1) == today_date:
           return True  
       return False
 
   @staticmethod
-  def getNearestStrikePrice(price, nearestMultiple = 50):
-      inputPrice = int(price)
-      remainder = int(inputPrice % nearestMultiple)
-      if remainder < int(nearestMultiple / 2):
-          return inputPrice - remainder
+  def get_nearest_strike_price(price, nearest_multiple = 50):
+      input_price = int(price)
+      remainder = int(input_price % nearest_multiple)
+      if remainder < int(nearest_multiple / 2):
+          return input_price - remainder
       else:
-          return inputPrice + (nearestMultiple - remainder)
+          return input_price + (nearest_multiple - remainder)

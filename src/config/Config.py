@@ -3,38 +3,31 @@ import os
 
 def get_server_config():
     with open('../config/server.json', 'r') as server:
-        jsonServerData = json.load(server)
-        return jsonServerData
-
+        json_server_data = json.load(server)
+        return json_server_data
 
 def get_system_config():
     with open('../config/system.json', 'r') as system:
         json_system_data = json.load(system)
         return json_system_data
 
-def getBrokerAppConfig():
-    with open('../config/brokerapp.json', 'r') as brokerapp:
-        jsonUserData = json.load(brokerapp)
-        return jsonUserData
-
-
 def get_holidays():
     with open('../config/holidays.json', 'r') as holidays:
-        holidaysData = json.load(holidays)
-        return holidaysData
+        holidays_data = json.load(holidays)
+        return holidays_data
 
-def getTimestampsData():
-    serverConfig = get_server_config()
-    timestampsFilePath = os.path.join(serverConfig['deployDir'], 'timestamps.json')
-    if os.path.exists(timestampsFilePath) == False:
+def get_timestamps_data():
+    server_config = get_server_config()
+    timestamps_file_path = os.path.join(server_config['deployDir'], 'timestamps.json')
+    if os.path.exists(timestamps_file_path) == False:
         return {}
-    timestampsFile = open(timestampsFilePath, 'r')
-    timestamps = json.loads(timestampsFile.read())
+    timestamps_file = open(timestamps_file_path, 'r')
+    timestamps = json.loads(timestamps_file.read())
     return timestamps
 
-def saveTimestampsData(timestamps = {}):
-    serverConfig = get_server_config()
-    timestampsFilePath = os.path.join(serverConfig['deployDir'], 'timestamps.json')
-    with open(timestampsFilePath, 'w') as timestampsFile:
-        json.dump(timestamps, timestampsFile, indent=2)
-    print("saved timestamps data to file " + timestampsFilePath)
+def save_timestamps_data(timestamps = {}):
+    server_config = get_server_config()
+    timestamps_file_path = os.path.join(server_config['deployDir'], 'timestamps.json')
+    with open(timestamps_file_path, 'w') as timestamps_file:
+        json.dump(timestamps, timestamps_file, indent=2)
+    print("saved timestamps data to file " + timestamps_file_path)

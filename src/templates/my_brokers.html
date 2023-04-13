@@ -51,7 +51,7 @@
             <th style="text-align:center" scope="col">Broker Name</th>
             <th style="text-align:center" scope="col">Status</th>
             <th style="text-align:center" scope="col">Test Connection</th>
-            <th style="text-align:center" scope="col">Login Status</th>
+            <th style="text-align:center" scope="col">Login Method</th>
             <th style="text-align:center" scope="col">Auto Login</th>
             <th style="text-align:center" scope="col">Amend</th>
             <th style="text-align:center" scope="col">Deactivate</th>
@@ -60,60 +60,72 @@
         </tr>
     </thead>
     <tbody>
-        {% for broker in brokers %}
-        <tr>
-            {% set bId, bName, status = broker.get('broker_id'), broker.get('broker_name'), broker.get('status') %}
 
-            <td style="text-align:center"><a href="{{ url_for('broker_enquiry_api',broker_id = broker.get('broker_id')) }}">{{ bId }}</a></td>
-            <td style="text-align:center">{{ broker.get('broker_name') }}</td>
-            <td style="text-align:center">{{ broker.get('status') }}</td>
-            <td style="text-align:center"> 
-                <button class="btn btn-outline-light " onClick="loginBroker()">
-                    Test Connection
-                </button> 
-            </td>
-            <td style="text-align:center"> 
-                {% if status == "Logged in" %}
-                    <button class="btn btn-outline-light " onClick="logoutBroker('{{bId}}')">
-                        Log out
-                    </button>
-                {% else %}
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Login
+        {% if brokers|length  > 0 %}
+            {% for broker in brokers %}
+            <tr>
+                {% set bId, bName, status = broker.get('broker_id'), broker.get('broker_name'), broker.get('status') %}
+
+                <td style="text-align:center"><a href="{{ url_for('broker_enquiry_api',broker_id = broker.get('broker_id')) }}">{{ bId }}</a></td>
+                <td style="text-align:center">{{ broker.get('broker_name') }}</td>
+                <td style="text-align:center">{{ broker.get('status') }}</td>
+                <td style="text-align:center"> 
+                    <button class="btn btn-outline-light disabled" onClick="loginBroker()">
+                        Test Connection
+                    </button> 
+                </td>
+                <td style="text-align:center"> 
+                    {% if status == "Logged in" %}
+                        <button class="btn btn-outline-light " onClick="logoutBroker('{{bId}}')">
+                            Log out
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'api_with_broker_portal')">With API and Brokers Portal</a></li>
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds_with_enc_token')">Without API and With Encryption Token</a></li>
-                            <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds_without_enc_token')">Without API and Without Credentials</a></li>
-                        </ul>
-                    </div>
-                {% endif %}
-                
-            </td>
-            <td style="text-align:center">{{ broker.get('status') }} </td>
-            <td style="text-align:center">
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
-                    Amend
-                </button>
-            </td>
-            <td style="text-align:center">
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
-                    Deactivate
-                </button>
-            </td>
-            <td style="text-align:center">
-                <button class="btn btn-outline-light " onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
-                    Delete
-                </button>
-            </td>
-        </tr>
-        {% endfor %}
+                    {% else %}
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Login
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'api_with_broker_portal')">With API and Brokers Portal</a></li>
+                                <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds_with_enc_token')">Without API and With Encryption Token</a></li>
+                                <li><a class="dropdown-item dropdown-menu-end dropdown-menu-dark" href="#" onClick="loginBroker('{{bId}}','{{bName}}', 'creds_without_enc_token')">Without API and With Credentials</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                </td>
 
+                <td style="text-align:center">{{ "No" }} </td>
+                <td style="text-align:center">
+                    <button class="btn btn-outline-light disabled" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
+                        Amend
+                    </button>
+                </td>
+                <td style="text-align:center">
+                    <button class="btn btn-outline-light disabled" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
+                        Deactivate
+                    </button>
+                </td>
+                <td style="text-align:center">
+                    <button class="btn btn-outline-light disabled" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endif %}
     </tbody>
 </table>
 
-
+{% if brokers|length == 0 %}
+    <center>
+    <p>No broker connected</p> <br>
+    <div class="container">
+            <button class="btn btn-outline-light" onClick="addBroker()">
+                Add Broker
+            </button>
+    </div>
+    </center>
+{% endif %}
 {% endblock content %}
 

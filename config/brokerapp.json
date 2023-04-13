@@ -1,9 +1,0 @@
-{
-  "broker": "Zerodha",
-  "clientID": "dummy",
-  "password" : "dummy",
-  "appKey": "dummy",
-  "appSecret": "dummy",
-  "totpKey" : "dummy",
-  "redirectUrl": "http://localhost:5000/apis/broker/login/zerodha"
-}

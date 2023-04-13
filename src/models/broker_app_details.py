@@ -1,15 +1,15 @@
 class BrokerAppDetails:
     def __init__(self, broker):
         self.broker = broker
-        self.appKey = None
-        self.appSecret = None
+        self.app_key = None
+        self.app_secret = None
 
-    def setClientID(self, clientID):
-        self.clientID = clientID
+    def set_client_id(self, client_id):
+        self.client_id = client_id
 
-    def setAppKey(self, appKey):
-        self.appKey = appKey
+    def set_app_key(self, app_key):
+        self.app_key = app_key
 
-    def setAppSecret(self, appSecret):
-        self.appSecret = appSecret
+    def set_app_secret(self, app_secret):
+        self.app_secret = app_secret
 

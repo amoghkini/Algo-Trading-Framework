@@ -65,7 +65,7 @@ class LogInBrokerAPI(MethodView):
         
         #print("Broker values",broker_values)
         
-        redirectUrl = Controller.handleBrokerLogin(request.args, broker_values)
+        redirectUrl = Controller.handle_broker_login(request.args, broker_values)
 
         if redirectUrl:
             r_stat = {"redirect": redirectUrl,

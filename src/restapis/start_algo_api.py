@@ -10,7 +10,7 @@ class StartAlgoAPI(MethodView):
     def post(self):
         # start algo in a separate thread
         print("Amogh is here")
-        x = threading.Thread(target=Algo.startAlgo)
+        x = threading.Thread(target=Algo.start_algo)
         x.start()
         
         '''
