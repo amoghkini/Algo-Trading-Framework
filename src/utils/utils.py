@@ -49,7 +49,7 @@ class Utils:
           return False
       now = datetime.now()
       market_start_time = Utils.get_market_start_time()
-      market_end_time = Utils.get_market_start_time()
+      market_end_time = Utils.get_market_end_time()
       return now >= market_start_time and now <= market_end_time
 
   @staticmethod
@@ -69,7 +69,7 @@ class Utils:
       if Utils.is_today_holiday():
           return True
       now = datetime.now()
-      market_end_time = Utils.get_market_start_time()
+      market_end_time = Utils.get_market_end_time()
       return now > market_end_time
 
   @staticmethod

@@ -5,7 +5,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from passlib.hash import sha256_crypt
 from PIL import Image
 
-from database.database_connection import conn
+from database.database_connection import get_db
 
 class User:
     
@@ -39,6 +39,7 @@ class User:
         
         print(user_data)
         try:
+            conn = get_db()
             conn.insert("users", user_data)
             conn.commit()
             return True
@@ -72,7 +73,7 @@ class User:
             else:
                 print(f"No user found with email '{user_email}'.")
         """
-        
+        conn = get_db()
         user = conn.getOne("users", ["id", "email_id", "password", "user_name"], ("email_id = %s", [email]))
         if user:
             return user
@@ -105,7 +106,7 @@ class User:
             else:
                 print(f"No user found with username '{username}'.")
         """
-        
+        conn = get_db()
         user = conn.getOne("users", '*', ("user_name = %s", [username]))
         if user:
             return user
@@ -131,7 +132,7 @@ class User:
             else:
                 print(f"No user found with email '{user_email}'.")
         """
-        
+        conn = get_db()
         user = conn.getOne("users", ["email_id"], ("email_id = %s", [email]))
         print("User", user)
         if user:
@@ -399,7 +400,7 @@ class User:
         Raises:
             None.
         """
-        
+        conn = get_db()
         print("Fields",fields_to_update)
         user = conn.update("users", fields_to_update, ("user_name=%s", (username,))) 
         print("User",user)

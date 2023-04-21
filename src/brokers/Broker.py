@@ -1,4 +1,4 @@
-from database.database_connection import conn
+from database.database_connection import get_db
 
 class Broker:
     
@@ -20,7 +20,7 @@ class Broker:
             >>> fetch_one_broker(123)
             {'id': 123, 'name': 'John Doe', 'email': 'johndoe@example.com', 'broker_id': 123}
         """
-        
+        conn = get_db()
         user = conn.getOne("users", '*', ("broker_id = %s", [broker_id]))
         if user:
             return user

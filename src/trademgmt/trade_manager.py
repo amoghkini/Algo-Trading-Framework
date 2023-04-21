@@ -491,7 +491,7 @@ class TradeManager:
         trade.stop_loss = jsonData['stop_loss']
         trade.target = jsonData['target']
         trade.cmp = jsonData['cmp']
-        trade.trade_state = jsonData['tradeState']
+        trade.trade_state = jsonData['trade_state']
         trade.timestamp = jsonData['timestamp']
         trade.create_timestamp = jsonData['create_timestamp']
         trade.start_timestamp = jsonData['start_timestamp']

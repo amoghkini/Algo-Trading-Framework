@@ -1,7 +1,7 @@
 from flask import render_template, g, redirect, url_for, flash
 from flask.views import MethodView
 
-from database.database_connection import conn
+from database.database_connection import get_db
 
 class MyBrokersAPI(MethodView):
 
@@ -9,7 +9,7 @@ class MyBrokersAPI(MethodView):
         print("Amogh is here")
         if not g.user:
             return redirect(url_for('login_api'))
-        
+        conn = get_db()
         brokers = conn.getAll(
             "brokers", ["broker_id", "broker_name","status"], ("user_name = %s", [g.user]))
         print("Brokers",brokers)

@@ -5,7 +5,7 @@ from flask.views import MethodView
 from brokers.broker import Broker
 from core.controller import Controller
 from common.broker_status import BrokerStatus
-from database.database_connection import conn
+from database.database_connection import get_db
 from forms.broker_form import BrokerLoginForm
 
 class LogInBrokerAPI(MethodView):
@@ -66,7 +66,8 @@ class LogInBrokerAPI(MethodView):
         #print("Broker values",broker_values)
         
         redirectUrl = Controller.handle_broker_login(request.args, broker_values)
-
+        
+        conn = get_db()
         if redirectUrl:
             r_stat = {"redirect": redirectUrl,
                     "broker_id": request.form.get('data[brokerID]'),
@@ -86,6 +87,7 @@ class LogInBrokerAPI(MethodView):
 
 
     def get_broker_data(self, broker_id):
+        conn = get_db()
         broker = conn.getOne(
             "brokers", ["id", "broker_id", "user_name", "broker_name", "password", "totp_key"], ("broker_id = %s", [broker_id]))
         if not broker:
