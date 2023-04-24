@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import timedelta
+from dotenv import load_dotenv
 from flask import Flask, g, render_template, session
 
 from config.config import get_server_config
@@ -28,6 +29,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'AMOGH kini'
 
+load_dotenv('../.env')
 
 app.add_url_rule("/", view_func=HomeAPI.as_view("home_api"))
 app.add_url_rule("/about", view_func=AboutUsAPI.as_view("about_us_api"))
@@ -51,18 +53,26 @@ server_config = get_server_config()
 
 deploy_dir = server_config.get('deployDir')
 if os.path.exists(deploy_dir) == False:
-    print("Deploy Directory " + deploy_dir +
-          " does not exist. Exiting the app.")
-    exit(-1)
+    print("Deploy Directory " + deploy_dir.lstrip('..') +
+          " does not exist. Creating the deploy directory.")
+    os.makedirs(deploy_dir)
+    if os.path.exists(deploy_dir) == False:
+        print("Failed to create the deploy directory."
+              "Exiting the application.")
+        exit(-1)
 
 log_file_dir = server_config.get('logFileDir')
 if os.path.exists(log_file_dir) == False:
-    print("LogFile Directory " + log_file_dir +
-          " does not exist. Exiting the app.")
-    exit(-1)
+    print("Log File Directory " + log_file_dir.lstrip('..') +
+          " does not exist. Creating the log directory.")
+    os.makedirs(log_file_dir)
+    if os.path.exists(log_file_dir) == False:
+        print("Failed to create the Log file directory." \
+              "Exiting the application.")
+        exit(-1)
 
-print("Deploy  Directory = " + deploy_dir)
-print("LogFile Directory = " + log_file_dir)
+print("Deploy  Directory = " + deploy_dir.lstrip('..'))
+print("Log File Directory = " + log_file_dir.lstrip('..'))
 
 config_root_logger(log_file_dir + "/app.log")
 
@@ -86,7 +96,11 @@ def before_request():
     # which will fetch the nifty and bank nifty price on each page reload
     # before implementing the websocket apporach.
 
-    
+@app.after_request
+def after_request(response):
+    print("After request")
+    return response
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

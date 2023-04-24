@@ -4,7 +4,7 @@ from wtforms_components import read_only
 from wtforms.validators import DataRequired, Length
 
 from brokers.brokers import Brokers
-from database.database_connection import conn
+from database.database_connection import get_db
 
 
 class BrokerCreateForm(FlaskForm):

@@ -1,13 +1,15 @@
 from database.my_sql import Mysql
 from flask import g
+from os import environ
 
 def get_db():
     if 'db' not in g:
         g.db = Mysql(
-            host="127.0.0.1",
-            db="algo_trader_framework",
-            user="root",
-            passwd="root",
+            host=environ.get('DB_HOST'),
+            port=int(environ.get('DB_PORT')),
+            db=environ.get('DB_SCHEMA'),
+            user=environ.get('DB_USER'),
+            passwd=environ.get('DB_PASSWORD'),
             keep_alive=True  # try and reconnect timedout mysql connections?
         )
     return g.db
