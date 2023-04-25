@@ -31,9 +31,9 @@ class BNFORB30Min(BaseStrategy):
         self.symbols = []
         self.sl_percentage = 0
         self.target_percentage = 0
-        self.start_timestamp = Utils.get_time_of_to_day(9, 45, 0) # When to start the strategy. Default is Market start time
-        self.stop_timestamp = Utils.get_time_of_to_day(14, 30, 0) # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
-        self.square_off_timestamp = Utils.get_time_of_to_day(15, 0, 0) # Square off time
+        self.start_timestamp = Utils.get_time_of_today(9, 45, 0) # When to start the strategy. Default is Market start time
+        self.stop_timestamp = Utils.get_time_of_today(14, 30, 0) # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
+        self.square_off_timestamp = Utils.get_time_of_today(15, 0, 0) # Square off time
         self.capital = 100000 # Capital to trade (This is the margin you allocate from your broker account for this strategy)
         self.leverage = 0
         self.max_trades_per_day = 1  # Max number of trades per day under this strategy
@@ -42,7 +42,7 @@ class BNFORB30Min(BaseStrategy):
 
     def process(self):
         now = datetime.now()
-        process_end_time = Utils.get_time_of_to_day(9, 50, 0)
+        process_end_time = Utils.get_time_of_today(9, 50, 0)
         if now < self.start_timestamp:
             return
         if now > process_end_time:

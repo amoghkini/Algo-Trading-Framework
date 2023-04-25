@@ -1,2 +1,0 @@
-class Brokers:
-    ZERODHA = "Zerodha"

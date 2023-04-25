@@ -1,12 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
-    <br>
-        <center>
-            <h1>500 error</h1>
-            <p>Internal Server Error - Try again</p>
-        </center>
-    </br>
-
+<center>
+    <h1 class="errorpage-title">Internal Server Error (500)</h1>
+    <div class="errorpage-section">
+        <h4>Sorry, it's our fault!</h4>
+        <h4><a href="{{ url_for('home_api') }}">Flask Application</a></h4>
+    </div>
+</center>
 {% endblock %}

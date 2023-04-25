@@ -472,38 +472,38 @@ class TradeManager:
         return trades_by_strategy
 
     @staticmethod
-    def convert_json_to_trade(jsonData):
-        trade = Trade(jsonData['trading_symbol'])
-        trade.trade_id = jsonData['trade_id']
-        trade.strategy = jsonData['strategy']
-        trade.direction = jsonData['direction']
-        trade.product_type = jsonData['product_type']
-        trade.is_futures = jsonData['is_futures']
-        trade.is_options = jsonData['is_options']
-        trade.option_type = jsonData['option_type']
-        trade.place_market_order = jsonData['place_market_order']
-        trade.intraday_square_off_timestamp = jsonData['intraday_square_off_timestamp']
-        trade.requested_entry = jsonData['requested_entry']
-        trade.entry = jsonData['entry']
-        trade.qty = jsonData['qty']
-        trade.filled_qty = jsonData['filled_qty']
-        trade.initial_stop_loss = jsonData['initial_stop_loss']
-        trade.stop_loss = jsonData['stop_loss']
-        trade.target = jsonData['target']
-        trade.cmp = jsonData['cmp']
-        trade.trade_state = jsonData['trade_state']
-        trade.timestamp = jsonData['timestamp']
-        trade.create_timestamp = jsonData['create_timestamp']
-        trade.start_timestamp = jsonData['start_timestamp']
-        trade.end_timestamp = jsonData['end_timestamp']
-        trade.pnl = jsonData['pnl']
-        trade.pnl_percentage = jsonData['pnl_percentage']
-        trade.exit = jsonData['exit']
-        trade.exit_reason = jsonData['exit_reason']
-        trade.exchange = jsonData['exchange']
-        trade.entry_order = TradeManager.convert_json_to_order(jsonData['entry_order'])
-        trade.sl_order = TradeManager.convert_json_to_order(jsonData['sl_order'])
-        trade.target_order = TradeManager.convert_json_to_order(jsonData['target_order'])
+    def convert_json_to_trade(json_data):
+        trade = Trade(json_data['trading_symbol'])
+        trade.trade_id = json_data['trade_id']
+        trade.strategy = json_data['strategy']
+        trade.direction = json_data['direction']
+        trade.product_type = json_data['product_type']
+        trade.is_futures = json_data['is_futures']
+        trade.is_options = json_data['is_options']
+        trade.option_type = json_data['option_type']
+        trade.place_market_order = json_data['place_market_order']
+        trade.intraday_square_off_timestamp = json_data['intraday_square_off_timestamp']
+        trade.requested_entry = json_data['requested_entry']
+        trade.entry = json_data['entry']
+        trade.qty = json_data['qty']
+        trade.filled_qty = json_data['filled_qty']
+        trade.initial_stop_loss = json_data['initial_stop_loss']
+        trade.stop_loss = json_data['stop_loss']
+        trade.target = json_data['target']
+        trade.cmp = json_data['cmp']
+        trade.trade_state = json_data['trade_state']
+        trade.timestamp = json_data['timestamp']
+        trade.create_timestamp = json_data['create_timestamp']
+        trade.start_timestamp = json_data['start_timestamp']
+        trade.end_timestamp = json_data['end_timestamp']
+        trade.pnl = json_data['pnl']
+        trade.pnl_percentage = json_data['pnl_percentage']
+        trade.exit = json_data['exit']
+        trade.exit_reason = json_data['exit_reason']
+        trade.exchange = json_data['exchange']
+        trade.entry_order = TradeManager.convert_json_to_order(json_data['entry_order'])
+        trade.sl_order = TradeManager.convert_json_to_order(json_data['sl_order'])
+        trade.target_order = TradeManager.convert_json_to_order(json_data['target_order'])
         return trade
 
     @staticmethod
