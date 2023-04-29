@@ -4,8 +4,8 @@ from models.direction import Direction
 from models.order_status import OrderStatus
 from models.order_type import OrderType
 from models.product_type import ProductType
-from ordermgmt.base_order_manager import BaseOrderManager
-from ordermgmt.order import Order
+from order_management_system.base_order_manager import BaseOrderManager
+from order_management_system.order import Order
 from utils.utils import Utils
 
 class ZerodhaOrderManager(BaseOrderManager):

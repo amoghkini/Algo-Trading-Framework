@@ -4,7 +4,7 @@ from datetime import datetime
 
 from core.quotes import Quotes
 from models.product_type import ProductType
-from trademgmt.trade_manager import TradeManager
+from trading_engine.trade_manager import TradeManager
 from utils.utils import Utils
 
 class BaseStrategy:

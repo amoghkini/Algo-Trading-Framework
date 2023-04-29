@@ -1,8 +1,8 @@
 import logging
 
+from broker.broker_login_methods import BrokerLoginMethods
 from broker_web_extenstions.kiteext import KiteExt
-from common.login_methods import LoginMethods
-from loginmgmt.base_login import BaseLogin
+from login_management.base_login import BaseLogin
 
 class ZerodhaWebLogin(BaseLogin):
     def __init__(self, broker_app_details):
@@ -16,10 +16,10 @@ class ZerodhaWebLogin(BaseLogin):
         
         if 'loginRequired' in args:
                         
-            if broker_details.get('login_method') == LoginMethods.CREDS_WITHOUT_ENC_TOKEN:
+            if broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITHOUT_ENC_TOKEN:
                 broker_handle.login_with_credentials(broker_details.get('broker_id'), broker_details.get('password'), broker_details.get('totp_key'))
             
-            elif broker_details.get('login_method') == LoginMethods.CREDS_WITH_ENC_TOKEN:
+            elif broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITH_ENC_TOKEN:
                 #brokerHandle.set_headers(broker_details.get('encryption_token'), broker_details.get('broker_id'))
                 try:
                     broker_handle.set_headers(broker_details.get('encryption_token'))

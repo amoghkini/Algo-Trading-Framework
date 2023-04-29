@@ -5,8 +5,8 @@ from instruments.instruments import Instruments
 from models.direction import Direction
 from models.product_type import ProductType
 from strategies.base_strategy import BaseStrategy
-from trademgmt.trade import Trade
-from trademgmt.trade_manager import TradeManager
+from trading_engine.trade import Trade
+from trading_engine.trade_manager import TradeManager
 from utils.utils import Utils
 
 # Each strategy has to be derived from BaseStrategy

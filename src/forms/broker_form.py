@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, Hidden
 from wtforms_components import read_only
 from wtforms.validators import DataRequired, Length
 
-from brokers.brokers import Brokers
+from broker.brokers import Brokers
 from database.database_connection import get_db
 
 

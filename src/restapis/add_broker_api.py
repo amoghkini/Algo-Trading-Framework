@@ -2,7 +2,7 @@ import logging
 from flask import render_template, redirect, url_for, flash, g
 from flask.views import MethodView
 
-from common.broker_status import BrokerStatus
+from broker.broker_status import BrokerStatus
 from database.database_connection import get_db
 from forms.broker_form import BrokerCreateForm
 

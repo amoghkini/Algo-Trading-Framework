@@ -3,7 +3,7 @@ import time
 
 from core.controller import Controller
 from ticker.zerodha_ticker import ZerodhaTicker
-from ordermgmt.zerodha_order_manager import ZerodhaOrderManager
+from order_management_system.zerodha_order_manager import ZerodhaOrderManager
 from core.quotes import Quotes
 from utils.utils import Utils
 

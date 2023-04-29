@@ -9,15 +9,15 @@ from core.controller import Controller
 from models.direction import Direction
 from models.order_status import OrderStatus
 from models.order_type import OrderType
-from ordermgmt.order import Order
-from ordermgmt.order_input_params import OrderInputParams
-from ordermgmt.order_modify_params import OrderModifyParams
-from ordermgmt.zerodha_order_manager import ZerodhaOrderManager
+from order_management_system.order import Order
+from order_management_system.order_input_params import OrderInputParams
+from order_management_system.order_modify_params import OrderModifyParams
+from order_management_system.zerodha_order_manager import ZerodhaOrderManager
 from ticker.zerodha_ticker import ZerodhaTicker
-from trademgmt.trade import Trade
-from trademgmt.trade_encoder import TradeEncoder
-from trademgmt.trade_exit_reason import TradeExitReason
-from trademgmt.trade_state import TradeState
+from trading_engine.trade import Trade
+from trading_engine.trade_encoder import TradeEncoder
+from trading_engine.trade_exit_reason import TradeExitReason
+from trading_engine.trade_state import TradeState
 from utils.utils import Utils
 
 

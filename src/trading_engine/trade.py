@@ -1,7 +1,7 @@
 import logging
 
 from models.product_type import ProductType
-from trademgmt.trade_state import TradeState
+from trading_engine.trade_state import TradeState
 from utils.utils import Utils
 
 class Trade:

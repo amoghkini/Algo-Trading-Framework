@@ -11,7 +11,8 @@ from typing import Dict
 from database.database_connection import get_db
 from exceptions.api_exceptions import APIException
 from exceptions.user_exceptions import AuthUserError, InvalidUserDataError, UserNotFoundError, UserSignatureError
-from messages.email import Email
+
+from messaging_engine.email import Email
 from user.user import User
 from utils.utils import Utils
 
@@ -270,6 +271,7 @@ class UserMethods:
         if not password_status:
             raise InvalidUserDataError("Please enter the paswword that contains capital & small letters, numbers and characters.")
 
+
     @staticmethod
     def save_picture(form_picture):
        
@@ -282,6 +284,7 @@ class UserMethods:
         i = Image.open(form_picture)
         i.thumbnail(output_size)
         i.save(picture_path)
+        
         return picture_fn
 
     @staticmethod
@@ -315,6 +318,7 @@ class UserMethods:
             if status == 0:
                 raise InvalidUserDataError("No changes found to update the profile details.")                
         else:
+
             raise InvalidUserDataError("No changes found to update the profile details.")
     
     @staticmethod

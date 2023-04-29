@@ -9,7 +9,7 @@ from typing import Dict
 from common.execution_env import ExecutionEnv
 from config.config import get_holidays, get_server_config, DevConfig, TestingConfig, ProdConfig
 from models.direction import Direction
-from trademgmt.trade_state import TradeState
+from trading_engine.trade_state import TradeState
 
 class Utils:
 

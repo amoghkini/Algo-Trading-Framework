@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, url_for, session, request
 from flask.views import MethodView
 
-from common.broker_status import BrokerStatus
+from broker.broker_status import BrokerStatus
 from database.database_connection import get_db
 
 

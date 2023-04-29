@@ -88,6 +88,7 @@ def validate_and_create_directory() -> None:
     server_config: Dict = get_server_config()
     
     log_file_dir: str = server_config.get('logFileDir')
+
     if os.path.exists(log_file_dir) == False:
         print("Log File Directory " + log_file_dir.lstrip('..') + \
           " does not exist. Creating the log directory.")
