@@ -1,6 +1,6 @@
 import logging
 
-from brokers.kiteext import KiteExt
+from broker_web_extenstions.kiteext import KiteExt
 from common.login_methods import LoginMethods
 from loginmgmt.base_login import BaseLogin
 

@@ -4,6 +4,7 @@ import time
 import logging
 import calendar
 from datetime import datetime, timedelta
+from typing import Dict
 
 from common.execution_env import ExecutionEnv
 from config.config import get_holidays, get_server_config, DevConfig, TestingConfig, ProdConfig
@@ -17,33 +18,17 @@ class Utils:
     date_time_format = "%Y-%m-%d--%H-%M-%S"
 
     @staticmethod
-    def round_to_nse_price(price):
-        """
-        Rounds the given price to the nearest multiple of 0.05, which is a typical price tick size used in the National Stock Exchange (NSE).
-        
-        Args:
-        price (float): The price to be rounded.
-        
-        Returns:
-        float: The rounded price.
-        """
-
+    def round_to_nse_price(price: int) -> int:
         x = round(price, 2) * 20
         y = math.ceil(x)
         return y / 20
 
     @staticmethod
-    def round_off(price):  # Round off to 2 decimal places
+    def round_off(price: int) -> int:  # Round off to 2 decimal places
         return round(price, 2)
 
     @staticmethod
-    def is_market_open():
-        """
-        Determines whether the stock market is currently open or closed based on the current date and time.
-        
-        Returns:
-        bool: True if the market is open, False otherwise.
-        """
+    def is_market_open() -> bool:
 
         if Utils.is_today_holiday():
             return False
@@ -54,16 +39,7 @@ class Utils:
 
     @staticmethod
     def is_market_closed_for_the_day():
-        """
-        Determine whether the market is closed for the day based on the current time and the market end time,
-        as determined by the `get_market_start_time` function in the `Utils` module.
-        
-        Returns:
-            A boolean value indicating whether the market is closed for the day.
-            
-        Raises:
-            None
-        """
+
         # This method returns true if the current time is > market_end_time
         # Please note this will not return true if current time is < market_start_time on a trading day
         if Utils.is_today_holiday():
@@ -74,19 +50,7 @@ class Utils:
 
     @staticmethod
     def wait_till_market_opens(context):
-        """
-        Wait until the market opens, as determined by the `get_market_start_time` function in the `Utils` module.
         
-        Args:
-            context: A string representing the context in which the method is being called. This could be used
-                    for logging purposes.
-                    
-        Returns:
-            None
-            
-        Raises:
-            None
-        """
         now_epoch = Utils.get_epoch(datetime.now())
         market_start_time_epoch = Utils.get_epoch(Utils.get_market_start_time())
         wait_seconds = market_start_time_epoch - now_epoch
@@ -307,3 +271,16 @@ class Utils:
     @staticmethod
     def get_log_dir():
         return get_server_config().get('logFileDir')
+
+    @staticmethod
+    def get_mismatches_from_two_dict(dict1: Dict, 
+                                     dict2: Dict, 
+                                     result_dict: int = 1) -> Dict:
+        # Currently the dictionary which fetches the data from db contains all the fields. For optimaziation, we should fetch the fields which are in scope of my profile page.
+        return_dict = dict()
+        mismatches = dict(dict1.items() ^ dict2.items())
+        for i in mismatches.keys():
+            return_dict[i] = dict1.get(i) if result_dict == 1 else dict2.get(i)
+        
+        return_dict = {keys: values for keys, values in return_dict.items() if values is not None}
+        return return_dict

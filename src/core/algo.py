@@ -30,9 +30,9 @@ class Algo:
 
         # start running strategies: Run each strategy in a separate thread
         threading.Thread(target=SampleStrategy.get_instance().run).start()
-        threading.Thread(target=BNFORB30Min.get_instance().run).start()
-        threading.Thread(target=OptionSelling.get_instance().run).start()
-        threading.Thread(target=ShortStraddleBNF.get_instance().run).start()
+        #threading.Thread(target=BNFORB30Min.get_instance().run).start()
+        #threading.Thread(target=OptionSelling.get_instance().run).start()
+        #threading.Thread(target=ShortStraddleBNF.get_instance().run).start()
         
         Algo.is_algo_running = True
         logging.info("Algo started.")

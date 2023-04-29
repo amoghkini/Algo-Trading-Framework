@@ -8,6 +8,6 @@ class RegisterUserForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    mobile_no = IntegerField('Mobile number')
+    mobile_no = IntegerField('Mobile number', validators=[Length(min=10, max=10)])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d')
     submit = SubmitField('Sign up')

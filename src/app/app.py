@@ -1,6 +1,7 @@
 import os
-from flask import Flask, g, session
 from typing import Dict, Tuple
+
+from flask import Flask, g, session
 
 from app.endpoints import register_endpoints
 from app.error_handlers import register_error_handlers
@@ -21,12 +22,14 @@ def create_app() -> Flask:
                        template_folder=TEMPLATE_FOLDER, 
                        static_folder=STATIC_FOLDER)
 
+
 def _create_app(config_object: BaseConfig, **kwargs) -> Flask:
     app = Flask(__name__, **kwargs)
     configure_app(app, config_object)
     register_endpoints(app)
     register_error_handlers(app)  
     return app
+
 
 def configure_app(app: Flask, config_object: BaseConfig) -> None:
     #configure configuration
@@ -37,6 +40,7 @@ def configure_app(app: Flask, config_object: BaseConfig) -> None:
     
     # configure logger
     configure_logger()
+
         
 def configure_requests(app: Flask) -> None:
     @app.before_request
@@ -63,6 +67,7 @@ def configure_requests(app: Flask) -> None:
     @app.after_request
     def after_request(response):
         return response
+
     
 def configure_logger() -> None:
     log_file_dir: str = Utils.get_log_dir()
@@ -73,9 +78,11 @@ def configure_logger() -> None:
         print("New directory created==>", log_file_dir_with_date)
     config_root_logger(log_file_dir_with_date + "/app_{0}.log".format(date_time_str))
 
+
 def server_bootup_validations() -> None:
     validate_and_create_directory()
     validate_execution_env()
+
 
 def validate_and_create_directory() -> None:
     server_config: Dict = get_server_config()
@@ -99,6 +106,7 @@ def validate_and_create_directory() -> None:
             print("Failed to create the deploy directory." \
                   "Exiting the application.")
             exit(-1)
+        
         
 def validate_execution_env() -> None:
     env: str = Utils.get_execution_env()

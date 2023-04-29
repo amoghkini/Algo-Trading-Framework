@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template
 from flask.views import MethodView
 
 class HomeAPI(MethodView):

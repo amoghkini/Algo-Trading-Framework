@@ -1,7 +1,6 @@
 from flask.views import MethodView
 from flask import url_for, flash
 import json
-import logging
 import threading
 from core.algo import Algo
 
