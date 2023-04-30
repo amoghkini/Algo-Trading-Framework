@@ -1,20 +1,18 @@
 from flask import render_template, g, redirect, url_for, flash
 from flask.views import MethodView
 
-from database.database_connection import get_db
+from broker.broker_methods import BrokerMethods
 
 class MyBrokersAPI(MethodView):
 
     def get(self):
-        print("Amogh is here")
         if not g.user:
-            return redirect(url_for('login_api'))
-        conn = get_db()
-        brokers = conn.getAll(
-            "brokers", ["broker_id", "broker_name","status"], ("user_name = %s", [g.user]))
-        print("Brokers",brokers)
-        if brokers == None:
-            brokers = []
+            return redirect(url_for('dashboard_api'))
+        try:
+            brokers = BrokerMethods.get_all_brokers(g.user)
+            return render_template('my_brokers.html',brokers = brokers)
         
-        return render_template('my_brokers.html',brokers = brokers)
+        except Exception as e:
+            flash("Something went wrong while fetching broker data. Please try after sometime", "danger")
+            return redirect(url_for('dashboard_api'))
     

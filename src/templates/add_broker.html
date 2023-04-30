@@ -24,16 +24,16 @@
             </div>
             <br>
             <div class="form-group">
-                {{ form.user_id.label(class="form-control-label") }}
-                {% if form.user_id.errors %}
-                {{ form.user_id(class="form-control form-control-lg is-invalid") }}
+                {{ form.broker_id.label(class="form-control-label") }}
+                {% if form.broker_id.errors %}
+                {{ form.broker_id(class="form-control form-control-lg is-invalid") }}
                 <div class='invalid-feedback'>
-                    {% for error in form.user_id.errors %}
+                    {% for error in form.broker_id.errors %}
                     <span> {{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.user_id(class="form-control form-control-lg") }}
+                {{ form.broker_id(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <br>

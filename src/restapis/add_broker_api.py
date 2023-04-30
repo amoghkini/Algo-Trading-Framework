@@ -2,8 +2,12 @@ import logging
 from flask import render_template, redirect, url_for, flash, g
 from flask.views import MethodView
 
+
+from broker.broker import Broker
+from broker.broker_methods import BrokerMethods
 from broker.broker_status import BrokerStatus
 from database.database_connection import get_db
+from exceptions.api_exceptions import DuplicateEntryError
 from forms.broker_form import BrokerCreateForm
 
 class AddBrokerAPI(MethodView):
@@ -15,54 +19,31 @@ class AddBrokerAPI(MethodView):
         form = BrokerCreateForm()
         return render_template('add_broker.html', form=form)
 
-
     def post(self):
-        if not g.user:
-            return redirect(url_for('login_api'))
-        
-        form = BrokerCreateForm()
-        
-        # check if broker is alrady present in the system
-        conn = get_db()
-        broker = conn.getOne(
-            "brokers", ["id", "broker_id", "user_name"], ("broker_id = %s", [form.user_id.data]))
-        if broker:
-            logging.error("The broker with same username already exist in the system.")
-            flash("The broker with same username already exist in the system.","danger")
-            return render_template('add_broker.html', form=form)
-        
-        
-        # add the new broker into syatem
-        
-        broker_data = self.add_broker_dict(form)
         try:
-            result = conn.insert("brokers",broker_data)
-            if result != None:
-                conn.commit()
-            else:
-                logging.exception("Exception occured while adding new broker.")
-                flash(
-                    "Something went wrong while adding the broker. Please retry after sometime.","danger")
-                return render_template('add_broker.html', form=form)
+            if not g.user:
+                return redirect(url_for('login_api'))
+
+            form = BrokerCreateForm()
+            broker_id: str = form.broker_id.data
             
-        except Exception as e:
-            logging.exception("Exception occured while adding new broker.")
-            flash(
-                "Something went wrong while adding the broker. Please retry after sometime.", "danger")
+            broker = Broker(broker_id)
+            broker.broker_name = form.broker_name.data
+            broker.password = form.password.data
+            broker.totp_key = form.totp_key.data
+            broker.auto_login = form.auto_login.data
+            broker.user_name = g.user
+            
+            # Perform new broker addition
+            BrokerMethods.add_new_broker(broker)
+            
+            flash("Broker added successfully. Please test the connection to activate the broker!!!", "success")
+            return redirect(url_for('my_brokers_api'))
+        
+        except DuplicateEntryError as e:
+            flash("The broker is already registered in the system. Please enquire brokers for more details", "danger")
             return render_template('add_broker.html', form=form)
-        
-        flash("Broker added successfully. Please test the connection to activate the broker!!!","success")
-        return redirect(url_for('my_brokers_api'))
+        except Exception as e:
+            flash("Something went wrong while adding the broker. Please retry after sometime.", "danger")
+            return render_template('add_broker.html', form=form)
     
-    def add_broker_dict(self,form):
-        broker_data = {"broker_id" : form.user_id.data,
-                       "broker_name" : form.broker_name.data,
-                       "password" : form.password.data,
-                       "user_name" : g.user,
-                       "totp_key" : form.totp_key.data,
-                       "auto_login" : 0,
-                       "status" : BrokerStatus.CREATED,
-                       "broker_addition_date" : 1231231
-                       }
-        return broker_data
-        

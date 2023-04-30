@@ -4,20 +4,19 @@ from wtforms_components import read_only
 from wtforms.validators import DataRequired, Length
 
 from broker.brokers import Brokers
-from database.database_connection import get_db
-
 
 class BrokerCreateForm(FlaskForm):
     broker_name = SelectField('Select Broker', choices = [Brokers.ZERODHA], validators=[DataRequired()])
-    user_id = StringField('User ID', validators=[DataRequired(), Length(min=2, max=20)])
+    broker_id = StringField('Broker ID', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField('Password', validators=[DataRequired()])
     totp_key = StringField('TOTP key', validators=[DataRequired(), Length(min=32, max=32)])
+    auto_login = SelectField('Auto Login', choices=["Yes","No"], validators=[DataRequired()])
     submit = SubmitField('Add Broker')
 
 
 class BrokerEnquiryForm(FlaskForm):
     broker_name = SelectField('Select Broker', choices=[Brokers.ZERODHA], validators=[DataRequired()])
-    user_id = StringField('User ID', validators=[DataRequired(), Length(min=2, max=20)])
+    broker_id = StringField('Broker ID', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField('Password', validators=[DataRequired()])
     totp_key = StringField('TOTP key', validators=[DataRequired(), Length(min=32, max=32)])
     submit = SubmitField('Add Broker')

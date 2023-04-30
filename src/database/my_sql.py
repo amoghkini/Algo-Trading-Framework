@@ -161,7 +161,7 @@ class Mysql:
         query = self._serialize_insert(data)
 
         sql = "INSERT INTO %s (%s) VALUES(%s)" % (table, query[0], query[1])
-        print(sql)
+        #print(sql)
         return self.query(sql, tuple(data.values())).rowcount
 
     def insertBatch(self, table, data):
