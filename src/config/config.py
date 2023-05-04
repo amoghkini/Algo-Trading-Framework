@@ -11,7 +11,6 @@ TEMPLATE_FOLDER = os.path.join(PROJECT_ROOT, 'templates')
 STATIC_FOLDER = os.path.join(PROJECT_ROOT, 'static')
 
 def get_server_config():
-    #print(os.getcwd())
     with open('../config/server.json', 'r') as server:
         json_server_data = json.load(server)
         return json_server_data

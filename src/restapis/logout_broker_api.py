@@ -3,6 +3,7 @@ from flask.views import MethodView
 
 from broker.broker_status import BrokerStatus
 from database.database_connection import get_db
+from database.database_schema import DatabaseSchema
 
 
 class LogOutBrokerAPI(MethodView):
@@ -15,7 +16,7 @@ class LogOutBrokerAPI(MethodView):
         fields_to_update = {"access_token": "",
                             "status": BrokerStatus.LOGGED_OUT}
         conn = get_db()
-        status = conn.update("brokers", fields_to_update,
+        status = conn.update(DatabaseSchema.ALGO_TRADER, "brokers", fields_to_update,
                               ("broker_id=%s", (request.args.get('brokerID'),)))
         print("status", status)
         

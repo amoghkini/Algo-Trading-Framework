@@ -27,14 +27,14 @@ class SignUpAPI(MethodView):
             user.user_name = UserMethods.generate_user_name(first_name, last_name)
             user.mobile_no = form.mobile_no.data
             user.date_of_birth = form.date_of_birth.data
-            
+            print("Passed the debugger")
             # Perform user sign up
             UserMethods.sign_up_user(user)
             
             # Activate account
             UserMethods.activate_account(user.email_id)
             
-            flash('Your account has been created! You are now able to login', 'success')
+            flash('The account activation mail has been sent to registerd email address!', 'success')
             return redirect(url_for('login_api'))
         
         except InvalidUserDataError as e:

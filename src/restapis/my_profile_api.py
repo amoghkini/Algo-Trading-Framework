@@ -13,11 +13,12 @@ class MyProfileAPI(MethodView):
             
             form = UpdateAccountForm()
             form.username.data = g.user
-            
             form = UserMethods.get_profile_data(form)
             
             # This needs to be changed if we starts to keep profile page on S3 bucket or mongodb
-            image_file = url_for('static', filename='profile_pic/' + form.picture.data)    
+            if form.picture.data == None:
+                form.picture.data = 'default.jpg'
+            image_file = url_for('static', filename='profile_pic/' + form.picture.data)
             return render_template('profile.html', form=form, image_file=image_file)
         
         except UserNotFoundError as e:

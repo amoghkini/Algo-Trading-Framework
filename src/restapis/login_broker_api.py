@@ -5,6 +5,7 @@ from flask.views import MethodView
 from broker.broker_status import BrokerStatus
 from core.controller import Controller
 from database.database_connection import get_db
+from database.database_schema import DatabaseSchema
 from forms.broker_form import BrokerLoginForm
 
 class LogInBrokerAPI(MethodView):
@@ -14,7 +15,7 @@ class LogInBrokerAPI(MethodView):
             return redirect(url_for('login_api'))
         
         if 'brokerName' in request.args:
-            broker_data = self.get_broker_data(request.args.get('brokerName'))
+            broker_data = self.get_broker_data(request.args.get('brokerId'))
             
             login_method = request.args.get('loginMethod')
             form = BrokerLoginForm()  
@@ -35,12 +36,7 @@ class LogInBrokerAPI(MethodView):
         print(request.form)
 
         if not g.user:
-            return redirect(url_for('login_api'))
-        
-        #r_stat ={"redirect": "/brokers"}
-        #r_stat = {"status": "error",
-        #          "message": "Something went wrong during broker login. Please try different method"}
-        
+            return redirect(url_for('login_api'))      
         
         login_method = request.form.get('data[loginMethod]')
         
@@ -48,6 +44,7 @@ class LogInBrokerAPI(MethodView):
             broker_values = {"broker_id": request.form.get('data[brokerID]'),
                              "broker_name": request.form.get('data[brokerName]'),
                              "login_method": login_method 
+                             # Pass app key and app secret key here as well which is required to pass for Kite API login
             }
         else:    
             broker_values = {"broker_id": request.form.get('broker_id'),
@@ -62,7 +59,7 @@ class LogInBrokerAPI(MethodView):
         print("broker_values post method", request.form)
         broker_data = self.get_broker_data(broker_values.get('broker_id'))
         
-        #print("Broker values",broker_values)
+        print("Broker values",broker_values)
         
         redirectUrl = Controller.handle_broker_login(request.args, broker_values)
         
@@ -87,7 +84,7 @@ class LogInBrokerAPI(MethodView):
 
     def get_broker_data(self, broker_id):
         conn = get_db()
-        broker = conn.getOne(
+        broker = conn.get_one(DatabaseSchema.ALGO_TRADER,
             "brokers", ["id", "broker_id", "user_name", "broker_name", "password", "totp_key"], ("broker_id = %s", [broker_id]))
         if not broker:
             logging.error("The broker is not registered in the system or credentials are invalid.")

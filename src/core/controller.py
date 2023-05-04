@@ -13,8 +13,8 @@ class Controller:
     def handle_broker_login(args,broker_values):
         broker_app_details = BrokerAppDetails(broker_values.get('broker_name'))
         broker_app_details.set_client_id(broker_values.get('broker_id'))
-        broker_app_details.set_app_key(broker_values.get('broker_id'))
-        broker_app_details.set_app_secret(broker_values.get('broker_id'))
+        broker_app_details.set_app_key(broker_values.get('app_key'))
+        broker_app_details.set_app_secret(broker_values.get('app_secret'))
         
         logging.info('handle_broker_login app_key %s',broker_app_details.app_key)
         Controller.broker_name = broker_app_details.broker

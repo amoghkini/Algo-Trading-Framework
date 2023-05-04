@@ -9,6 +9,7 @@ from PIL import Image
 from typing import Dict
 
 from database.database_connection import get_db
+from database.database_schema import DatabaseSchema
 from exceptions.api_exceptions import APIException
 from exceptions.user_exceptions import AuthUserError, InvalidUserDataError, UserNotFoundError, UserSignatureError
 
@@ -34,7 +35,7 @@ class UserMethods:
         try:
             conn = get_db()
             user_dict = user.__dict__
-            conn.insert("users", user_dict)
+            conn.insert(DatabaseSchema.ALGO_TRADER, "users", user_dict)
             conn.commit()
 
             # Need to handle exceptions such as handle duplicate entry. We need to send different error on screen.
@@ -140,7 +141,7 @@ class UserMethods:
     def get_user(email: str) -> Dict:
         try:
             conn = get_db()
-            user = conn.getOne("users", '*', ("email_id = %s", [email]))
+            user = conn.get_one(DatabaseSchema.ALGO_TRADER, "users", '*', ("email_id = %s", [email]))
             return user
         except Exception as e:
             raise ValueError("Something went wrong while fetching the user details.")
@@ -149,7 +150,9 @@ class UserMethods:
     def get_user_by_username(username: str) -> Dict:
         try:
             conn = get_db()
-            user = conn.getOne("users", '*', ("user_name = %s", [username]))
+            #import pdb;pdb.set_trace()
+            user = conn.get_one(DatabaseSchema.ALGO_TRADER, "users", '*', ("user_name = %s", [username]))
+            print("User", user)
             return user
         except Exception as e:
             raise ValueError("Something went wrong while checking if username exist.")
@@ -204,7 +207,7 @@ class UserMethods:
                          by: str='user_name') -> int:
         
         conn = get_db()
-        user = conn.update("users", fields_to_update, (by+"=%s", (user_identifier,))) 
+        user = conn.update(DatabaseSchema.ALGO_TRADER, "users", fields_to_update, (by+"=%s", (user_identifier,))) 
         if user:
             conn.commit()
             return user
@@ -349,6 +352,7 @@ class UserMethods:
             form.address1.data = user.get('address1')
             form.address2.data = user.get('address2')
             form.address3.data = user.get('address3')
+            
             form.picture.data = user.get('profile_pic')
         except Exception as e:
             raise APIException("Something went wrong. Please retry after sometime")

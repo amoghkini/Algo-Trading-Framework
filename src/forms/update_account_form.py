@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, Email
 
 class UpdateAccountForm(FlaskForm):
     first_name = StringField('First name', validators=[DataRequired(), Length(min=2, max=40)])
-    middle_name = StringField('Middle name', validators=[DataRequired(), Length(min=2, max=40)])
+    middle_name = StringField('Middle name', validators=[Length(min=2, max=40)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=40)], render_kw={"placeholder": "Last name"})
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)], render_kw={"placeholder": "Username"})
     email = StringField('Email', validators=[DataRequired(), Email()], render_kw={'readonly': True})

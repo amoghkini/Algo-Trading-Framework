@@ -24,7 +24,11 @@
                     console.log(data.redirect)
                     if (data.redirect) {
                         console.log("Amogh",data)
-                        window.location.href = data.redirect + "?brokerName="+data.broker_id + "&loginMethod=" + data.login_method;
+                        if (loginMethod != 'api_with_broker_portal'){
+                            window.location.href = data.redirect + "?brokerName="+ brokerName + "&brokerId=" + brokerID + "&loginMethod=" + data.login_method;
+                        }else{
+                            window.location.href = data.redirect
+                        }
                     } else {
                         alert(JSON.stringify(data));
                     }
