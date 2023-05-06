@@ -9,6 +9,8 @@ class Broker:
         self.broker_name: str = ''
         self.password: str = ''
         self.user_name: str = ''
+        self.app_key: str = ''
+        self.app_secret_key: str = ''
         self.totp_key: str = ''
         self.auto_login: bool = ''
         self.status: str = BrokerStatus.CREATED

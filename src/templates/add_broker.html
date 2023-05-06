@@ -52,6 +52,34 @@
             </div>
             <br>
             <div class="form-group">
+                {{ form.app_key.label(class="form-control-label") }}
+                {% if form.app_key.errors %}
+                {{ form.app_key(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.app_key.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.app_key(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.app_secret_key.label(class="form-control-label") }}
+                {% if form.app_secret_key.errors %}
+                {{ form.app_secret_key(class="form-control form-control-lg is-invalid") }}
+                <div class='invalid-feedback'>
+                    {% for error in form.app_secret_key.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.app_secret_key(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <br>
+            <div class="form-group">
                 {{ form.totp_key.label(class="form-control-label") }}
                 {% if form.totp_key.errors %}
                 {{ form.totp_key(class="form-control form-control-lg is-invalid") }}

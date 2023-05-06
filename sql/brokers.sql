@@ -11,7 +11,7 @@ CREATE TABLE algo_trader.brokers
     broker_addition_date bigint,
     last_login_date bigint,
     app_key character varying(150),
-    secret_key character varying(150),
+    app_secret_key character varying(150),
     PRIMARY KEY (id),
     CONSTRAINT broker_id_pk UNIQUE (broker_id)
 );

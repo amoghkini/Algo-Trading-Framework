@@ -30,6 +30,8 @@ class AddBrokerAPI(MethodView):
             broker = Broker(broker_id)
             broker.broker_name = form.broker_name.data
             broker.password = form.password.data
+            broker.app_key = form.app_key.data
+            broker.app_secret_key = form.app_secret_key.data
             broker.totp_key = form.totp_key.data
             broker.auto_login = form.auto_login.data
             broker.user_name = g.user

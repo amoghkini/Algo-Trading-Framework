@@ -9,6 +9,8 @@ class BrokerCreateForm(FlaskForm):
     broker_name = SelectField('Select Broker', choices = [Brokers.ZERODHA], validators=[DataRequired()])
     broker_id = StringField('Broker ID', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField('Password', validators=[DataRequired()])
+    app_key = StringField('App key', validators=[Length(min=1, max=32)])
+    app_secret_key = StringField('App secret key', validators=[Length(min=1, max=32)])
     totp_key = StringField('TOTP key', validators=[DataRequired(), Length(min=32, max=32)])
     auto_login = SelectField('Auto Login', choices=["Yes","No"], validators=[DataRequired()])
     submit = SubmitField('Add Broker')
@@ -18,6 +20,8 @@ class BrokerEnquiryForm(FlaskForm):
     broker_name = SelectField('Select Broker', choices=[Brokers.ZERODHA], validators=[DataRequired()])
     broker_id = StringField('Broker ID', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField('Password', validators=[DataRequired()])
+    app_key = StringField('App key', validators=[Length(min=1, max=32)])
+    app_secret_key = StringField('App secret key', validators=[Length(min=1, max=32)])
     totp_key = StringField('TOTP key', validators=[DataRequired(), Length(min=32, max=32)])
     submit = SubmitField('Add Broker')
 
