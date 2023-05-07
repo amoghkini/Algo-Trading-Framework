@@ -15,7 +15,6 @@ class ZerodhaWebLogin(BaseLogin):
         redirect_url = None
         
         if 'login_required' in args:
-                        
             if broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITHOUT_ENC_TOKEN:
                 broker_handle.login_with_credentials(broker_details.get('broker_id'), broker_details.get('password'), broker_details.get('totp_key'))
             
@@ -23,10 +22,8 @@ class ZerodhaWebLogin(BaseLogin):
                 #brokerHandle.set_headers(broker_details.get('encryption_token'), broker_details.get('broker_id'))
                 try:
                     broker_handle.set_headers(broker_details.get('encryption_token'))
-                except ValueError as e:
-                    print("Value error",e)
                 except Exception as e:
-                    print("Exception occured",e)
+                    raise
                 
             print(broker_handle.profile())
             access_token = broker_handle.enctoken+"&user_id="+broker_handle.user_id

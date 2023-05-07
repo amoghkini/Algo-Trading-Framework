@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -34,7 +35,7 @@ def save_timestamps_data(timestamps = {}):
     timestamps_file_path = os.path.join(server_config['deployDir'], 'timestamps.json')
     with open(timestamps_file_path, 'w') as timestamps_file:
         json.dump(timestamps, timestamps_file, indent=2)
-    print("saved timestamps data to file " + timestamps_file_path)
+    logging.info("saved timestamps data to file %s", timestamps_file_path)
 
 def get_env():
     return get_server_config().get('env')

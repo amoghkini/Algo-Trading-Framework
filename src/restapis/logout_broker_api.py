@@ -1,25 +1,29 @@
-from flask import flash, redirect, render_template, url_for, session, request
+from flask import flash, redirect, url_for, request
 from flask.views import MethodView
 
+from broker.broker_methods import BrokerMethods
 from broker.broker_status import BrokerStatus
 from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
-
+from exceptions.broker_exceptions import BrokerNotFoundError
 
 class LogOutBrokerAPI(MethodView):
 
     def get(self):
-        print("Inside get method")
-        # Need to implement actual broker logout logic similar to login logic.
-        
-        print(request.args)
-        fields_to_update = {"status": BrokerStatus.LOGGED_OUT}
-        conn = get_db()
-        status = conn.update(DatabaseSchema.ALGO_TRADER, "brokers", fields_to_update,
-                              ("broker_id=%s", (request.args.get('brokerID'),)))
-        print("status", status)
-        
-        if status:
-            conn.commit()
+        try:
+            broker_id: str = request.args.get('brokerID')
+            if broker_id == None:
+                raise BrokerNotFoundError("Please provide the valid broker")
+            
+            status = BrokerMethods.logout_broker(broker_id)
+            if not status:
+                BrokerNotFoundError("Requested broker not found!!!")
+                
             flash("Broker logged out successfully!!!", "success")
-        return redirect(url_for('my_brokers_api'))
+            return redirect(url_for('my_brokers_api'))
+        except BrokerNotFoundError as e:
+            flash(str(e), "danger")
+            return redirect(url_for('my_brokers_api'))
+        except Exception as e:
+            flash("Something went wrong during broker log out", "danger")
+            return redirect(url_for('my_brokers_api'))

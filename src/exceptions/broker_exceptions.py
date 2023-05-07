@@ -12,3 +12,7 @@ class BrokerNotFoundError(Exception):
 
 class BrokerError(Exception):
     pass
+
+
+class BrokerTOTPError(Exception):
+    pass

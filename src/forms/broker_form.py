@@ -28,7 +28,7 @@ class BrokerEnquiryForm(FlaskForm):
 class BrokerLoginForm(FlaskForm):
     
     broker_name = SelectField('Broker Name', choices=[Brokers.ZERODHA], validators=[DataRequired()], render_kw={'readonly': True})
-    broker_id = StringField('User ID', validators=[DataRequired(), Length(min=2, max=20)], render_kw={'readonly': True})
+    broker_id = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)], render_kw={'readonly': True})
     password = PasswordField('Password', validators=[DataRequired()])
     login_method = HiddenField('Login Method', validators=[DataRequired()])
     enc_token = StringField('Encryption Token', validators=[DataRequired(), Length(min=5, max=150)])

@@ -4,7 +4,8 @@ from flask.views import MethodView
 from typing import Dict
 
 from broker.broker_methods import BrokerMethods
-from exceptions.broker_exceptions import BrokerError
+from exceptions.api_exceptions import DatabaseWriteError
+from exceptions.broker_exceptions import BrokerAuthError, BrokerError, BrokerNotFoundError, BrokerTOTPError
 from forms.broker_form import BrokerLoginForm
 
 class LogInBrokerAPI(MethodView):
@@ -57,7 +58,22 @@ class LogInBrokerAPI(MethodView):
                 flash("Broker logged in successfully. Please test the connection!!!",'success')
                 return redirect(url_for('my_brokers_api'))
             else:
-                raise BrokerError("Something went wrong while storing the broker key!!!")
+                raise BrokerError("Something went wrong while storing the broker key!!!")  
+        except BrokerAuthError as e:
+            flash(str(e), 'danger')
+            return redirect(url_for('my_brokers_api'))
+        except BrokerError as e:
+            flash(str(e), 'danger')
+            return redirect(url_for('my_brokers_api'))
+        except BrokerNotFoundError as e:
+            flash(str(e), 'danger')
+            return redirect(url_for('my_brokers_api'))
+        except BrokerTOTPError as e:
+            flash(str(e), 'danger')
+            return redirect(url_for('my_brokers_api'))
+        except DatabaseWriteError as e:
+            flash(str(e), 'danger')
+            return redirect(url_for('my_brokers_api'))
         except Exception as e:
             flash("Something went wrong during broker log in!!!",'danger')
             return redirect(url_for('my_brokers_api'))
