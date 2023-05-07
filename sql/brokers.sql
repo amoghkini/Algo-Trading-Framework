@@ -18,3 +18,9 @@ CREATE TABLE algo_trader.brokers
 
 ALTER TABLE IF EXISTS algo_trader.brokers
     OWNER to postgres;
+
+
+-- Table updates
+-- 1. New field login_status
+ALTER TABLE IF EXISTS algo_trader.brokers
+    ADD COLUMN login_status character varying(20);

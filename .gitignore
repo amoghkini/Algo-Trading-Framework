@@ -111,6 +111,11 @@ env.bak/
 venv.bak/
 logs/
 DeploymentCreds/
+python-deploy/trades/
+src/static/profile_pic/
+docs/
+python-deploy/
+
 
 # Spyder project settings
 .spyderproject

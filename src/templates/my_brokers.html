@@ -47,15 +47,15 @@
 
 <br><br><br><br>
 
-
 <table class="table table-bordered table-hover table-dark table-responsive">
     <thead class="thead-dark"   >
         <tr>
             <th style="text-align:center" scope="col">Broker id</th>
             <th style="text-align:center" scope="col">Broker Name</th>
-            <th style="text-align:center" scope="col">Status</th>
+            <th style="text-align:center" scope="col">Login Status</th>
             <th style="text-align:center" scope="col">Test Connection</th>
             <th style="text-align:center" scope="col">Login Method</th>
+            <th style="text-align:center" scope="col">Status</th>
             <th style="text-align:center" scope="col">Auto Login</th>
             <th style="text-align:center" scope="col">Amend</th>
             <th style="text-align:center" scope="col">Deactivate</th>
@@ -68,18 +68,18 @@
         {% if brokers|length  > 0 %}
             {% for broker in brokers %}
             <tr>
-                {% set bId, bName, status = broker.get('broker_id'), broker.get('broker_name'), broker.get('status') %}
+                {% set bId, bName, bLoginStatus = broker.get('broker_id'), broker.get('broker_name'), broker.get('status') %}
 
                 <td style="text-align:center"><a href="{{ url_for('broker_enquiry_api',broker_id = broker.get('broker_id')) }}">{{ bId }}</a></td>
                 <td style="text-align:center">{{ broker.get('broker_name') }}</td>
-                <td style="text-align:center">{{ broker.get('status') }}</td>
+                <td style="text-align:center">{{ broker.get('login_status') }}</td>
                 <td style="text-align:center"> 
                     <button class="btn btn-outline-light disabled" onClick="loginBroker()">
                         Test Connection
                     </button> 
                 </td>
                 <td style="text-align:center"> 
-                    {% if status == "Logged in" %}
+                    {% if bLoginStatus == "Logged in" %}
                         <button class="btn btn-outline-light " onClick="logoutBroker('{{bId}}')">
                             Log out
                         </button>
@@ -98,7 +98,7 @@
                     {% endif %}
                     
                 </td>
-
+                <td style="text-align:center">{{ broker.get('status') }}</td>
                 <td style="text-align:center">{{ "No" }} </td>
                 <td style="text-align:center">
                     <button class="btn btn-outline-light disabled" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
@@ -132,4 +132,3 @@
     </center>
 {% endif %}
 {% endblock content %}
-

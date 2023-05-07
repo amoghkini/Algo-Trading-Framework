@@ -2,9 +2,6 @@ from flask import flash, redirect, url_for, request
 from flask.views import MethodView
 
 from broker.broker_methods import BrokerMethods
-from broker.broker_status import BrokerStatus
-from database.database_connection import get_db
-from database.database_schema import DatabaseSchema
 from exceptions.broker_exceptions import BrokerNotFoundError
 
 class LogOutBrokerAPI(MethodView):

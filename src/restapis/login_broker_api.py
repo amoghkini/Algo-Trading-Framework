@@ -49,6 +49,7 @@ class LogInBrokerAPI(MethodView):
             else:
                 # For broker login using brokers API
                 # Need to figure out how can we get the broker id from broker respose.
+                # We can keep the broker id in flask global variable g. This can be used to get the broker id once we get the redirect from broker application.
                 broker: Dict = dict()
                 
             redirect_handler = BrokerMethods.login_broker(request.args, broker)

@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session, g
+from flask import render_template, redirect, url_for, g
 from flask.views import MethodView
 
 class DashboardAPI(MethodView):

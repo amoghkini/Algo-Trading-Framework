@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from broker.broker import Broker
-from broker.broker_status import BrokerStatus
+from broker.broker_login_status import BrokerLoginStatus
 from core.controller import Controller
 from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
@@ -31,7 +31,7 @@ class BrokerMethods:
     def get_all_brokers(user_name: str) -> List:
         try:
             conn = get_db()
-            brokers: List = conn.get_all(DatabaseSchema.ALGO_TRADER, "brokers", ["broker_id", "broker_name", "status"], ("user_name = %s", [user_name]))
+            brokers: List = conn.get_all(DatabaseSchema.ALGO_TRADER, "brokers", ["broker_id", "broker_name", "status", "login_status","auto_login"], ("user_name = %s", [user_name]))
             if brokers == None:
                 brokers = []
             return brokers
@@ -54,7 +54,7 @@ class BrokerMethods:
             r_stat = {"redirect": redirect_url}
             return r_stat
         else:
-            fields_to_update = {"status": BrokerStatus.LOGGED_IN}
+            fields_to_update = {"login_status": BrokerLoginStatus.LOGGED_IN}
             # Insert or update method to insert the auth token in new table
             status = BrokerMethods.update_broker(fields_to_update, broker_id)
             if status:
@@ -64,7 +64,7 @@ class BrokerMethods:
 
     @staticmethod
     def logout_broker(broker_id: str) -> int:
-        fields_to_update = {"status": BrokerStatus.LOGGED_OUT}
+        fields_to_update = {"login_status": BrokerLoginStatus.LOGGED_OUT}
         status = BrokerMethods.update_broker(fields_to_update, broker_id)
         if status:
             return status
