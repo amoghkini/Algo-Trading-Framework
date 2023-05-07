@@ -14,7 +14,7 @@
         }
 
     function loginBroker(brokerID, brokerName, loginMethod) {
-            var url = "{{ url_for('login_broker_api')}}"
+            var url = "{{ url_for('login_broker_api')}}" + '?login_method=' + loginMethod
             var data = {"brokerID": brokerID ,
                         "brokerName": brokerName,
                         "loginMethod" : loginMethod
@@ -25,7 +25,7 @@
                     if (data.redirect) {
                         console.log("Amogh",data)
                         if (loginMethod != 'api_with_broker_portal'){
-                            window.location.href = data.redirect + "?brokerName="+ brokerName + "&brokerId=" + brokerID + "&loginMethod=" + data.login_method;
+                            window.location.href = data.redirect + "?brokerName="+ brokerName + "&brokerId=" + brokerID + "&loginMethod=" + loginMethod
                         }else{
                             window.location.href = data.redirect
                         }

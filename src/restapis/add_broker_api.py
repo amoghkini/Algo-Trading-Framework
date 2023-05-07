@@ -39,7 +39,7 @@ class AddBrokerAPI(MethodView):
             # Perform new broker addition
             BrokerMethods.add_new_broker(broker)
             
-            flash("Broker added successfully. Please test the connection to activate the broker!!!", "success")
+            flash("Broker added successfully. Please login and test the connection to activate the broker!!!", "success")
             return redirect(url_for('my_brokers_api'))
         
         except DuplicateEntryError as e:

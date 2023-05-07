@@ -13,8 +13,7 @@ class LogOutBrokerAPI(MethodView):
         # Need to implement actual broker logout logic similar to login logic.
         
         print(request.args)
-        fields_to_update = {"access_token": "",
-                            "status": BrokerStatus.LOGGED_OUT}
+        fields_to_update = {"status": BrokerStatus.LOGGED_OUT}
         conn = get_db()
         status = conn.update(DatabaseSchema.ALGO_TRADER, "brokers", fields_to_update,
                               ("broker_id=%s", (request.args.get('brokerID'),)))

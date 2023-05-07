@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<br>
+<br><br><br><br>
 <div class="content-section div-back-color">
-    <form method="POST" action="/broker/login?loginRequired=True">
+    <form method="POST" action="/broker/login?login_required=True">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <center>
@@ -51,7 +51,7 @@
                 {% endif %}
             </div>
             <br>
-            {% if login_method == 'creds_with_enc_token' %}
+            {% if form.login_method.data == 'creds_with_enc_token' %}
                 <div class="form-group">
                     {{ form.enc_token.label(class="form-control-label") }}
                     {% if form.enc_token.errors %}
@@ -79,22 +79,7 @@
                     {{ form.login_method(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="form-group">
-                {{ form.totp_key.label(class="form-control-label") }}
-                {% if form.totp_key.errors %}
-                {{ form.totp_key(class="form-control form-control-lg is-invalid") }}
-                <div class='invalid-feedback'>
-                    {% for error in form.totp_key.errors %}
-                    <span> {{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.totp_key(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <br>
         </fieldset>
-        <br>
         <center>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-light") }}

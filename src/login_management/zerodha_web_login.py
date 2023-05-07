@@ -14,7 +14,7 @@ class ZerodhaWebLogin(BaseLogin):
         broker_handle = KiteExt()
         redirect_url = None
         
-        if 'loginRequired' in args:
+        if 'login_required' in args:
                         
             if broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITHOUT_ENC_TOKEN:
                 broker_handle.login_with_credentials(broker_details.get('broker_id'), broker_details.get('password'), broker_details.get('totp_key'))
