@@ -2,7 +2,7 @@ import logging
 
 from broker.broker_login_methods import BrokerLoginMethods
 from broker_web_extenstions.kiteext import KiteExt
-from login_management.base_login import BaseLogin
+from login_management_system.base_login import BaseLogin
 
 class ZerodhaWebLogin(BaseLogin):
     def __init__(self, broker_app_details):
