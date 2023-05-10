@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 import secrets
@@ -10,6 +11,7 @@ from typing import Dict
 
 from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
+from database.database_tables import DatabaseTables
 from exceptions.api_exceptions import APIException
 from exceptions.user_exceptions import AuthUserError, InvalidUserDataError, UserNotFoundError, UserSignatureError
 
@@ -35,7 +37,7 @@ class UserMethods:
         try:
             conn = get_db()
             user_dict = user.__dict__
-            conn.insert(DatabaseSchema.ALGO_TRADER, "users", user_dict)
+            conn.insert(DatabaseSchema.ALGO_TRADER, DatabaseTables.USERS, user_dict)
             conn.commit()
 
             # Need to handle exceptions such as handle duplicate entry. We need to send different error on screen.
@@ -141,7 +143,7 @@ class UserMethods:
     def get_user(email: str) -> Dict:
         try:
             conn = get_db()
-            user = conn.get_one(DatabaseSchema.ALGO_TRADER, "users", '*', ("email_id = %s", [email]))
+            user = conn.get_one(DatabaseSchema.ALGO_TRADER, DatabaseTables.USERS, '*', ("email_id = %s", [email]))
             return user
         except Exception as e:
             raise ValueError("Something went wrong while fetching the user details.")
@@ -151,10 +153,12 @@ class UserMethods:
         try:
             conn = get_db()
             #import pdb;pdb.set_trace()
-            user = conn.get_one(DatabaseSchema.ALGO_TRADER, "users", '*', ("user_name = %s", [username]))
+            user = conn.get_one(DatabaseSchema.ALGO_TRADER, DatabaseTables.USERS, '*', ("user_name = %s", [username]))
             print("User", user)
             return user
         except Exception as e:
+            print("EXCEPTION in get_user_by_username", e)
+            logging.error("EXCEPTION in get_user_by_username %s", e)
             raise ValueError("Something went wrong while checking if username exist.")
 
     @staticmethod
@@ -207,7 +211,7 @@ class UserMethods:
                          by: str='user_name') -> int:
         
         conn = get_db()
-        user = conn.update(DatabaseSchema.ALGO_TRADER, "users", fields_to_update, (by+"=%s", (user_identifier,))) 
+        user = conn.update(DatabaseSchema.ALGO_TRADER, DatabaseTables.USERS, fields_to_update, (by+"=%s", (user_identifier,))) 
         if user:
             conn.commit()
             return user

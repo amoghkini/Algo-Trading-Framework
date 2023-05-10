@@ -8,6 +8,7 @@ kiteconnect==4.2.0
 mysql-connector-python==8.0.32
 passlib==1.7.4
 Pillow==9.4.0
+psycopg2==2.9.5
 pyOpenSSL==23.0.0
 pyotp==2.8.0
 python-dotenv==1.0.0

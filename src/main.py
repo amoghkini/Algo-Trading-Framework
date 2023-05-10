@@ -7,4 +7,4 @@ server_config = get_server_config()
 port = server_config.get('port')
 
 if __name__ == "__main__":
-    app.run(debug=True, port=port)
+    app.run(host='0.0.0.0',debug=True, port=port)

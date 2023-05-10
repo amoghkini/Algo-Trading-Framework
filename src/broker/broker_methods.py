@@ -1,3 +1,4 @@
+from flask import url_for
 from typing import Dict, List
 
 from broker.broker import Broker
@@ -5,8 +6,10 @@ from broker.broker_login_status import BrokerLoginStatus
 from core.controller import Controller
 from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
+from database.database_tables import DatabaseTables
 from exceptions.api_exceptions import DatabaseWriteError
 from exceptions.broker_exceptions import BrokerNotFoundError
+from utils.utils import Utils
 
 class BrokerMethods:
     
@@ -14,7 +17,7 @@ class BrokerMethods:
     def add_new_broker(broker: Broker) -> None:
         conn = get_db()
         broker_data: Dict = broker.__dict__
-        result: int = conn.insert(DatabaseSchema.ALGO_TRADER, "brokers", broker_data)
+        result: int = conn.insert(DatabaseSchema.ALGO_TRADER, DatabaseTables.BROKERS, broker_data)
         if result:
             conn.commit()  
     
@@ -22,7 +25,7 @@ class BrokerMethods:
     def get_broker_data(broker_id: str) -> Dict:
         try:
             conn = get_db()
-            broker: Dict = conn.get_one(DatabaseSchema.ALGO_TRADER, "brokers", '*', ("broker_id = %s", [broker_id]))
+            broker: Dict = conn.get_one(DatabaseSchema.ALGO_TRADER, DatabaseTables.BROKERS, '*', ("broker_id = %s", [broker_id]))
             return broker
         except Exception as e:
             raise BrokerNotFoundError("Something went wrong while fetching the broker details.")
@@ -31,7 +34,7 @@ class BrokerMethods:
     def get_all_brokers(user_name: str) -> List:
         try:
             conn = get_db()
-            brokers: List = conn.get_all(DatabaseSchema.ALGO_TRADER, "brokers", ["broker_id", "broker_name", "status", "login_status","auto_login"], ("user_name = %s", [user_name]))
+            brokers: List = conn.get_all(DatabaseSchema.ALGO_TRADER, DatabaseTables.BROKERS, ["broker_id", "broker_name", "status", "login_status","auto_login"], ("user_name = %s", [user_name]))
             if brokers == None:
                 brokers = []
             return brokers
@@ -58,7 +61,12 @@ class BrokerMethods:
             # Insert or update method to insert the auth token in new table
             status = BrokerMethods.update_broker(fields_to_update, broker_id)
             if status:
-                return status
+                if 'login_required' in args:
+                    return status
+                else:
+                    r_stat = {"redirect": url_for('my_brokers_api', _external=True),
+                              "alert_message": "The broker is already logged in using this method. No further action is required."}
+                    return r_stat
             else:
                 return None
 
@@ -80,7 +88,8 @@ class BrokerMethods:
     def update_broker(fields_to_update: Dict, broker_id: str):
         try:
             conn = get_db()
-            broker_update_count: int = conn.update(DatabaseSchema.ALGO_TRADER, "brokers", fields_to_update, ("broker_id=%s", (broker_id,)))
+            broker_update_count: int = conn.update(
+                DatabaseSchema.ALGO_TRADER, DatabaseTables.BROKERS, fields_to_update, ("broker_id=%s", (broker_id,)))
             if broker_update_count:
                 conn.commit()
                 return broker_update_count
@@ -88,3 +97,23 @@ class BrokerMethods:
                 return None
         except Exception as e:
             raise DatabaseWriteError("Something went wrong while updating the broker data")
+        
+    @staticmethod
+    def save_access_token(access_token_data: Dict) -> None:
+        conn = get_db()
+        result: int = conn.insert_or_update(
+            DatabaseSchema.ALGO_TRADER, DatabaseTables.ACCESS_TOKENS, access_token_data, 'broker_id,token_date')
+        if result:
+            conn.commit()
+        return
+    
+    @staticmethod
+    def get_access_token(broker_id: str) -> str:
+        conn = get_db()
+        todays_date: str = Utils.get_today_date_str()
+        result: Dict = conn.get_one(DatabaseSchema.ALGO_TRADER, DatabaseTables.ACCESS_TOKENS,
+                                         ["access_token"], ("broker_id = %s and token_date = %s", [broker_id, todays_date]))
+        if result:
+            return result.get('access_token')
+        else:
+            return None

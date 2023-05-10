@@ -29,6 +29,9 @@
                         }else{
                             window.location.href = data.redirect
                         }
+                        if (data.alert_message){
+                            alert(data.alert_message)
+                        }
                     } else {
                         alert(JSON.stringify(data));
                     }
@@ -68,7 +71,7 @@
         {% if brokers|length  > 0 %}
             {% for broker in brokers %}
             <tr>
-                {% set bId, bName, bLoginStatus = broker.get('broker_id'), broker.get('broker_name'), broker.get('status') %}
+                {% set bId, bName, bLoginStatus = broker.get('broker_id'), broker.get('broker_name'), broker.get('login_status') %}
 
                 <td style="text-align:center"><a href="{{ url_for('broker_enquiry_api',broker_id = broker.get('broker_id')) }}">{{ bId }}</a></td>
                 <td style="text-align:center">{{ broker.get('broker_name') }}</td>

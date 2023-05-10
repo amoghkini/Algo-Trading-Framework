@@ -115,6 +115,7 @@ python-deploy/trades/
 src/static/profile_pic/
 docs/
 python-deploy/
+postgres-data/
 
 
 # Spyder project settings

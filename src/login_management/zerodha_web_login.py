@@ -13,47 +13,41 @@ class ZerodhaWebLogin(BaseLogin):
         
         broker_handle = KiteExt()
         redirect_url = None
-        
-        if 'login_required' in args:
-            if broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITHOUT_ENC_TOKEN:
-                broker_handle.login_with_credentials(broker_details.get('broker_id'), broker_details.get('password'), broker_details.get('totp_key'))
-            
-            elif broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITH_ENC_TOKEN:
-                #brokerHandle.set_headers(broker_details.get('encryption_token'), broker_details.get('broker_id'))
-                try:
-                    broker_handle.set_headers(broker_details.get('encryption_token'))
-                except Exception as e:
-                    raise
-                
-            print(broker_handle.profile())
-            access_token = broker_handle.enctoken+"&user_id="+broker_handle.user_id
-            
-            logging.info('access token = %s', access_token)
-            logging.info('Login successful. access token = %s', access_token)
-            print(access_token)
-            
-            logging.info('Zerodha access_token = %s', access_token)
-            broker_handle.set_access_token(access_token)
-
-            logging.info('Zerodha Login successful. access_token = %s', access_token)
-
-            # set broker handle and access token to the instance
+        access_token: str = broker_details.get('access_token')
+        if access_token:   # and test_connection()  # To be implemented: Check connection to verify the access token generated for the day is still valid
             self.set_broker_handle(broker_handle)
             self.set_access_token(access_token)
-            
-            
-            
-            '''
-            # redirect to home page with query param loggedIn=true
-            homeUrl = systemConfig['homeUrl'] + '?loggedIn=true'
-            logging.info('Zerodha Redirecting to home page %s', homeUrl)
-            '''
             redirect_url = None
         else:
-            login_url = broker_handle.login_url()
-            logging.info('Redirecting to zerodha login url = %s', login_url)
-            redirect_url = login_url
+            if 'login_required' in args:
+                if broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITHOUT_ENC_TOKEN:
+                    broker_handle.login_with_credentials(broker_details.get('broker_id'), broker_details.get('password'), broker_details.get('totp_key'))
+                
+                elif broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITH_ENC_TOKEN:
+                    try:
+                        broker_handle.set_headers(broker_details.get('encryption_token'))
+                    except Exception as e:
+                        raise
+                    
+                print(broker_handle.profile())
+                access_token = broker_handle.enctoken+"&user_id="+broker_handle.user_id
+                
+                logging.info('access token = %s', access_token)
+                logging.info('Login successful. access token = %s', access_token)
+                
+                logging.info('Zerodha access_token = %s', access_token)
+                broker_handle.set_access_token(access_token)
 
+                logging.info('Zerodha Login successful. access_token = %s', access_token)
+
+                # set broker handle and access token to the instance
+                self.set_broker_handle(broker_handle)
+                self.set_access_token(access_token)
+                redirect_url = None
+            else:
+                login_url = broker_handle.login_url()
+                logging.info('Redirecting to zerodha login url = %s', login_url)
+                redirect_url = login_url
         return redirect_url
     
     def logout(self):

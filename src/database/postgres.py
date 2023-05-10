@@ -28,7 +28,7 @@ class PostgresSql:
 
         except Exception as e:
             print("Postgres connection failed")
-            raise ValueError("Connection to the database failed.")
+            raise ValueError("Connection to the database failed.",e)
 
     def insert(self,
                schema: str,
@@ -62,7 +62,7 @@ class PostgresSql:
                 fields='*',
                 where=None,
                 order=None,
-                limit=None):
+                limit=None) -> List:
         cur = self.__select(schema, table, fields, where, order, limit)
         result = cur.fetchall()
 
@@ -76,7 +76,7 @@ class PostgresSql:
                schema: str, 
                table: str, 
                data, 
-               where=None):
+               where=None) -> int:
         query = self.__serialize_update(data)
 
         sql = "UPDATE %s.%s SET %s" % (schema, table, query)
@@ -87,6 +87,23 @@ class PostgresSql:
 
         return self.query(sql, values + where[1] if where and len(where) > 1 else values).rowcount
 
+    def insert_or_update(self,
+                         schema: str,
+                         table: str,
+                         data: Dict,
+                         keys: str) -> int:
+        insert_data = data.copy()
+
+        data = {k: data[k] for k in data if k not in keys}
+
+        insert = self.__serialize_insert(insert_data)
+        update = self.__serialize_update(data)
+
+        sql = "INSERT INTO %s.%s (%s) VALUES(%s) ON CONFLICT (%s) DO UPDATE SET %s" % (
+            schema, table, insert[0], insert[1], keys, update)
+
+        return self.query(sql, tuple(insert_data.values()) + tuple(data.values())).rowcount
+        
     def __serialize_insert(self,
                            data: Dict[str, Any]) -> List[str]:
         keys = ",".join(data.keys())
