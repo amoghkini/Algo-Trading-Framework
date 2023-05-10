@@ -1,4 +1,3 @@
-from flask import url_for
 from typing import Dict, List
 
 from broker.broker import Broker
@@ -64,7 +63,8 @@ class BrokerMethods:
                 if 'login_required' in args:
                     return status
                 else:
-                    r_stat = {"redirect": url_for('my_brokers_api', _external=True),
+                    redirect_external_url: str = Utils.get_external_url('my_brokers_api')
+                    r_stat = {"redirect": redirect_external_url,
                               "alert_message": "The broker is already logged in using this method. No further action is required."}
                     return r_stat
             else:

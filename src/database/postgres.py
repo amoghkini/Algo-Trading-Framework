@@ -17,7 +17,7 @@ class PostgresSql:
         self.conf['password'] = kwargs.get("password")
         self.connect()
 
-    def connect(self):
+    def connect(self) -> None:
         try:
             self.conn = psycopg2.connect(host=self.conf.get('host'),
                                          database=self.conf.get('db'),
@@ -58,7 +58,7 @@ class PostgresSql:
 
     def get_all(self,
                 schema: str,
-                table=None,
+                table: str=None,
                 fields='*',
                 where=None,
                 order=None,

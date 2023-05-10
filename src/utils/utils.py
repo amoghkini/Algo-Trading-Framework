@@ -4,6 +4,7 @@ import time
 import logging
 import calendar
 from datetime import datetime, timedelta
+from flask import url_for
 from typing import Dict
 
 from common.execution_env import ExecutionEnv
@@ -284,3 +285,9 @@ class Utils:
         
         return_dict = {keys: values for keys, values in return_dict.items() if values is not None}
         return return_dict
+
+    @staticmethod
+    def get_external_url(api_name: str, args=None) -> str:
+        if 'token' in args:
+            return url_for(api_name, token=list(args.values())[0], _external=True)
+        return url_for(api_name, _external=True)

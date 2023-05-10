@@ -2,7 +2,6 @@ import logging
 import os
 import re
 import secrets
-from flask import url_for
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous.exc import SignatureExpired
 from passlib.hash import sha256_crypt
@@ -26,7 +25,8 @@ class UserMethods:
     def activate_account(email_id: str) -> None:
         # Generate account activation token.
         verify_token = UserMethods.generate_token(email_id)
-        link = f'''Click here to verify the account: {url_for('verify_email_api', token=verify_token, _external=True)}'''
+        account_activation_url: str = Utils.get_external_url('verify_email_api',{"token":verify_token})
+        link = f'''Click here to verify the account: {account_activation_url}'''
 
         # Send acccount activation link to given email address.
         Email.send_account_activation_email(link)
@@ -182,8 +182,9 @@ class UserMethods:
         existing_user = UserMethods.get_user(email_id)
         if existing_user:
             # Generate password reset token.
-            verify_token = UserMethods.generate_token(email_id)
-            link = f'''Click here to verify the account: {url_for('reset_password_api', token=verify_token, _external=True)}'''
+            verify_token: str = UserMethods.generate_token(email_id)
+            password_reset_url: str = Utils.get_external_url('reset_password_api',{"token":verify_token})
+            link = f'''Click here to verify the account: {password_reset_url}'''
 
             # Send password reset link to given email address.
             Email.send_password_reset_email(link)
