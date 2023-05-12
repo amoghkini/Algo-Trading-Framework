@@ -42,7 +42,6 @@ class UserMethods:
 
             # Need to handle exceptions such as handle duplicate entry. We need to send different error on screen.
         except Exception as e:
-            print(e)
             raise ValueError("Something went wrong while writing the database. Please retry after sometime.")
     
     @staticmethod
@@ -59,7 +58,6 @@ class UserMethods:
                         reset: bool = False) -> None:
         UserMethods.validate_change_password(user, reset)
         hashed_password = UserMethods.hash_password(user.get('new_password'))
-        print("Hashed password", hashed_password)
         fields_to_update = {"password": hashed_password}
         UserMethods.update_user_data(user.get('user_name'), fields_to_update)
     
@@ -154,10 +152,8 @@ class UserMethods:
             conn = get_db()
             #import pdb;pdb.set_trace()
             user = conn.get_one(DatabaseSchema.ALGO_TRADER, DatabaseTables.USERS, '*', ("user_name = %s", [username]))
-            print("User", user)
             return user
         except Exception as e:
-            print("EXCEPTION in get_user_by_username", e)
             logging.error("EXCEPTION in get_user_by_username %s", e)
             raise ValueError("Something went wrong while checking if username exist.")
 
@@ -284,7 +280,6 @@ class UserMethods:
     def save_picture(form_picture):
        
         random_hex = secrets.token_hex(8)
-        print("Form picture",form_picture)
         _, f_ext = os.path.splitext(form_picture.filename)
         picture_fn = random_hex + f_ext
         picture_path = os.path.join(os.getcwd()  , 'static/profile_pic', picture_fn)  # Instead of os.getcwd() we should use app.root_path. This can be fetched from config file
@@ -301,7 +296,6 @@ class UserMethods:
         user_db_data: Dict = UserMethods.get_user_by_username(user_name)
         if not user_db_data:
             raise UserNotFoundError("The username with this email address is not registered.")
-        print("Data from db fetched successfully")
         user_form = UserMethods.convert_dict_to_profile_form(form, user_db_data)
         return user_form
     
@@ -320,7 +314,6 @@ class UserMethods:
         if form.picture.data:
                 picture_file = UserMethods.save_picture(form.picture.data)
                 fields_to_update['profile_pic'] = picture_file
-        print(fields_to_update)
         if len(fields_to_update) != 0 :
             status = UserMethods.update_user_data(email_id, fields_to_update, by='email_id')
             if status == 0:

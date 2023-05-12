@@ -10,7 +10,6 @@ class SignUpAPI(MethodView):
     def get(self):
         if g.user:
             return redirect(url_for('dashboard_api'))
-        print("Inside get method")
         form = RegisterUserForm()
         return render_template('signup.html', form=form)
 
@@ -27,7 +26,6 @@ class SignUpAPI(MethodView):
             user.user_name = UserMethods.generate_user_name(first_name, last_name)
             user.mobile_no = form.mobile_no.data
             user.date_of_birth = form.date_of_birth.data
-            print("Passed the debugger")
             # Perform user sign up
             UserMethods.sign_up_user(user)
             

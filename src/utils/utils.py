@@ -288,6 +288,6 @@ class Utils:
 
     @staticmethod
     def get_external_url(api_name: str, args=None) -> str:
-        if 'token' in args:
+        if args and 'token' in args:
             return url_for(api_name, token=list(args.values())[0], _external=True)
         return url_for(api_name, _external=True)

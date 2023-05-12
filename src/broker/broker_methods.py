@@ -1,7 +1,9 @@
 from typing import Dict, List
 
 from broker.broker import Broker
+from broker.brokers import Brokers
 from broker.broker_login_status import BrokerLoginStatus
+from broker_transaction_management_system.zerodha_transaction_manager import ZerodhaTransactionManager
 from core.controller import Controller
 from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
@@ -80,11 +82,6 @@ class BrokerMethods:
             return None
     
     @staticmethod
-    def test_connection():
-        # Check with saved auth token if we are able to fetch the boker details. If not then throw error.
-        pass
-    
-    @staticmethod
     def update_broker(fields_to_update: Dict, broker_id: str):
         try:
             conn = get_db()
@@ -117,3 +114,13 @@ class BrokerMethods:
             return result.get('access_token')
         else:
             return None
+
+    @staticmethod
+    def get_transaction_manager():
+        transaction_manager = None
+        broker_name = Controller.get_broker_name()
+        if broker_name == Brokers.ZERODHA:
+            transaction_manager = ZerodhaTransactionManager()
+        # elif broker_name == "fyers": # Not implemented
+        #   transaction_manager = FyresTransactionManager()
+        return transaction_manager

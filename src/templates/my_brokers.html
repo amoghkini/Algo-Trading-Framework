@@ -21,9 +21,7 @@
         };
             $.post(url, {data:data},
                 function (data, status, xhr) {
-                    console.log(data.redirect)
                     if (data.redirect) {
-                        console.log("Amogh",data)
                         if (loginMethod != 'api_with_broker_portal'){
                             window.location.href = data.redirect + "?brokerName="+ brokerName + "&brokerId=" + brokerID + "&loginMethod=" + loginMethod
                         }else{
