@@ -2,10 +2,10 @@ import logging
 
 import broker.broker_methods as broker_methods
 from broker.broker_login_methods import BrokerLoginMethods
+from broker.broker_app_details import BrokerAppDetails
 from broker.brokers import Brokers
 from login_management_system.zerodha_login import ZerodhaLogin
 from login_management_system.zerodha_web_login import ZerodhaWebLogin
-from models.broker_app_details import BrokerAppDetails
 from utils.utils import Utils
 
 class Controller:

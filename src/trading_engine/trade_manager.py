@@ -56,6 +56,8 @@ class TradeManager:
         # elif broker_name == "fyers" # not implemented
         #   ticker = FyersTicker()
 
+        Controller.get_broker_login().set_ticker_service_handle(TradeManager.ticker)
+        
         TradeManager.ticker.start_ticker()
         TradeManager.ticker.register_listener(TradeManager.ticker_listener)
 

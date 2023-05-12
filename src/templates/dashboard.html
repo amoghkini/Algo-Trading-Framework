@@ -68,7 +68,37 @@
     }
 
     function stopAlgo(){
-        alert("Stopping the algorithm")
+        $.ajax({
+            url: "{{ url_for('stop_algo_api')}}",
+            type: "GET",
+            dataType: 'json',
+            success: function (response) {
+                if (response.status == "success") {
+                    document.getElementById("stopAlgoLoad").style.display = "none"
+                    document.getElementById("start").style.display = "inline"
+                    alert("Algo stopped successfully")
+                }
+                else {
+                    document.getElementById("stopAlgoLoad").style.display = "none"
+                    document.getElementById("stop").style.display = "inline"
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status) {
+                console.log('ajax error = ' + xhr.statusText);
+                document.getElementById("stopAlgoLoad").style.display = "none"
+                document.getElementById("stop").style.display = "inline"
+                if (xhr.statusText == 'timeout') {
+                    alert("Timeout occured. Please try again after sometime");
+                }
+                else {
+                    alert("Something went wrong while stopping algo. Please try after sometime");
+                }
+            },
+            timeout: 30000
+        })
+        document.getElementById("stop").style.display = "none"
+        document.getElementById("stopAlgoLoad").style.display = "inline"
     }
 </script>
 

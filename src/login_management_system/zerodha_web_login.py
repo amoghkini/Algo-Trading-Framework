@@ -27,7 +27,7 @@ class ZerodhaWebLogin(BaseLogin):
                 logging.info("The provided api key or access token is invalid. Need to login once again.")
                 redirect_url = self.__login(args, broker_details, broker_handle)
             except Exception as e:
-                logging.info("Something went wrong while testing broker conection. Need to login once again.q")
+                logging.info("Something went wrong while testing broker conection. Need to login once again.")
                 redirect_url = self.__login(args, broker_details, broker_handle)
         else:
             redirect_url = self.__login(args, broker_details, broker_handle)
@@ -45,7 +45,6 @@ class ZerodhaWebLogin(BaseLogin):
                 except Exception as e:
                     raise
 
-            print(broker_handle.profile())
             access_token = broker_handle.enctoken+"&user_id="+broker_handle.user_id
 
             logging.info('access token = %s', access_token)
