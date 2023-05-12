@@ -1,44 +1,75 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<style>
-    .button {
-        background-color: #53a5b0;
-        border: none;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-    }
 
-    .center {
-        text-align: center;
-    }
-</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    function startAlgo() {
-        var url = "{{ url_for('start_algo_api')}}"
-        var data = {};
-        $.post(url, {},
-            function (data, status, xhr) {
-                if (data.redirect) {
-                    window.location.href = data.redirect;
-                } else {
-                    alert('status: ' + status + ', data: ' + JSON.stringify(data));
-                }
-            },
-            'json'
-        );
-    }
-</script>
+
 <br><br><br><br>
 
-<button class="btn btn-outline-light " onClick="startAlgo()">
-    Start Algo
+<button class="btn btn-outline-light " onclick="startAlgo()" id="start">
+     Start Algo 
 </button>
+
+<button class="btn btn-outline-light "  type="button" disabled id = "startAlgoLoad">
+    <span class = "spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Starting Algo
+</button>
+
+<button class="btn btn-outline-light " onclick="stopAlgo()" id="stop">
+    Stop Algo
+</button>
+
+<button class="btn btn-outline-light " type="button" disabled id="stopAlgoLoad">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Stopping Algo
+</button>
+
+<script>
+
+    document.getElementById("stop").style.display = "none"
+    
+    document.getElementById("startAlgoLoad").style.display = "none"
+    document.getElementById("stopAlgoLoad").style.display = "none"
+
+    function startAlgo() {
+        $.ajax({
+            url: "{{ url_for('start_algo_api')}}",
+            type: "GET",
+            dataType: 'json',
+            success: function (response) {
+                if (response.status == "success") {
+                    document.getElementById("startAlgoLoad").style.display = "none"
+                    document.getElementById("stop").style.display = "inline"
+                    alert("Algo started successfully")
+                }
+                else {  
+                    document.getElementById("startAlgoLoad").style.display = "none"
+                    document.getElementById("start").style.display = "inline"
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status) {
+                console.log('ajax error = ' + xhr.statusText);
+                document.getElementById("startAlgoLoad").style.display = "none"
+                document.getElementById("start").style.display = "inline"
+                if (xhr.statusText == 'timeout'){
+                    alert("Timeout occured. Please try again after sometime");
+                }
+                else{
+                    alert("Something went wrong while starting algo. Please try after sometime");
+                }
+            },
+            timeout: 30000
+        })
+        document.getElementById("start").style.display = "none"
+        document.getElementById("startAlgoLoad").style.display = "inline"
+        
+    }
+
+    function stopAlgo(){
+        alert("Stopping the algorithm")
+    }
+</script>
+
 {% endblock content %}

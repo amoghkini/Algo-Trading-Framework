@@ -9,6 +9,7 @@ from strategies.sample_strategy import SampleStrategy
 from strategies.short_straddle_BNF import ShortStraddleBNF
 from trading_engine.trade_manager import TradeManager
 
+
 class Algo:
     is_algo_running = None
 
@@ -17,7 +18,7 @@ class Algo:
         if Algo.is_algo_running == True:
             logging.info("Algo has already started..")
             return
-        
+
         logging.info("Starting Algo...")
         Instruments.fetch_instruments()
 
@@ -33,6 +34,7 @@ class Algo:
         threading.Thread(target=BNFORB30Min.get_instance().run).start()
         threading.Thread(target=OptionSelling.get_instance().run).start()
         threading.Thread(target=ShortStraddleBNF.get_instance().run).start()
-        
+
         Algo.is_algo_running = True
+        # Write the also status in new table
         logging.info("Algo started.")
