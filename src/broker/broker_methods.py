@@ -102,8 +102,7 @@ class BrokerMethods:
             DatabaseSchema.ALGO_TRADER, DatabaseTables.ACCESS_TOKENS, access_token_data, 'broker_id,token_date')
         if result:
             conn.commit()
-        return
-    
+                
     @staticmethod
     def get_access_token(broker_id: str) -> str:
         conn = get_db()

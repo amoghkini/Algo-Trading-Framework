@@ -5,6 +5,7 @@ from flask import Flask, g, session
 
 from app.endpoints import register_endpoints
 from app.error_handlers import register_error_handlers
+from app.server_bootup_operations import server_bootup_operations
 from common.execution_env import ExecutionEnv
 from config.config import BaseConfig, TEMPLATE_FOLDER, STATIC_FOLDER, get_server_config
 from database.database_connection import get_db
@@ -17,32 +18,35 @@ def create_app() -> Flask:
     server_bootup_validations()
     
     config_object: BaseConfig = Utils.get_config()
-    
-    return _create_app(config_object, 
-                       template_folder=TEMPLATE_FOLDER, 
-                       static_folder=STATIC_FOLDER)
+    app = _create_app(config_object,
+                      template_folder=TEMPLATE_FOLDER,
+                      static_folder=STATIC_FOLDER)
+    return app
 
 
 def _create_app(config_object: BaseConfig, **kwargs) -> Flask:
     app = Flask(__name__, **kwargs)
     configure_app(app, config_object)
     register_endpoints(app)
-    register_error_handlers(app)  
+    register_error_handlers(app)      
     return app
 
 
 def configure_app(app: Flask, config_object: BaseConfig) -> None:
     #configure configuration
     app.config.from_object(config_object)
-     
-    # configure requests
-    configure_requests(app)
     
-    # configure logger
-    configure_logger()
+    configure_requests(app)  # configure requests
+    configure_logger()  # configure logger
 
-        
+
+
+    
 def configure_requests(app: Flask) -> None:
+    @app.before_first_request
+    def before_first_request():
+        server_bootup_operations()
+    
     @app.before_request
     def before_request():
         session.permanent = True  # set session to use PERMANENT_SESSION_LIFETIME
@@ -54,16 +58,14 @@ def configure_requests(app: Flask) -> None:
             g.user = session['user']
 
         g.secret_key = "Amogh kini"
-
         g.db = get_db()
-        # Async method can be written which will be called in before requst method
-        # which will fetch the nifty and bank nifty price on each page reload
-        # before implementing the websocket apporach.
+
 
     @app.teardown_appcontext
     def shutdown_session(exception=None) -> None:
-        session = g.pop('db', None)
+        db = g.pop('db', None)
         
+            
     @app.after_request
     def after_request(response):
         return response

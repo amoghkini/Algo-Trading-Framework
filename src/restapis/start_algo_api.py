@@ -1,16 +1,13 @@
-import threading
 from flask.views import MethodView
 
-from algo.algo import Algo
+from algo.algo_methods import AlgoMethods
 from exceptions.broker_exceptions import BrokerNotFoundError
 
 class StartAlgoAPI(MethodView):
     
     def get(self):
         try:
-            #x = threading.Thread(target=Algo.start_algo)
-            #x.start()
-            Algo.start_algo()
+            AlgoMethods.start_algorithm()
             response_json = {"status": 'success',
                             "message": "Algo started successfully"}
         except BrokerNotFoundError as e:

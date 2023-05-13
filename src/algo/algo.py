@@ -2,7 +2,6 @@ import logging
 import threading
 import time
 
-from broker.brokers import Brokers
 from core.controller import Controller
 from exceptions.broker_exceptions import BrokerNotFoundError
 from instruments.instruments import Instruments
@@ -10,7 +9,6 @@ from strategies.options_bnf_orb_30_min import BNFORB30Min
 from strategies.option_selling import OptionSelling
 from strategies.sample_strategy import SampleStrategy
 from strategies.short_straddle_BNF import ShortStraddleBNF
-from ticker.zerodha_ticker import ZerodhaTicker
 from trading_engine.trade_manager import TradeManager
 
 Controller.get_broker_login()
@@ -26,7 +24,7 @@ class Algo:
 
         broker_name = Controller.get_broker_name()
         if not broker_name:
-            raise BrokerNotFoundError("Broker is not logged in. Hence not able to start the ticker service")      
+            raise BrokerNotFoundError("Broker is not logged in. Not able to start the ticker service")      
           
         logging.info("Starting Algo...")
         Instruments.fetch_instruments()
@@ -45,7 +43,6 @@ class Algo:
         threading.Thread(target=ShortStraddleBNF.get_instance().run).start()
 
         Algo.is_algo_running = True
-        # Write the algo status in new table
         logging.info("Algo started.")
 
 
@@ -62,5 +59,4 @@ class Algo:
             ticker.stop_ticker()
 
         Algo.is_algo_running = False
-        # Write the algo status in new table
         logging.info("Algo stopped.")

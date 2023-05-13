@@ -116,7 +116,7 @@ src/static/profile_pic/
 docs/
 python-deploy/
 postgres-data/
-
+.vscode/
 
 # Spyder project settings
 .spyderproject

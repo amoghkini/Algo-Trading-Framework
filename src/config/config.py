@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv('../.env')
 
 APP_NAME = "Algo Trading Framework"
+ALGO_NAME = "Algo Trader"
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 TEMPLATE_FOLDER = os.path.join(PROJECT_ROOT, 'templates')
 STATIC_FOLDER = os.path.join(PROJECT_ROOT, 'static')
