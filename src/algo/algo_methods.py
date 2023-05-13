@@ -7,12 +7,14 @@ from config.config import ALGO_NAME
 from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
 from database.database_tables import DatabaseTables
+from exceptions.api_exceptions import APIException
 from utils.utils import Utils
+
 
 class AlgoMethods:
     
     @staticmethod
-    def start_algorithm():
+    def start_algorithm() -> None:
         # x = threading.Thread(target=Algo.start_algo)
         # x.start()
         Algo.start_algo()
@@ -23,7 +25,7 @@ class AlgoMethods:
         AlgoMethods.update_algo_data(fields_to_update)
         
     @staticmethod
-    def stop_algorithm():
+    def stop_algorithm() -> None:
         # x = threading.Thread(target=Algo.stop_algo)
         # x.start()
         Algo.stop_algo()
@@ -34,14 +36,9 @@ class AlgoMethods:
         AlgoMethods.update_algo_data(fields_to_update)
     
     @staticmethod
-    def update_algo_data(fields_to_update: Dict) -> int:
-        conn = get_db()
-        algo = conn.update(DatabaseSchema.ALGO_TRADER, DatabaseTables.ALGO, fields_to_update)
-        if algo:
-            conn.commit()
-            return algo
-        else:
-            return None
+    def algorithm_status() -> str:
+        algo_data: Dict = AlgoMethods.get_algo_data()
+        return algo_data.get('status')
     
     @staticmethod
     def save_algo_data() -> None:
@@ -53,3 +50,22 @@ class AlgoMethods:
         result: int = conn.insert_or_update(DatabaseSchema.ALGO_TRADER, DatabaseTables.ALGO, algo_data, 'name')
         if result:
             conn.commit()
+            
+    @staticmethod
+    def get_algo_data() -> Dict:
+        try:
+            conn = get_db()
+            algo_data: Dict = conn.get_one(DatabaseSchema.ALGO_TRADER, DatabaseTables.ALGO, '*')
+            return algo_data
+        except Exception as e:
+            raise APIException("Something went wrong while fetching the algo details.")
+    
+    @staticmethod
+    def update_algo_data(fields_to_update: Dict) -> int:
+        conn = get_db()
+        algo = conn.update(DatabaseSchema.ALGO_TRADER, DatabaseTables.ALGO, fields_to_update)
+        if algo:
+            conn.commit()
+            return algo
+        else:
+            return None

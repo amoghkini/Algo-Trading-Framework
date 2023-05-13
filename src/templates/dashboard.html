@@ -25,13 +25,45 @@
     Stopping Algo
 </button>
 
+<button class="btn btn-outline-light " type="button" disabled id="checkingStatus">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Checking Algo Status
+</button>
+
 <script>
 
-    document.getElementById("stop").style.display = "none"
-    
+    document.getElementById("start").style.display = "none"
     document.getElementById("startAlgoLoad").style.display = "none"
+    document.getElementById("stop").style.display = "none"
     document.getElementById("stopAlgoLoad").style.display = "none"
 
+    window.onload = function () {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', "{{ url_for('status_algo_api')}}");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response)
+                    document.getElementById("checkingStatus").style.display = "none"
+                    if (response.status == "success"){
+                        if (response.algoStatus == "Running"){
+                            document.getElementById("stop").style.display = "inline"
+                        }else{
+                            document.getElementById("start").style.display = "inline"
+                        }
+                    }
+                    else{
+                        document.getElementById("start").style.display = "inline"
+                    }
+                    
+                } else {
+                    document.getElementById("start").style.display = "inline"
+                    console.error('Error calling API');
+                }
+            };
+            xhr.send();
+        };
+        
     function startAlgo() {
         $.ajax({
             url: "{{ url_for('start_algo_api')}}",
