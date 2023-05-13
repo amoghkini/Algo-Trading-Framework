@@ -1,5 +1,6 @@
 from algo.algo_methods import AlgoMethods
 
 def server_bootup_operations():
-    AlgoMethods.save_algo_data()    
+    print("Amogh is inside server bootup menu")
+    #AlgoMethods.save_algo_data()    
     
