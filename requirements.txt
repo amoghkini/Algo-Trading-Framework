@@ -3,9 +3,9 @@ Flask==2.2.2
 Flask-Alembic==2.0.1
 Flask-Bcrypt==1.0.1
 Flask-WTF==1.1.1
+gunicorn
 itsdangerous==2.0.1
 kiteconnect==4.2.0
-mysql-connector-python==8.0.32
 passlib==1.7.4
 Pillow==9.4.0
 psycopg2==2.9.5

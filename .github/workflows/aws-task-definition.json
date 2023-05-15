@@ -1,0 +1,73 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:782597819683:task-definition/AlgoTraderTaskDefinition:1",
+    "containerDefinitions": [
+        {
+            "name": "algo_trading_framework",
+            "image": "782597819683.dkr.ecr.ap-south-1.amazonaws.com/algo_trading_framework",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "algo_trading_framework-80-tcp",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                },
+                {
+                    "name": "algo_trading_framework-5000-tcp",
+                    "containerPort": 5000,
+                    "hostPort": 5000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": []
+        }
+    ],
+    "family": "AlgoTraderTaskDefinition",
+    "taskRoleArn": "arn:aws:iam::782597819683:role/ECS_task_execution_role",
+    "executionRoleArn": "arn:aws:iam::782597819683:role/ECS_task_execution_role",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2023-05-15T13:40:04.174Z",
+    "registeredBy": "arn:aws:iam::782597819683:root",
+    "tags": []
+}
