@@ -84,7 +84,16 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build \
+            --build-arg AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            --build-arg AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            --build-arg AWS_DEFAULT_REGION="${{ secrets.AWS_REGION }}" \
+            --build-arg DB_HOST="${{ secrets.DB_HOST }}" \
+            --build-arg DB_PORT="${{ secrets.DB_PORT }}" \
+            --build-arg DB_USER="${{ secrets.DB_USER }}" \
+            --build-arg DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            --build-arg DB_SCHEMA="${{ secrets.DB_SCHEMA }}" \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           
