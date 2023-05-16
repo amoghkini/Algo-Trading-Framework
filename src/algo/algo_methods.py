@@ -44,7 +44,11 @@ class AlgoMethods:
     def save_algo_data() -> None:
         algo_data = {
             "name": ALGO_NAME,
-            "status": AlgoStatus.STOPPED
+            "status": AlgoStatus.STOPPED,
+            "start_time": 0,
+            "end_time": 0,
+            "algo_start_reason": "",
+            "algo_stop_reason": ""
         }
         conn = get_db()
         result: int = conn.insert_or_update(DatabaseSchema.ALGO_TRADER, DatabaseTables.ALGO, algo_data, 'name')
