@@ -123,3 +123,19 @@ class BrokerMethods:
         # elif broker_name == "fyers": # Not implemented
         #   transaction_manager = FyresTransactionManager()
         return transaction_manager
+
+    @staticmethod
+    def fetch_orders():
+        orders = BrokerMethods.get_transaction_manager().get_orders()
+        return orders
+    
+    @staticmethod
+    def fetch_positiosn():
+        positions = BrokerMethods.get_transaction_manager().get_positions()
+        return positions
+    
+    @staticmethod
+    def fetch_holdings():
+        holdings = BrokerMethods.get_transaction_manager().get_holdings()
+        return holdings
+    

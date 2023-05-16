@@ -2,7 +2,6 @@ import os
 import logging
 import time
 import json
-from datetime import datetime
 
 from config.config import get_server_config
 from core.controller import Controller
