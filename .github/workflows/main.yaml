@@ -91,7 +91,7 @@ jobs:
           
   Continuous-Deployment:
     needs: build-and-push-ecr-image
-    runs-on: ip-172-31-32-201
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
