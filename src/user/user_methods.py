@@ -13,7 +13,6 @@ from database.database_schema import DatabaseSchema
 from database.database_tables import DatabaseTables
 from exceptions.api_exceptions import APIException
 from exceptions.user_exceptions import AuthUserError, InvalidUserDataError, UserNotFoundError, UserSignatureError
-
 from messaging_engine.email import Email
 from user.user import User
 from utils.utils import Utils
@@ -319,7 +318,6 @@ class UserMethods:
             if status == 0:
                 raise InvalidUserDataError("No changes found to update the profile details.")                
         else:
-
             raise InvalidUserDataError("No changes found to update the profile details.")
     
     @staticmethod
@@ -350,7 +348,6 @@ class UserMethods:
             form.address1.data = user.get('address1')
             form.address2.data = user.get('address2')
             form.address3.data = user.get('address3')
-            
             form.picture.data = user.get('profile_pic')
         except Exception as e:
             raise APIException("Something went wrong. Please retry after sometime")

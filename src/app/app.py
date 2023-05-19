@@ -39,9 +39,7 @@ def configure_app(app: Flask, config_object: BaseConfig) -> None:
     configure_requests(app)  # configure requests
     configure_logger()  # configure logger
 
-
-
-    
+ 
 def configure_requests(app: Flask) -> None:
     @app.before_first_request
     def before_first_request():

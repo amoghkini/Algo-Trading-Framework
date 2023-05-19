@@ -3,7 +3,7 @@ from flask import Flask
 
 from restapis import (about_us_api, add_broker_api, dashboard_api, enquire_broker_api, holdings_api, home_api, login_api, 
                       login_broker_api, logout_api, logout_broker_api, my_brokers_api, my_profile_api, orders_api,
-                      password_change_api, password_reset_api, password_reset_request, positions_api, sign_up_api, 
+                      password_change_api, password_reset_api, password_reset_request, positions_api, redirect_handler_api, sign_up_api, 
                       start_algo_api, status_algo, stop_algo_api, verify_user_api)
 
 def register_endpoints(app: Flask) -> None:
@@ -22,6 +22,7 @@ def register_endpoints(app: Flask) -> None:
     app.add_url_rule("/oms/holdings", view_func=holdings_api.HoldingsAPI.as_view("holdings_api"))
     app.add_url_rule("/oms/orders", view_func=orders_api.OrdersAPI.as_view("orders_api"))
     app.add_url_rule("/oms/positions", view_func=positions_api.PositionsAPI.as_view("positions_api"))
+    app.add_url_rule("/api/<page_name>", view_func=redirect_handler_api.RdirectHandlerAPI.as_view("redirect_api"))
     app.add_url_rule("/user/login", view_func=login_api.LogInAPI.as_view("login_api"))
     app.add_url_rule("/user/logout", view_func=logout_api.LogOutAPI.as_view("logout_api"))
     app.add_url_rule("/user/profile", view_func=my_profile_api.MyProfileAPI.as_view("my_profile_api"))

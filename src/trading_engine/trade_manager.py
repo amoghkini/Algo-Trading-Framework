@@ -159,7 +159,7 @@ class TradeManager:
             if long_trade != None:
                 if strategy_instance.should_place_trade(long_trade, tick):
                     # place the longTrade
-                    is_success = TradeManager.executeTrade(long_trade)
+                    is_success = TradeManager.execute_trade(long_trade)
                     if is_success == True:
                         # set longTrade state to ACTIVE
                         long_trade.trade_state = TradeState.ACTIVE
@@ -169,7 +169,7 @@ class TradeManager:
             if short_trade != None:
                 if strategy_instance.should_place_trade(short_trade, tick):
                     # place the shortTrade
-                    is_success = TradeManager.executeTrade(short_trade)
+                    is_success = TradeManager.execute_trade(short_trade)
                     if is_success == True:
                         # set shortTrade state to ACTIVE
                         short_trade.trade_state = TradeState.ACTIVE
@@ -194,7 +194,7 @@ class TradeManager:
         return trade
 
     @staticmethod
-    def executeTrade(trade):
+    def execute_trade(trade):
         logging.info('TradeManager: Execute trade called for %s', trade)
         trade.initial_stop_loss = trade.stop_loss
         # Create order input params object and place order

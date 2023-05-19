@@ -75,13 +75,13 @@
                     <a class="nav-link" href="{{ url_for('dashboard_api') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url_for('orders_api') }}" class="nav-link">Orders</a>
+                    <a href="{{ url_for('redirect_api', page_name='orders') }}" class="nav-link">Orders</a>
                 <li>
                 <li class="nav-item">
-                    <a href="{{ url_for('positions_api') }}" class="nav-link">Positions</a>
+                    <a href="{{ url_for('redirect_api', page_name='positions') }}" class="nav-link">Positions</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url_for('holdings_api') }}" class="nav-link">Holdings</a>
+                    <a href="{{ url_for('redirect_api', page_name='holdings') }}" class="nav-link">Holdings</a>
                 </li>
                 <!--li class="nav-item">
                     <a href="#" class="nav-link">Funds</a>

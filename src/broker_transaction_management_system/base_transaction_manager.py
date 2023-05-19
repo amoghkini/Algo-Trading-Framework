@@ -7,3 +7,12 @@ class BaseTransactionManager:
 
     def test_connection(self):
         pass
+    
+    def get_orders(self):
+        pass
+    
+    def get_positions(self):
+        pass
+    
+    def get_holdings(self):
+        pass
