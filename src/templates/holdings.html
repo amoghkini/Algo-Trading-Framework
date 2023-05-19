@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-between align-items-center">
+            <h3>Holdings <span id="holdingsCount"></span></h3>
+            <button class="btn btn-outline-light" onclick="fetchHoldings()" id="fetchHoldings">
+                Fetch Holdings
+            </button>
+            <button class="btn btn-outline-light" type="button" disabled id="fetchingHoldings">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Fetching Holdings
+            </button>
+        </div>
+    </div>
+</div>
+
+<br>
+<table class="table table-bordered table-hover table-dark table-responsive" id="holdingsTable">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center">Instrument</th>
+            <th class="text-center">Qty.</th>
+            <th class="text-center">Avg. Cost</th>
+            <th class="text-center">LTP</th>
+            <th class="text-center">Cur. val</th>
+            <th class="text-center">P&amp;L</th>
+            <th class="text-center">Net chg.</th>
+            <th class="text-center">Day chg.</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<center>
+    <p id="defaultMessage">No holdings found</p>
+</center>
+
+<script>
+    document.getElementById("fetchHoldings").style.display = "inline"
+    document.getElementById("fetchingHoldings").style.display = "none"
+
+
+    window.onload = function () {
+
+        // Call fetchHoldings function on page load
+                fetchHoldings();
+    };
+    function fetchHoldings() {
+        $.ajax({
+            url: "{{ url_for('holdings_api')}}",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == "success") {
+                    var holdingsData = response.data;
+                    var tableBody = document.querySelector("#holdingsTable tbody");
+                    var holdingsCountElement = document.getElementById("holdingsCount");
+
+                    // Clear the table body before populating with new data
+                    tableBody.innerHTML = "";
+
+                    // Loop through the holdings data and create table rows
+                    if (holdingsData.length === 0) {
+                        // Display default message when no data is found
+                        document.getElementById("defaultMessage").style.display = "block";
+                        document.getElementById("fetchHoldings").style.display = "inline"
+                        document.getElementById("fetchingHoldings").style.display = "none"
+                    } else {
+                        document.getElementById("defaultMessage").style.display = "none"; // Hide the default message if data is found
+                        
+                        // Update holdings count
+                        holdingsCountElement.textContent = "(" + holdingsData.length + ")";
+
+                        // Loop through the holdings data and create table rows
+                        holdingsData.forEach(function (holding) {
+                            var row = document.createElement("tr");
+                            row.innerHTML = `
+                            <td class="text-center">${holding.tradingsymbol}</td>
+                            <td class="text-center">${holding.quantity}</td>
+                            <td class="text-center">${holding.average_price.toFixed(2) }</td>
+                            <td class="text-center">${holding.last_price.toFixed(2)}</td>
+                            <td class="text-center">${holding.pnl.toFixed(2)}</td>
+                            <td class="text-center">${holding.pnl.toFixed(2)}</td>
+                            <td class="text-center">${holding.pnl.toFixed(2)}</td>
+                            <td class="text-center">${holding.day_change_percentage.toFixed(2)}</td>
+                            `;
+                            tableBody.appendChild(row);
+                            
+                        });
+                        document.getElementById("fetchHoldings").style.display = "inline"
+                        document.getElementById("fetchingHoldings").style.display = "none"
+                    }
+                } else {
+                    document.getElementById("fetchHoldings").style.display = "inline"
+                    document.getElementById("fetchingHoldings").style.display = "none"
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status) {
+                console.log("ajax error = " + xhr.statusText);
+                if (xhr.statusText == "timeout") {
+                    alert("Timeout occurred. Please try again after some time.");
+                } else {
+                    alert("Something went wrong while fetching the holdings. Please check if broker connection is active.");
+                }
+                document.getElementById("fetchHoldings").style.display = "inline"
+                document.getElementById("fetchingHoldings").style.display = "none"
+            },
+            timeout: 30000
+        });
+
+        document.getElementById("fetchHoldings").style.display = "none";
+        document.getElementById("fetchingHoldings").style.display = "inline";
+    }
+
+</script>
+
+{% endblock content %}
