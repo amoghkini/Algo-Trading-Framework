@@ -10,8 +10,7 @@ class HoldingsAPI(MethodView):
             holdings: str = BrokerMethods.fetch_holdings()
             response_json = {"status": 'success',
                              "data": holdings}
-        
         except Exception as e:
-            response_json = {"status": "fail",
+            response_json = {"status": "error",
                              "message": "Something went wrong while fetching holdings. Please try again after sometime."+str(e)}
         return response_json

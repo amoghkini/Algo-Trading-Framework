@@ -40,6 +40,21 @@
 <center>
     <p id="defaultMessage">No holdings found</p>
 </center>
+<br>
+<hr class="hr hr-blurry" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <strong style="display: block; text-align: center; color: #e0e0e0;">Total Investment</strong>
+            <span id="totalInvestment" style="display: block; text-align: center; font-size: 30px;"></span>
+        </div>
+        <div class="col-md-6">
+            <strong style="display: block; text-align: center; color: #e0e0e0;">Current Value</strong>
+            <span id="totalCurrentValue" style="display: block; text-align: center; font-size: 30px;"></span>
+        </div>
+    </div>
+</div>
 
 <script>
     document.getElementById("fetchHoldings").style.display = "inline"
@@ -61,9 +76,15 @@
                     var holdingsData = response.data;
                     var tableBody = document.querySelector("#holdingsTable tbody");
                     var holdingsCountElement = document.getElementById("holdingsCount");
+                    var totalInvestmentElement = document.getElementById("totalInvestment");
+                    var totalCurrentValueElement = document.getElementById("totalCurrentValue");
 
                     // Clear the table body before populating with new data
                     tableBody.innerHTML = "";
+                    
+                    // Reset total investment and total current value
+                    var totalInvestment = 0;
+                    var totalCurrentValue = 0;
 
                     // Loop through the holdings data and create table rows
                     if (holdingsData.length === 0) {
@@ -80,19 +101,37 @@
                         // Loop through the holdings data and create table rows
                         holdingsData.forEach(function (holding) {
                             var row = document.createElement("tr");
+                            var pnlSign = holding.pnl > 0 ? "+" : "";
+                            var dayChangePercentageSign = holding.day_change_percentage > 0 ? "+" : "";
+                            
+                            // Calculate current value
+                            var currentValue = holding.quantity * holding.last_price;
+
+                            // Calculate net change
+                            var netChangePercentage = holding.pnl / (holding.quantity * holding.average_price) * 100
+                            var netChangePercentageSign = netChangePercentage > 0 ? "+" : "";
+
                             row.innerHTML = `
                             <td class="text-center">${holding.tradingsymbol}</td>
                             <td class="text-center">${holding.quantity}</td>
                             <td class="text-center">${holding.average_price.toFixed(2) }</td>
                             <td class="text-center">${holding.last_price.toFixed(2)}</td>
-                            <td class="text-center">${holding.pnl.toFixed(2)}</td>
-                            <td class="text-center">${holding.pnl.toFixed(2)}</td>
-                            <td class="text-center">${holding.pnl.toFixed(2)}</td>
-                            <td class="text-center">${holding.day_change_percentage.toFixed(2)}</td>
+                            <td class="text-center">${currentValue.toFixed(2)}</td>
+                            <td class="text-center ${holding.pnl >= 0 ? 'text-success' : 'text-danger'}">${pnlSign}${holding.pnl.toFixed(2)}</td>
+                            <td class="text-center ${netChangePercentage >= 0 ? 'text-success' : 'text-danger'}">${netChangePercentageSign}${netChangePercentage.toFixed(2)}%</td>
+                            <td class="text-center ${holding.day_change_percentage >= 0 ? 'text-success' : 'text-danger'}">${dayChangePercentageSign}${holding.day_change_percentage.toFixed(2)}%</td>
                             `;
                             tableBody.appendChild(row);
                             
+                            // Calculate total investment and total current value
+                            totalInvestment += holding.quantity * holding.average_price;
+                            totalCurrentValue += currentValue;
                         });
+                        
+                        // Update total investment and total current value
+                        totalInvestmentElement.textContent = totalInvestment.toFixed(2);
+                        totalCurrentValueElement.textContent = totalCurrentValue.toFixed(2);
+
                         document.getElementById("fetchHoldings").style.display = "inline"
                         document.getElementById("fetchingHoldings").style.display = "none"
                     }
