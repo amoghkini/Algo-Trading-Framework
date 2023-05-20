@@ -9,6 +9,7 @@ from app.server_bootup_operations import server_bootup_operations
 from common.execution_env import ExecutionEnv
 from config.config import BaseConfig, TEMPLATE_FOLDER, STATIC_FOLDER, get_server_config
 from database.database_connection import get_db
+from database.mongo_connection import get_mongo_db
 from utils.logger import config_root_logger
 from utils.utils import Utils
 
@@ -56,8 +57,10 @@ def configure_requests(app: Flask) -> None:
             g.user = session['user']
 
         g.secret_key = "Amogh kini"
-        g.db = get_db()
-
+        
+        g.db = get_db() # Connect to sql db
+        g.mongo_db = get_mongo_db() # Connect to nosql db
+        
 
     @app.teardown_appcontext
     def shutdown_session(exception=None) -> None:
