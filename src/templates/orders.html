@@ -1,0 +1,183 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-between align-items-center">
+        <h3 id="Orders">Total Orders <span id="totalOrdersCount"></span></h3>
+            <button class="btn btn-outline-light" onclick="fetchOrders()" id="fetchOrders">
+                Fetch Orders
+            </button>
+            <button class="btn btn-outline-light" type="button" disabled id="fetchingOrders">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Fetching Orders
+            </button>
+        </div>
+    </div>
+</div>
+
+<center>
+    <p id="defaultMessage">You haven't placed any orders today</p>
+</center>
+<br>
+<div>
+    <h3 id="openOrders">Open Orders <span id="openOrdersCount"></span></h3><br>
+    <table class="table table-bordered table-hover table-dark table-responsive" id="openOrdersTable">
+        <thead class="thead-dark">
+            <tr>
+                <th class="text-center">Time</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Instrument</th>
+                <th class="text-center">Product</th>
+                <th class="text-center">Qty.</th>
+                <th class="text-center">LTP</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<center>
+    <p id="openMessage">You don't have any open orders</p>
+</center>
+<br>
+<div>
+    <h3 id="executedOrders">Executed Orders <span id="executedOrdersCount"></span></h3><br>
+    <table class="table table-bordered table-hover table-dark table-responsive" id="executedOrdersTable">
+        <thead class="thead-dark">
+            <tr>
+                <th class="text-center">Time</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Instrument</th>
+                <th class="text-center">Product</th>
+                <th class="text-center">Qty.</th>
+                <th class="text-center">LTP</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+    <tbody></tbody>
+    </table>
+</div>
+<center>
+    <p id="executedMessage">You don't have any executed orders</p>
+</center>
+<script>
+    document.getElementById("fetchOrders").style.display = "inline"
+    document.getElementById("fetchingOrders").style.display = "none"
+    document.getElementById("openMessage").style.display = "none"
+    document.getElementById("executedMessage").style.display = "none"
+
+    window.onload = function () {
+
+        // Call fetchOrders function on page load
+        fetchOrders();
+    };
+    function fetchOrders() {
+        $.ajax({
+            url: "{{ url_for('orders_api')}}",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == "success") {
+                    var ordersData = response.data;
+                    var openOrdersTableBody = document.querySelector("#openOrdersTable tbody");
+                    var executedOrdersTableBody = document.querySelector("#executedOrdersTable tbody");
+                    var ordersCountElement = document.getElementById("ordersCount");
+
+                    // Clear the table body before populating with new data
+                    openOrdersTableBody.innerHTML = "";
+                    executedOrdersTableBody.innerHTML = "";
+
+                    // Initialize counts for open and executed orders
+                    var openOrdersCount = 0;
+                    var executedOrdersCount = 0;
+                    
+                    if (ordersData.length === 0){
+                        // Display default message when no data is found
+                        document.getElementById("defaultMessage").style.display = "block"
+                        document.getElementById("openOrdersTable").style.display = "none";
+                        document.getElementById("executedOrdersTable").style.display = "none";
+                        document.getElementById("executedOrders").style.display = "none";
+                        document.getElementById("executedOrdersCount").style.display = "none";
+                        document.getElementById("openOrders").style.display = "none";
+                        document.getElementById("openOrdersCount").style.display = "none";
+                        // Add new button to take manual trades
+                    }
+                    else{
+                        // Loop through the orders data and create table rows
+                        ordersData.forEach(function (order) {
+                            var row = document.createElement("tr");
+
+                            row.innerHTML = `
+                            <td class="text-center">${order.order_timestamp.split(" ")[1]}</td>
+                            <td class="text-center">${order.transaction_type}</td>
+                            <td class="text-center">${order.tradingsymbol}</td>                       
+                            <td class="text-center">${order.product}</td>
+                            <td class="text-center">${order.quantity}</td>
+                            <td class="text-center">${order.price.toFixed(2)}</td>
+                            <td class="text-center">${order.average_price.toFixed(2)}</td>
+                            <td class="text-center">${order.status}</td>
+                            `;
+
+                            // Check the order status and append the row to the respective table
+                            if (order.status === "OPEN") {
+                                openOrdersTableBody.appendChild(row);
+                                openOrdersCount++;
+                            } else {
+                                executedOrdersTableBody.appendChild(row);
+                                executedOrdersCount++;
+                            }
+                        });
+                    
+
+                        // Update counts for open and executed orders in the headers
+                        document.getElementById("openOrdersCount").textContent = "(" + openOrdersCount + ")";
+                        document.getElementById("executedOrdersCount").textContent = "(" + executedOrdersCount + ")";
+                        document.getElementById("totalOrdersCount").textContent = "(" + ordersData.length  + ")";
+                        
+                        if (openOrdersCount  === 0){
+                            document.getElementById("openOrdersTable").style.display = "none"
+                            document.getElementById("openMessage").style.display = "inline"
+                        }
+                        if (executedOrdersCount === 0) {
+                            document.getElementById("executedOrdersTable").style.display = "none"
+                            document.getElementById("executedMessage").style.display = "inline"
+                        }
+
+                        document.getElementById("defaultMessage").style.display = "none"
+                    }
+                    document.getElementById("fetchOrders").style.display = "inline"
+                    document.getElementById("fetchingOrders").style.display = "none"
+                    
+                } else {
+                    document.getElementById("fetchOrders").style.display = "inline"
+                    document.getElementById("fetchingOrders").style.display = "none"
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status) {
+                console.log("ajax error = " + xhr.statusText);
+                if (xhr.statusText == "timeout") {
+                    alert("Timeout occurred. Please try again after some time.");
+                } else {
+                    alert("Something went wrong while fetching the orders. Please check if broker connection is active.");
+                }
+                document.getElementById("fetchOrders").style.display = "inline"
+                document.getElementById("fetchingOrders").style.display = "none"
+            },
+            timeout: 30000
+        });
+
+        document.getElementById("fetchOrders").style.display = "none";
+        document.getElementById("fetchingOrders").style.display = "inline";
+    }
+
+</script>
+
+{% endblock content %}

@@ -10,8 +10,7 @@ class OrdersAPI(MethodView):
             orders: str = BrokerMethods.fetch_orders()
             response_json = {"status": 'success',
                              "data": orders}
-
         except Exception as e:
-            response_json = {"status": "fail",
+            response_json = {"status": "error",
                              "message": "Something went wrong while fetching orders. Please try again after sometime."+str(e)}
         return response_json
