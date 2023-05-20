@@ -158,6 +158,10 @@
                 } else {
                     document.getElementById("fetchOrders").style.display = "inline"
                     document.getElementById("fetchingOrders").style.display = "none"
+                    document.getElementById("openOrdersTable").style.display = "none"
+                    document.getElementById("executedOrdersTable").style.display = "none"
+                    document.getElementById("executedOrders").style.display = "none";
+                    document.getElementById("openOrders").style.display = "none";
                     alert(response.message);
                 }
             },
@@ -170,6 +174,10 @@
                 }
                 document.getElementById("fetchOrders").style.display = "inline"
                 document.getElementById("fetchingOrders").style.display = "none"
+                document.getElementById("openOrdersTable").style.display = "none"
+                document.getElementById("executedOrdersTable").style.display = "none"
+                document.getElementById("executedOrders").style.display = "none";
+                document.getElementById("openOrders").style.display = "none";
             },
             timeout: 30000
         });
