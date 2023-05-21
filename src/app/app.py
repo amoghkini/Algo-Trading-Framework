@@ -59,8 +59,8 @@ def configure_requests(app: Flask) -> None:
         g.secret_key = "Amogh kini"
         
         g.db = get_db() # Connect to sql db
-        g.mongo_db = get_mongo_db() # Connect to nosql db
-        
+        #g.mongo_db = get_mongo_db() # Connect to nosql db
+        # Commenting this as of now as mongo db is not yet installed in production. Once the activity is completed, we can uncomment it.
 
     @app.teardown_appcontext
     def shutdown_session(exception=None) -> None:

@@ -13,7 +13,7 @@ from database.database_schema import DatabaseSchema
 from database.database_tables import DatabaseTables
 from exceptions.api_exceptions import APIException
 from exceptions.user_exceptions import AuthUserError, InvalidUserDataError, UserNotFoundError, UserSignatureError
-from messaging_engine.email import Email
+from messaging_engine.producer import MessagingEngineProducer
 from user.user import User
 from utils.utils import Utils
 
@@ -28,7 +28,7 @@ class UserMethods:
         link = f'''Click here to verify the account: {account_activation_url}'''
 
         # Send acccount activation link to given email address.
-        Email.send_account_activation_email(link)
+        UserMethods.send_account_activation_email(link, email_id)
 
     
     @staticmethod
@@ -179,10 +179,10 @@ class UserMethods:
             # Generate password reset token.
             verify_token: str = UserMethods.generate_token(email_id)
             password_reset_url: str = Utils.get_external_url('reset_password_api',{"token":verify_token})
-            link = f'''Click here to verify the account: {password_reset_url}'''
+            link = f'''Click here to reset the account password: {password_reset_url}'''
 
             # Send password reset link to given email address.
-            Email.send_password_reset_email(link)
+            UserMethods.send_password_reset_email(link, email_id)
     
     @staticmethod
     def verify_password_reset_token(token: str):
@@ -352,3 +352,23 @@ class UserMethods:
         except Exception as e:
             raise APIException("Something went wrong. Please retry after sometime")
         return form
+    
+    @staticmethod    
+    def send_account_activation_email(activation_link: str,
+                                      email_id: str):
+        payload = {"to": email_id,
+                   "subject": "Account activation request",
+                   "message": activation_link
+                   }
+        message = MessagingEngineProducer()
+        message.publish(payload)
+
+    @staticmethod
+    def send_password_reset_email(password_reset_link: str,
+                                  email_id: str):
+        payload = {"to": email_id,
+                   "subject": "Password reset request",
+                   "message": password_reset_link
+        }
+        message = MessagingEngineProducer()
+        message.publish(payload)
