@@ -28,7 +28,7 @@ from messaging_engine.email import Email
 
 # channel.start_consuming()
 
-class MessaginEngineConsumer:
+class MessagingEngineConsumer:
     def __init__(self) -> None:
         self.__connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         self.__channel = self.__connection.channel()
