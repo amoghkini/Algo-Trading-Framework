@@ -42,7 +42,12 @@ class MessagingEngineProducer:
         self.__connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', heartbeat=0))
         self.__channel = self.__connection.channel()
         self.queue = queue
-        
+    
+    def declare_exchange(self) -> None:
+        self.__channel.exchange_declare(
+            exchange='messaging_engine', 
+            exchange_type='direct')
+    
     def publish(self, payload={}):
         self.__channel.basic_publish(
             exchange='messaging_engine',
