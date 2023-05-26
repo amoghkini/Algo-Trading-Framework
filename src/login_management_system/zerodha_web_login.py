@@ -41,7 +41,7 @@ class ZerodhaWebLogin(BaseLogin):
 
             elif broker_details.get('login_method') == BrokerLoginMethods.CREDS_WITH_ENC_TOKEN:
                 try:
-                    broker_handle.set_headers(broker_details.get('encryption_token'))
+                    broker_handle.set_headers(broker_details.get('encryption_token'), broker_details.get('broker_id'))
                 except Exception as e:
                     raise
 
