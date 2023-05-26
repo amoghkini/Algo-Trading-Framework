@@ -82,6 +82,18 @@ class BrokerMethods:
             return None
     
     @staticmethod
+    def logout_all_brokers():
+        fields_to_update = {"login_status": BrokerLoginStatus.LOGGED_OUT}
+        conn = get_db()
+        broker_update_count: int = conn.update(
+               DatabaseSchema.ALGO_TRADER, DatabaseTables.BROKERS, fields_to_update, ("login_status=%s", (BrokerLoginStatus.LOGGED_IN,)))
+        if broker_update_count:
+            conn.commit()
+            return broker_update_count
+        else:
+            return None
+    
+    @staticmethod
     def update_broker(fields_to_update: Dict, broker_id: str):
         try:
             conn = get_db()
