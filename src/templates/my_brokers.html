@@ -2,8 +2,6 @@
 
 {% block content %}
 <br>
-<h3 style="color:white">My Brokers</h3>
-<br>
 <script>
     function addBroker() {
         window.location.href =  "/broker/add"
@@ -38,15 +36,19 @@
             );
         }
 </script>
+
 <div class="container">
-        <div class="col-md-12 bg-light text-right">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-between align-items-center">
+            <h3>My Brokers <span id="holdingsCount"></span></h3>
             <button class="btn btn-outline-light float-end" onClick="addBroker()">
                 Add Broker
             </button>
         </div>
+    </div>
 </div>
 
-<br><br><br><br>
+<br><br>
 
 <table class="table table-bordered table-hover table-dark table-responsive">
     <thead class="thead-dark"   >

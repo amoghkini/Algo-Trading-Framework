@@ -8,7 +8,7 @@ class MyBrokersAPI(MethodView):
 
     def get(self):
         if not g.user:
-            return redirect(url_for('dashboard_api'))
+            return redirect(url_for('login_api'))
         try:
             brokers = BrokerMethods.get_all_brokers(g.user)
             return render_template('my_brokers.html',brokers = brokers)
