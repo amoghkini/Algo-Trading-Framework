@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-between align-items-center">
+            <h3>My Strategies <span id="strategyCount"></span></h3>
+        </div>
+    </div>
+</div>
+<br>
+<table class="table table-bordered table-hover table-dark table-responsive">
+    <thead class="thead-dark">
+        <tr>
+            {% for key in strategies.keys() %}
+            <th style="text-align:center" scope="col">{{ key | title | replace("_"," ") }}</th>
+            {% endfor %}
+            <th style="text-align:center" scope="col">Add to portfolio</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in range(strategies.get('name')|length) %}
+        <tr>
+            {% for value in strategies.values() %}
+            <td style="text-align:center">{{ value[i] }}</td>
+            {% endfor %}
+            <td style="text-align:center">
+                <button class="btn btn-outline-light" onClick="loginBroker('{{bId}}','{{bName}}', 'creds')">
+                    Add to portfolio
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
