@@ -3,4 +3,5 @@ class DatabaseTables:
     ACCESS_TOKENS = 'access_tokens'
     ALGO = 'algo'
     BROKERS = 'brokers'
+    STRATEGIES = 'strategies'
     USERS = 'users'

@@ -1,8 +1,12 @@
 import logging
 import time
 from datetime import datetime
+from typing import Dict
 
 from core.quotes import Quotes
+from database.database_connection import get_db
+from database.database_schema import DatabaseSchema
+from database.database_tables import DatabaseTables
 from models.product_type import ProductType
 from trading_engine.trade_manager import TradeManager
 from utils.utils import Utils
@@ -31,6 +35,15 @@ class BaseStrategy:
     def get_name(self):
         return self.name
 
+    def get_params(self):
+        try:
+            conn = get_db()
+            startegy_params: Dict = conn.get_one(
+                DatabaseSchema.ALGO_TRADER, DatabaseTables.STRATEGIES, '*', ("name = %s", [self.get_name()]))
+            return startegy_params
+        except Exception as e:
+            raise Exception("Something went wrong while fetching strategy parameters.")
+    
     def is_enabled(self):
         return self.enabled
 

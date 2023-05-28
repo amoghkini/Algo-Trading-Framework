@@ -24,19 +24,30 @@ class SampleStrategy(BaseStrategy):
             SampleStrategy.__instance = self
         # Call Base class constructor
         super().__init__("SAMPLE")
+        
+        # Fetch strategy parameters from database
+        startegy_parameters = self.get_params() 
+        
         # Initialize all the properties specific to this strategy
-        self.product_type = ProductType.MIS
+        self.product_type = startegy_parameters.get('product_type')
         self.symbols = ["SBIN", "INFY", "TATASTEEL", "RELIANCE", "HDFCBANK", "CIPLA"]
-        self.sl_percentage = 1.1
-        self.target_percentage = 2.2
-        self.start_timestamp = Utils.get_time_of_today(9, 30, 0) # When to start the strategy. Default is Market start time
-        self.stop_timestamp = Utils.get_time_of_today(14, 30, 0) # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
-        self.square_off_timestamp = Utils.get_time_of_today(15, 0, 0) # Square off time
-        self.capital = 3000 # Capital to trade (This is the margin you allocate from your broker account for this strategy)
-        self.leverage = 2 # 2x, 3x Etc
-        self.max_trades_per_day = 3  # Max number of trades per day under this strategy
-        self.is_fno = False  # Does this strategy trade in FnO or not
-        self.capital_per_set = 0 # Applicable if isFnO is True (1 set means 1CE/1PE or 2CE/2PE etc based on your strategy logic)
+        self.sl_percentage = startegy_parameters.get('start_timestamp')
+        self.target_percentage = startegy_parameters.get('target_percentage')
+        
+        self.start_time = startegy_parameters.get('start_timestamp')
+        self.start_timestamp = Utils.get_time_of_today(self.start_time.hour, self.start_time.minute, self.start_time.second) # When to start the strategy. Default is Market start time
+        
+        self.stop_time = startegy_parameters.get('stop_timestamp')
+        self.stop_timestamp = Utils.get_time_of_today(self.stop_time.hour, self.stop_time.minute, self.stop_time.second) # This is not square off timestamp. This is the timestamp after which no new trades will be placed under this strategy but existing trades continue to be active.
+        
+        self.square_off_time = startegy_parameters.get('square_off_timestamp')
+        self.square_off_timestamp = Utils.get_time_of_today(self.square_off_time.hour, self.square_off_time.minute, self.square_off_time.second)  # Square off time
+        
+        self.capital = startegy_parameters.get('capital') # Capital to trade (This is the margin you allocate from your broker account for this strategy)
+        self.leverage = startegy_parameters.get('leverage') # 2x, 3x Etc
+        self.max_trades_per_day = startegy_parameters.get('max_trades_per_day')  # Max number of trades per day under this strategy
+        self.is_fno = startegy_parameters.get('is_fno') # Does this strategy trade in FnO or not
+        self.capital_per_set = startegy_parameters.get('capital_per_set') # Applicable if isFnO is True (1 set means 1CE/1PE or 2CE/2PE etc based on your strategy logic)
 
     def process(self):
         if len(self.trades) >= self.max_trades_per_day:
