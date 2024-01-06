@@ -2,6 +2,7 @@ import logging
 
 from models.product_type import ProductType
 from trading_engine.trade_state import TradeState
+from utils.time_utils import TimeUtils
 from utils.utils import Utils
 
 class Trade:
@@ -28,7 +29,7 @@ class Trade:
 
         self.trade_state = TradeState.CREATED # state of the trade
         self.timestamp = None # Set this timestamp to strategy timestamp if you are not sure what to set
-        self.create_timestamp = Utils.get_epoch() # Timestamp when the trade is created (Not triggered)
+        self.create_timestamp = TimeUtils.get_epoch() # Timestamp when the trade is created (Not triggered)
         self.start_timestamp = None # Timestamp when the trade gets triggered and order placed
         self.end_timestamp = None # Timestamp when the trade ended
         self.pnl = 0 # Profit loss of the trade. If trade is Active this shows the unrealized pnl else realized pnl

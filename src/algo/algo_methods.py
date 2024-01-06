@@ -8,7 +8,7 @@ from database.database_connection import get_db
 from database.database_schema import DatabaseSchema
 from database.database_tables import DatabaseTables
 from exceptions.api_exceptions import APIException
-from utils.utils import Utils
+from utils.time_utils import TimeUtils
 
 
 class AlgoMethods:
@@ -19,7 +19,7 @@ class AlgoMethods:
         # x.start()
         Algo.start_algo()
         fields_to_update = {"status": AlgoStatus.RUNNING,
-                            "start_time": Utils.get_epoch(),
+                            "start_time": TimeUtils.get_epoch(),
                             "algo_start_reason": Messages.MANUALLY_STARTED_BY_USER
                             }
         AlgoMethods.update_algo_data(fields_to_update)
@@ -30,7 +30,7 @@ class AlgoMethods:
         # x.start()
         Algo.stop_algo()
         fields_to_update = {"status": AlgoStatus.STOPPED,
-                            "end_time": Utils.get_epoch(),
+                            "end_time": TimeUtils.get_epoch(),
                             "algo_stop_reason": Messages.MANUALLY_STOPPED_BY_USER
                             }
         AlgoMethods.update_algo_data(fields_to_update)

@@ -9,6 +9,7 @@ from database.database_schema import DatabaseSchema
 from database.database_tables import DatabaseTables
 from models.product_type import ProductType
 from trading_engine.trade_manager import TradeManager
+from utils.time_utils import TimeUtils
 from utils.utils import Utils
 
 class BaseStrategy:
@@ -89,7 +90,7 @@ class BaseStrategy:
             return
 
         if now < self.start_timestamp:
-            wait_seconds = Utils.get_epoch(self.start_timestamp) - Utils.get_epoch(now)
+            wait_seconds = TimeUtils.get_epoch(self.start_timestamp) - TimeUtils.get_epoch(now)
             logging.info("%s: Waiting for %d seconds till startegy start timestamp reaches...", self.get_name(), wait_seconds)
             if wait_seconds > 0:
                 time.sleep(wait_seconds)

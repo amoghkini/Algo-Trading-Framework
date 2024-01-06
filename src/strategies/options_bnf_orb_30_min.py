@@ -7,6 +7,7 @@ from models.product_type import ProductType
 from strategies.base_strategy import BaseStrategy
 from trading_engine.trade import Trade
 from trading_engine.trade_manager import TradeManager
+from utils.time_utils import TimeUtils
 from utils.utils import Utils
 
 # Each strategy has to be derived from BaseStrategy
@@ -71,7 +72,7 @@ class BNFORB30Min(BaseStrategy):
         trade.product_type = self.product_type
         trade.place_market_order = True
         trade.requested_entry = high if direction == Direction.LONG else low
-        trade.timestamp = Utils.get_epoch(self.start_timestamp) # setting this to strategy timestamp
+        trade.timestamp = TimeUtils.get_epoch(self.start_timestamp) # setting this to strategy timestamp
         # Calculate lots
         num_lots = self.calculate_lots_per_trade()
         isd = Instruments.get_instrument_data_by_symbol(trading_symbol)  # Get instrument data to know qty per lot
@@ -85,7 +86,7 @@ class BNFORB30Min(BaseStrategy):
         else:
             trade.target = Utils.round_to_nse_price(trade.requested_entry - 1.5 * sl_diff)
 
-        trade.intraday_square_off_timestamp = Utils.get_epoch(self.square_off_timestamp)
+        trade.intraday_square_off_timestamp = TimeUtils.get_epoch(self.square_off_timestamp)
         # Hand over the trade to TradeManager
         TradeManager.add_new_trade(trade)
 

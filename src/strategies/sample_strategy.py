@@ -5,6 +5,7 @@ from models.product_type import ProductType
 from strategies.base_strategy import BaseStrategy
 from trading_engine.trade import Trade
 from trading_engine.trade_manager import TradeManager
+from utils.time_utils import TimeUtils
 from utils.utils import Utils
 
 # Each strategy has to be derived from BaseStrategy
@@ -85,7 +86,7 @@ class SampleStrategy(BaseStrategy):
         trade.product_type = self.product_type
         trade.place_market_order = True
         trade.requested_entry = breakout_price
-        trade.timestamp = Utils.get_epoch(self.start_timestamp) # setting this to strategy timestamp
+        trade.timestamp = TimeUtils.get_epoch(self.start_timestamp) # setting this to strategy timestamp
         trade.qty = int(self.calculate_capital_per_trade() / breakout_price)
         if trade.qty == 0:
             trade.qty = 1 # Keep min 1 qty
@@ -103,7 +104,7 @@ class SampleStrategy(BaseStrategy):
         else:
             trade.target = Utils.round_to_nse_price(breakout_price - breakout_price * self.target_percentage / 100)
 
-        trade.intraday_square_off_timestamp = Utils.get_epoch(self.square_off_timestamp)
+        trade.intraday_square_off_timestamp = TimeUtils.get_epoch(self.square_off_timestamp)
         # Hand over the trade to TradeManager
         TradeManager.add_new_trade(trade)
 

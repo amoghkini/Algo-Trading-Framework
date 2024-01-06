@@ -6,7 +6,7 @@ from models.order_type import OrderType
 from models.product_type import ProductType
 from order_management_system.base_order_manager import BaseOrderManager
 from order_management_system.order import Order
-from utils.utils import Utils
+from utils.time_utils import TimeUtils
 
 class ZerodhaOrderManager(BaseOrderManager):
     def __init__(self):
@@ -30,8 +30,8 @@ class ZerodhaOrderManager(BaseOrderManager):
             logging.info('%s: Order placed successfully, orderId = %s', self.broker, order_id)
             order = Order(order_input_params)
             order.order_id = order_id
-            order.order_place_timestamp = Utils.get_epoch()
-            order.last_order_update_timestamp = Utils.get_epoch()
+            order.order_place_timestamp = TimeUtils.get_epoch()
+            order.last_order_update_timestamp = TimeUtils.get_epoch()
             return order
         except Exception as e:
             logging.info('%s Order placement failed: %s', self.broker, str(e))
@@ -50,7 +50,7 @@ class ZerodhaOrderManager(BaseOrderManager):
               order_type=order_modify_params.new_order_type if order_modify_params.new_order_type != None else None)
 
             logging.info('%s Order modified successfully for order_id = %s', self.broker, order_id)
-            order.last_order_update_timestamp = Utils.get_epoch()
+            order.last_order_update_timestamp = TimeUtils.get_epoch()
             return order
         
         except Exception as e:
@@ -67,7 +67,7 @@ class ZerodhaOrderManager(BaseOrderManager):
               order_type=kite.ORDER_TYPE_MARKET)
 
             logging.info('%s Order modified successfully to MARKET for order_id = %s', self.broker, order_id)
-            order.last_order_update_timestamp = Utils.get_epoch()
+            order.last_order_update_timestamp = TimeUtils.get_epoch()
             return order
         except Exception as e:
             logging.info('%s Order modify to market failed: %s', self.broker, str(e))
@@ -82,7 +82,7 @@ class ZerodhaOrderManager(BaseOrderManager):
               order_id=order.order_id)
 
             logging.info('%s Order cancelled successfully, order_id = %s', self.broker, order_id)
-            order.last_order_update_timestamp = Utils.get_epoch()
+            order.last_order_update_timestamp = TimeUtils.get_epoch()
             return order
         except Exception as e:
             logging.info('%s Order cancel failed: %s', self.broker, str(e))

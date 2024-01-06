@@ -4,7 +4,7 @@ import json
 
 from config.config import get_server_config, get_timestamps_data, save_timestamps_data
 from core.controller import Controller
-from utils.utils import Utils
+from utils.time_utils import TimeUtils
 
 class Instruments:
     instruments_list = None
@@ -17,7 +17,7 @@ class Instruments:
         if 'instrumentsLastSavedAt' not in timestamps:
             return True
         last_saved_timestamp = timestamps['instrumentsLastSavedAt']
-        now_epoch = Utils.get_epoch()
+        now_epoch = TimeUtils.get_epoch()
         if now_epoch - last_saved_timestamp >= 24 * 60 * 60:
             logging.info("Instruments: should_fetch_from_server() returning True as its been 24 hours since last fetch.")
             return True
@@ -26,7 +26,7 @@ class Instruments:
     @staticmethod
     def update_last_saved_timestamp():
         timestamps = get_timestamps_data()
-        timestamps['instrumentsLastSavedAt'] = Utils.get_epoch()
+        timestamps['instrumentsLastSavedAt'] = TimeUtils.get_epoch()
         save_timestamps_data(timestamps)
 
     @staticmethod

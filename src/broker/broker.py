@@ -1,6 +1,6 @@
 from broker.broker_login_status import BrokerLoginStatus
 from broker.broker_status import BrokerStatus
-from utils.utils import Utils
+from utils.time_utils import TimeUtils
 
 class Broker:
     
@@ -14,5 +14,5 @@ class Broker:
         self.totp_key: str = ''
         self.auto_login: bool = ''
         self.status: str = BrokerStatus.CREATED
-        self.broker_addition_date: int = Utils.get_epoch()
+        self.broker_addition_date: int = TimeUtils.get_epoch()
         self.login_status: str = BrokerLoginStatus.YET_TO_LOGIN

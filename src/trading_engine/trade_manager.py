@@ -17,6 +17,7 @@ from trading_engine.trade import Trade
 from trading_engine.trade_encoder import TradeEncoder
 from trading_engine.trade_exit_reason import TradeExitReason
 from trading_engine.trade_state import TradeState
+from utils.time_utils import TimeUtils
 from utils.utils import Utils
 
 
@@ -163,7 +164,7 @@ class TradeManager:
                     if is_success == True:
                         # set longTrade state to ACTIVE
                         long_trade.trade_state = TradeState.ACTIVE
-                        long_trade.start_timestamp = Utils.get_epoch()
+                        long_trade.start_timestamp = TimeUtils.get_epoch()
                         continue
             
             if short_trade != None:
@@ -173,7 +174,7 @@ class TradeManager:
                     if is_success == True:
                         # set shortTrade state to ACTIVE
                         short_trade.trade_state = TradeState.ACTIVE
-                        short_trade.start_timestamp = Utils.get_epoch()
+                        short_trade.start_timestamp = TimeUtils.get_epoch()
     
     @staticmethod
     def get_untriggered_trade(trading_symbol, strategy, direction):
@@ -233,7 +234,7 @@ class TradeManager:
         for trade in TradeManager.trades:
             if trade.trade_state == TradeState.ACTIVE:
                 if trade.intraday_square_off_timestamp != None:
-                    nowEpoch = Utils.get_epoch()
+                    nowEpoch = TimeUtils.get_epoch()
                     if nowEpoch >= trade.intraday_square_off_timestamp:
                         TradeManager.square_off_trade(trade, TradeExitReason.SQUARE_OFF)
                 
@@ -415,7 +416,7 @@ class TradeManager:
         trade.tradeState = TradeState.COMPLETED
         trade.exit = exit
         trade.exit_reason = exit_reason if trade.exit_reason == None else trade.exit_reason
-        trade.end_timestamp = Utils.get_epoch()
+        trade.end_timestamp = TimeUtils.get_epoch()
         trade = Utils.calculate_trade_pnl(trade)
         logging.info('TradeManager: set_trade_to_completed strategy = %s, symbol = %s, qty = %d, entry = %f, exit = %f, pnl = %f, exit reason = %s', trade.strategy, trade.trading_symbol, trade.filled_qty, trade.entry, trade.exit, trade.pnl, trade.exit_reason)
 

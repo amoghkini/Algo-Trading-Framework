@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from user.user_status import UserStatus
-from utils.utils import Utils
+from utils.time_utils import TimeUtils
 
 class User:
     def __init__(self,
@@ -14,7 +14,7 @@ class User:
         self.password: str = ''
         self.mobile_no: str = ''
         self.date_of_birth: datetime = ''
-        self.account_creation_date: int = Utils.get_epoch()
+        self.account_creation_date: int = TimeUtils.get_epoch()
         self.account_status: str = UserStatus.CREATED
         
     def __str__(self) -> str:

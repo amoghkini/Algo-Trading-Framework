@@ -11,7 +11,7 @@ from common.execution_env import ExecutionEnv
 from config.config import get_holidays, get_server_config, DevConfig, TestingConfig, ProdConfig
 from models.direction import Direction
 from trading_engine.trade_state import TradeState
-
+from utils.time_utils import TimeUtils
 class Utils:
 
     date_format = "%Y-%m-%d"
@@ -52,54 +52,20 @@ class Utils:
     @staticmethod
     def wait_till_market_opens(context):
         
-        now_epoch = Utils.get_epoch(datetime.now())
-        market_start_time_epoch = Utils.get_epoch(Utils.get_market_start_time())
+        now_epoch = TimeUtils.get_epoch(datetime.now())
+        market_start_time_epoch = TimeUtils.get_epoch(Utils.get_market_start_time())
         wait_seconds = market_start_time_epoch - now_epoch
         if wait_seconds > 0:
             logging.info("%s: Waiting for %d seconds till market opens...", context, wait_seconds)
             time.sleep(wait_seconds)
 
     @staticmethod
-    def get_epoch(datetime_obj=None):
-        # This method converts given datetime_obj to epoch seconds
-        if datetime_obj == None:
-            datetime_obj = datetime.now()
-        epoch_seconds = datetime.timestamp(datetime_obj)
-        return int(epoch_seconds)  # converting double to long
-
-    @staticmethod
     def get_market_start_time(date_time_obj=None):
-        return Utils.get_time_of_day(9, 15, 0, date_time_obj)
+        return TimeUtils.get_time_of_day(9, 15, 0, date_time_obj)
 
     @staticmethod
     def get_market_end_time(date_time_obj=None):
-        return Utils.get_time_of_day(15, 30, 0, date_time_obj)
-
-    @staticmethod
-    def get_time_of_day(hours, minutes, seconds, date_time_obj=None):
-        if date_time_obj == None:
-            date_time_obj = datetime.now()
-        date_time_obj = date_time_obj.replace(hour=hours, minute=minutes, second=seconds, microsecond=0)
-        return date_time_obj
-
-    @staticmethod
-    def get_time_of_today(hours, minutes, seconds):
-        return Utils.get_time_of_day(hours, minutes, seconds, datetime.now())
-
-    @staticmethod
-    def get_today_date_str(time=False):
-        if time == True:
-            return Utils.convert_to_date_time_str(datetime.now())
-        else:
-            return Utils.convert_to_date_str(datetime.now())
-
-    @staticmethod
-    def convert_to_date_str(datetime_obj):
-        return datetime_obj.strftime(Utils.date_format)
-    
-    @staticmethod
-    def convert_to_date_time_str(datetime_obj):
-        return datetime_obj.strftime(Utils.date_time_format)
+        return TimeUtils.get_time_of_day(15, 30, 0, date_time_obj)
 
     @staticmethod
     def is_holiday(datetime_obj):
@@ -107,7 +73,7 @@ class Utils:
         if day_of_week == 'Saturday' or day_of_week == 'Sunday':
             return True
 
-        date_str = Utils.convert_to_date_str(datetime_obj)
+        date_str = TimeUtils.convert_to_date_str(datetime_obj)
         holidays = get_holidays()
         if (date_str in holidays):
             return True
@@ -207,7 +173,7 @@ class Utils:
         while Utils.is_holiday(datetime_expiry_day) == True:
             datetime_expiry_day = datetime_expiry_day - timedelta(days=1)
 
-        datetime_expiry_day = Utils.get_time_of_day(0, 0, 0, datetime_expiry_day)
+        datetime_expiry_day = TimeUtils.get_time_of_day(0, 0, 0, datetime_expiry_day)
         return datetime_expiry_day
 
     @staticmethod
@@ -223,13 +189,13 @@ class Utils:
         while Utils.is_holiday(datetime_expiry_day) == True:
             datetime_expiry_day = datetime_expiry_day - timedelta(days=1)
 
-        datetime_expiry_day = Utils.get_time_of_day(0, 0, 0, datetime_expiry_day)
+        datetime_expiry_day = TimeUtils.get_time_of_day(0, 0, 0, datetime_expiry_day)
         return datetime_expiry_day
 
     @staticmethod
     def is_today_weekly_expiry_day():
         expiry_date = Utils.get_weekly_expiry_day_date()
-        today_date = Utils.get_time_of_today(0, 0, 0)
+        today_date = TimeUtils.get_time_of_today(0, 0, 0)
         if expiry_date == today_date:
             return True
         return False
@@ -237,7 +203,7 @@ class Utils:
     @staticmethod
     def is_today_one_day_before_weekly_expiry_day():
         expiry_date = Utils.get_weekly_expiry_day_date()
-        today_date = Utils.get_time_of_today(0, 0, 0)
+        today_date = TimeUtils.get_time_of_today(0, 0, 0)
         if expiry_date - timedelta(days=1) == today_date:
             return True  
         return False
