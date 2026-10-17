@@ -41,3 +41,7 @@ Previously (A year Before), the web access token worked with the API, but due to
 ·
 46
  Views
+
+## Documentation
+
+See [docs/README.md](docs/README.md) for the architecture diagrams and the documentation of every feature.
